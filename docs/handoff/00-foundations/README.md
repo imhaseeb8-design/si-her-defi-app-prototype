@@ -90,4 +90,4 @@ Figma: component set **Sidebar item** `1040:37` (Post-UX-Fixes, next to the Butt
 
 - 40px tall, radius 12, 12px side padding, 11px gap, Geist Medium 13.5, 18px icons.
 - Properties: **Label** (text), **Icon** (swap: Home / Certificate / Settings), **Show lock** (boolean, on by default in Locked).
-- The Dashboard icon is now the Figma `home-09` house (was a 4-square grid).
+- Icons are the Figma ones: Dashboard = `home-09` house, Certificate = document with a ribbon, Settings = gear (18px, `after-sidebar-icons.png`). The gear also shows in the account menu.
