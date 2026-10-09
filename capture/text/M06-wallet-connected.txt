@@ -1,0 +1,39 @@
+https://certifications.si3.space/siherdefi/wallet
+
+ada@example.com
+Not you?
+Email verified
+Profile created
+Connect a wallet
+← Back to profile
+Connect your wallet
+
+This is where your certificate mints at the end of the cohort. We only read your address — no funds needed.
+
+Wallet connected
+
+0x8f3a…e1f2
+
+BASE MAINNET
+Linked to your Si Her account
+ADDRESS
+0x8f3a2b7c91d04e6a5b12c3d4e5f6a7b8c9d0e1f2
+View on BaseScan ↗
+Go to my dashboard
+→
+Connect a different wallet
+Your certification is yours, not ours.
+
+It mints to your wallet on Base. Nothing here is held in an account we control.
+
+You keep what you earn
+
+Your certificate stays in your wallet. Verifiable for a lifetime.
+
+Connecting costs nothing
+
+No payment and no transaction — you're proving the wallet is yours.
+
+Takes about ten seconds
+
+Pick your wallet, approve the request, done.

@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+.env*
+.vercel
+.next/
+# personal data — never commit
+capture/_private/
+tools/capture/fixtures-raw/
+capture/api/

@@ -1,0 +1,60 @@
+https://certifications.si3.space/siherdefi/wallet
+
+POWERED BY
+BASE
+ada@example.com
+Not you?
+Email verified
+Profile created
+Connect a wallet
+← Back to profile
+Connect your wallet
+
+This is where your certificate mints at the end of the cohort. We only read your address — no funds needed.
+
+CHOOSE WALLET
+
+BASE MAINNET
+
+MetaMask
+
+Not installed — click to get it ↗
+
+Coinbase Wallet
+
+Not installed — click to get it ↗
+
+Rainbow
+
+Not installed — click to get it ↗
+
+1inch Wallet
+
+Scan QR with mobile app to connect or install
+
+QR CODE
+↗
+
+WalletConnect
+
+Scan with your mobile wallet app to connect
+
+QR CODE
+
+No wallet extension detected. Install MetaMask to get started.
+
+Your certification is yours, not ours.
+
+It mints to your wallet on Base. Nothing here is held in an account we control.
+
+You keep what you earn
+
+Your certificate stays in your wallet. Verifiable for a lifetime.
+
+Connecting costs nothing
+
+No payment and no transaction — you're proving the wallet is yours.
+
+Takes about ten seconds
+
+Pick your wallet, approve the request, done.

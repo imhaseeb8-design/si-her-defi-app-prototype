@@ -1,0 +1,53 @@
+https://certifications.si3.space/siherdefi/settings
+
+Wallet disconnected successfully
+POWERED BY
+BASE
+Dashboard
+Certificate
+Settings
+Not connected
+Connect
+
+Ada Nwosu
+
+Product designer
+
+Settings
+
+Manage your cohort profile, connected wallet, and platform preferences.
+
+Profile Information
+
+This is how your credentials appear on your on-chain certificate.
+
+Edit profile
+→
+Ada Nwosu
+
+Product designer
+
+Lagos Fintech Collective
+
+SOCIAL PROFILE
+https://linkedin.com/in/adanwosu
+COHORT
+Cohort 01 — Si Her DeFi
+Connected Wallet
+
+Your on-chain certificate will be minted to this address on Base Mainnet.
+
+No wallet connected
+
+Connect a wallet to receive your certificate.
+
+Connect wallet
+Account Preferences
+
+Email notifications
+
+Get updates when new modules, live sessions, and materials are published.
+
+On-chain verification privacy
+
+Display your full name publicly on the Base certificate registry & verification page.
