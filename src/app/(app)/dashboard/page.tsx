@@ -188,10 +188,7 @@ function SessionCard({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => 
         <div className="min-w-0">
           <h3 className="truncate text-[15px] font-medium text-[#151534]">{m.title}</h3>
           <p className="mt-1 text-[12.5px] text-[#5f5f7a]"><time dateTime={m.scheduledDate}>{when.weekday}, {when.month} {when.day} · {when.time}</time></p>
-          <p className="mt-1 flex items-center gap-1.5 text-[12.5px] text-[#7e7e96]">
-            <span className="grid h-4 min-w-4 place-items-center rounded bg-[#eef0f6] px-0.5 text-[8.5px] font-medium text-[#6b6d8f]">{m.companyTag.slice(0, 3)}</span>
-            <span className="truncate"><span className="text-[#45465f]">{m.presenter}</span>{m.partnerName ? ` · ${m.partnerName}` : ''}</span>
-          </p>
+          <p className="mt-1 truncate text-[12.5px] text-[#7e7e96]"><span className="text-[#45465f]">{m.presenter}</span>{m.partnerName ? ` · ${m.partnerName}` : ''}</p>
         </div>
       </div>
       <button type="button" onClick={() => onSchedule(m)} className={`inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border px-4 py-2 text-[12.5px] font-medium transition ${m.isScheduled ? 'border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]' : 'border-[#d4c2f5] text-[#7c2ae8] hover:border-[#b794ef] hover:bg-[#f8f5fe]'}`}>
