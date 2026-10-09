@@ -35,3 +35,16 @@ Screenshot: `after-profile-card.jpg`. Built to sit beside the badges card at the
 - New cover image (`public/v2/module-cover.webp`), with a lighter overlay: dark on the left behind the text, nearly clear on the right. On mobile a soft fade at the bottom keeps the small text readable.
 - Locked (Part 1 not done): "Start session" shows in the Disabled state and isn't clickable; the meta line starts "Finish Part 1 to unlock". The "Quiz open" status is hidden while locked.
 - Title, pill and monogram use medium weight, not bold.
+
+## Badge art and earned states
+Screenshot: `after-badges-earned.jpg` (1, 4 and 12 earned).
+- Badge art from the design team lives in `public/v2/badges/` (192px PNG, one per week: 01 Module #1, 02 Module #2, 03 FinDaS, 04 Cashi, 06 Sodax, 07 Ixian, 09 CryptoMommi). In the real app this is each module's `badge.image` from the CMS.
+- Once you've earned one, the help line is replaced by your badges in a 12-column row under the progress bar (max 40px each; hover shows week and module).
+- With all 12 earned, the footer becomes "✓ All 12 badges earned. They're all on your certificate."
+- Demo panel presets to test it: "Week 1 badge earned", "4 badges earned", "All 12 badges earned" (the 5 weeks without a module in the fixtures reuse existing art).
+
+## Section headings
+Screenshot: `after-sections.jpg`.
+- Bigger and easier to read: 17px Medium, dark grey `#45465f` (was 11.5px light grey).
+- New copy: "Start here" → **Begin your journey** (then **Your onboarding** once Part 1 is done); "This week" / "Modules & credentials" → **Your learning path**; "From our partners (2)" → **From our partners**.
+- The small notes on the right of those headings go from 11px to 12.5px.

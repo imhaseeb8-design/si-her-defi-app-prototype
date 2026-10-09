@@ -36,6 +36,8 @@ export interface DemoState {
   quizzes: Record<string, QuizState>;
   scheduled: Record<string, string>;
   minted: boolean;
+  /** demo only: also award the 5 weeks that have no module in the fixtures, to test a full set of 12 */
+  allBadges?: boolean;
   settings: Settings;
   flags: {
     emailNotFound: boolean;
@@ -115,14 +117,16 @@ export function now(): Date {
 
 // ---------------------------------------------------------------- presets (Prototype panel)
 
-export type Preset = 'new' | 'verified' | 'profile' | 'wallet' | 'part1-draft' | 'part1-done' | 'badge' | 'minted';
+export type Preset = 'new' | 'verified' | 'profile' | 'wallet' | 'part1-draft' | 'part1-done' | 'badge' | 'badges-some' | 'badges-all' | 'minted';
 
 export function applyPreset(p: Preset) {
   const flags = getState().flags;
   const s = initialState();
   s.flags = flags;
   const order: Preset[] = ['new', 'verified', 'profile', 'wallet', 'part1-draft', 'part1-done', 'badge', 'minted'];
-  const at = order.indexOf(p);
+  // badge-count presets build on 'badge' (Week 1 passed) and pass more quizzes on top
+  const extra = p === 'badges-some' ? 4 : p === 'badges-all' ? Infinity : 0;
+  const at = extra ? order.indexOf('badge') : order.indexOf(p);
   if (at >= 1) s.signedIn = true;
   if (at >= 2) s.profile = { ...filledProfile };
   if (at >= 3) s.user.walletAddress = DEMO_ADDRESS;
@@ -130,6 +134,10 @@ export function applyPreset(p: Preset) {
   if (at >= 5) s.progress = { status: 'completed', videoWatched: true, followedSocialIds: ['onboarding-social-x', 'onboarding-social-linkedin'], answers: {}, completedAt: '2026-10-08T18:00:00.000Z' };
   if (at >= 6) s.quizzes['si-her-collective-capital'] = { ...emptyQuiz(), attemptsUsed: 1, passed: true };
   if (at >= 7) s.minted = true;
+  if (extra) {
+    fixtureModules.slice(0, extra).forEach((m) => { s.quizzes[m.slug] = { ...emptyQuiz(), attemptsUsed: 1, passed: true }; });
+    if (extra === Infinity) s.allBadges = true;
+  }
   setState(s);
   if (typeof window !== 'undefined') {
     if (s.signedIn) {
@@ -172,18 +180,36 @@ function moduleView(s: DemoState, m: Module): Module {
     isScheduled: !!s.scheduled[m.slug],
     scheduledProvider: s.scheduled[m.slug] ?? null,
     quiz: { ...m.quiz, isOpen: state !== 'upcoming', attemptsUsed: q.attemptsUsed, isPassed: q.passed },
+    badge: { ...m.badge, image: badgeArt(m.week) },
   };
 }
+
+// Badge art from the design team (public/v2/badges), by week. Weeks without a module in the
+// fixtures reuse these when the 'badges-all' preset fills the set.
+const BADGE_ART: Record<number, string> = { 1: 'week-01', 2: 'week-02', 3: 'week-03', 4: 'week-04', 6: 'week-06', 7: 'week-07', 9: 'week-09' };
+const badgeArt = (week: number) => {
+  const keys = Object.keys(BADGE_ART).map(Number);
+  return `/siherdefi/v2/badges/${BADGE_ART[week] ?? BADGE_ART[keys[week % keys.length]]}.png`;
+};
 
 function modules(s: DemoState) {
   return fixtureModules.map((m) => moduleView(s, m));
 }
 
 function earnedBadges(s: DemoState): EarnedBadge[] {
-  return modules(s).filter((m) => quizState(s, m.slug).passed).map((m) => ({
+  const earned: EarnedBadge[] = modules(s).filter((m) => quizState(s, m.slug).passed).map((m) => ({
     id: `badge-${m.slug}`, slug: m.slug, moduleSlug: m.slug, week: m.week, name: m.badge.name, image: m.badge.image,
     partnerName: m.partnerName || m.companyTag, earnedAt: '2026-10-09T15:00:00.000Z', moduleTitle: m.title,
   }));
+  if (s.allBadges) {
+    const have = new Set(earned.map((b) => b.week));
+    for (let week = 1; week <= 12; week++) {
+      if (have.has(week)) continue;
+      earned.push({ id: `badge-week-${week}`, slug: `week-${week}`, moduleSlug: `week-${week}`, week, name: `Week ${week} badge`, image: badgeArt(week), partnerName: 'Si Her DeFi', earnedAt: '2026-10-09T15:00:00.000Z', moduleTitle: `Week ${week} module` });
+    }
+    earned.sort((a, b) => a.week - b.week);
+  }
+  return earned;
 }
 
 function baseQuiz(slug: string): Quiz {

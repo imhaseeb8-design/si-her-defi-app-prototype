@@ -15,7 +15,7 @@ import type { Badges, Certificate, Module, OnboardStatus, Partner, Profile } fro
 import { Arrow } from '@/components/ui/Arrow';
 
 const TOTAL_BADGES = 12;
-const sectionTitle = 'text-[11.5px] font-medium text-[#8e8ea6]';
+const sectionTitle = 'text-[17px] font-medium tracking-[-0.01em] text-[#45465f]';
 
 const CalendarIcon = ({ className = 'size-3.5 text-[#7954ad]', strokeWidth = '1.7', rx = '2' }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
@@ -368,9 +368,25 @@ export default function DashboardPage() {
               <span className="text-[13px] font-medium text-[#151534] tabular-nums">{earned}<span className="font-medium text-[#9a9cbd]"> / {TOTAL_BADGES}</span></span>
             </div>
             <BadgeSlots modules={modules} badges={badges} />
-            <p className="mt-3 text-[12.5px] leading-5 text-[#7e7e96]">{earned > 0 ? 'Every badge is a passed quiz. Your certificate lists the ones you earn.' : 'Pass each week’s quiz to earn that partner’s badge for your certificate.'}</p>
+            {earned > 0 ? (
+              <ul className="mt-4 grid grid-cols-12 gap-1.5" aria-label="Your badges">
+                {badges!.badges.map((b) => (
+                  <li key={b.id} title={`Week ${b.week} · ${b.moduleTitle ?? b.name}`} className="max-w-10">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={assetPath(b.image)} alt={b.name} className="aspect-[8/9] w-full object-contain drop-shadow-[0_2px_4px_rgba(94,50,149,0.25)]" />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-3 text-[12.5px] leading-5 text-[#7e7e96]">Pass each week’s quiz to earn that partner’s badge for your certificate.</p>
+            )}
           </div>
-          {nextBadge && (
+          {earned >= TOTAL_BADGES ? (
+            <p className="mt-4 flex items-center gap-2 border-t border-[#f0f0f6] pt-4 text-[12.5px] text-[#7e7e96]">
+              <span className="grid size-4 shrink-0 place-items-center rounded-full bg-[#dcfce7] text-[#16a34a]"><svg viewBox="0 0 12 12" aria-hidden="true" className="size-2.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="2.5 6 5 8.5 9.5 3.5" /></svg></span>
+              <span className="min-w-0 truncate"><span className="font-medium text-[#151534]">All {TOTAL_BADGES} badges earned.</span> They’re all on your certificate.</span>
+            </p>
+          ) : nextBadge && (
             <p className="mt-4 flex items-center gap-2 border-t border-[#f0f0f6] pt-4 text-[12.5px] text-[#7e7e96]">
               <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4 shrink-0 text-[#9b4dff]" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><path d="M8 1.5l5.6 3.25v6.5L8 14.5l-5.6-3.25v-6.5z" /></svg>
               <span className="min-w-0 truncate">Next badge: <span className="font-medium text-[#151534]">Week {String(nextBadge.week).padStart(2, '0')} · {nextBadge.title}</span></span>
@@ -380,16 +396,16 @@ export default function DashboardPage() {
       </div>
 
       <section className="space-y-3">
-        <h2 className={sectionTitle}>Start here</h2>
+        <h2 className={sectionTitle}>{status.part1Done ? 'Your onboarding' : 'Begin your journey'}</h2>
         <StartHere status={status} />
       </section>
 
       <section className="space-y-5">
         <div className="flex items-center justify-between">
           {unlocked ? (
-            <><h2 className={sectionTitle}>Modules & credentials</h2><span className="text-[11px] font-medium text-[#16a34a]">● Certificate unlocked</span></>
+            <><h2 className={sectionTitle}>Your learning path</h2><span className="text-[12.5px] font-medium text-[#16a34a]">● Certificate unlocked</span></>
           ) : (
-            <><h2 className={sectionTitle}>This week</h2><span className="text-[11px] text-[#9ca3af]">{status.part1Done ? 'Pass the quiz to unlock your certificate' : 'Opens once Part 1 is done'}</span></>
+            <><h2 className={sectionTitle}>Your learning path</h2><span className="text-[12.5px] text-[#8e8ea6]">{status.part1Done ? 'Pass the quiz to unlock your certificate' : 'Opens once Part 1 is done'}</span></>
           )}
         </div>
         <div className="space-y-4">
@@ -409,7 +425,7 @@ export default function DashboardPage() {
       {partners.length > 0 && (
         <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className={sectionTitle}>From our partners ({partners.length})</h2>
+            <h2 className={sectionTitle}>From our partners</h2>
             <span className="text-[11px] text-[#9ca3af]">Verified ecosystem partners · opens in new tab</span>
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">{partners.map((p) => <PartnerCard key={p.id} p={p} />)}</div>
