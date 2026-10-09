@@ -12,3 +12,7 @@ Screenshot: `quiz-out-of-attempts.jpg` (out of attempts, skip confirmation, skip
 
 ## Removed
 - The "Next up: {session} — date · Add to calendar ↗" line under the video. Upcoming sessions live on the dashboard.
+
+## Badge earned → certificate stays locked
+Screenshot: `quiz-ticks-badge.jpg`.
+- The "Badge earned" dialog and the module's Completed card only offer **View your certificate** when the certificate is unlocked (every session and quiz done). Otherwise the main button is **Back to dashboard** and the copy says "Your certificate unlocks once every session and its quiz are done." On the last quiz it says the certificate is unlocked and ready to mint.

@@ -9,6 +9,7 @@ import { assetPath, certificateApi, modulesApi } from '@/lib/api';
 import { shortAddress } from '@/lib/format';
 import type { Certificate } from '@/lib/types';
 import { Arrow } from '@/components/ui/Arrow';
+import { Check } from '@/components/ui/Check';
 
 const card = 'rounded-2xl border border-[#ececf2] bg-white p-5 sm:p-6 shadow-2xs space-y-3.5';
 const secondary = 'w-full rounded-xl border border-[#e2e2ec] py-2.5 text-center text-[12.5px] font-medium text-[#171730] transition hover:bg-gray-50 active:scale-[0.99] cursor-pointer block disabled:opacity-50 disabled:cursor-wait';
@@ -98,7 +99,7 @@ export default function CertificatePage() {
                 <ButtonLink href={addToProfile} external showIcon={false}>Add to LinkedIn profile <Arrow dir="up-right" /></ButtonLink>
                 <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(verifyUrl)}`} target="_blank" rel="noopener noreferrer" className="w-full rounded-xl bg-[#f4effe] py-2.5 text-center text-[12.5px] font-medium text-[#7c2ae8] transition hover:bg-[#ede5fc] active:scale-[0.99] cursor-pointer block">Share on LinkedIn <Arrow dir="up-right" /></a>
                 <button type="button" disabled={downloading} onClick={download} className={secondary}>{downloading ? 'Preparing image…' : 'Download image'}</button>
-                <button type="button" onClick={async () => { await navigator.clipboard?.writeText(verifyUrl).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 1600); }} className={secondary}>{copied ? 'Link copied ✓' : 'Copy verification link'}</button>
+                <button type="button" onClick={async () => { await navigator.clipboard?.writeText(verifyUrl).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 1600); }} className={secondary}>{copied ? <span className="inline-flex items-center gap-1.5">Link copied <Check className="size-4" /></span> : 'Copy verification link'}</button>
                 <a href={assetPath(`/verify/${cert.verificationCode}`)} target="_blank" rel="noopener noreferrer" className={secondary}>View public page <Arrow dir="up-right" /></a>
               </div>
               <p className="text-[10.5px] text-[#8e8ea6] leading-relaxed">“Add to profile” puts it under Licenses & certifications; sharing posts it to your feed.</p>

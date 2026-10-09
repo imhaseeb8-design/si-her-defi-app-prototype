@@ -13,6 +13,7 @@ import { assetPath, badgeApi, certificateApi, modulesApi, onboardApi, partnerApi
 import { firstName, sessionWhen, shortAddress, tagCase } from '@/lib/format';
 import type { Badges, Certificate, Module, OnboardStatus, Partner, Profile } from '@/lib/types';
 import { Arrow } from '@/components/ui/Arrow';
+import { Check } from '@/components/ui/Check';
 
 const TOTAL_BADGES = 12;
 const SESSIONS_STEP = 3;
@@ -107,7 +108,7 @@ function StartHere({ status }: { status: OnboardStatus }) {
         <ol className="divide-y divide-[#f0f0f5]">
           <li className="flex items-center gap-4 p-4 sm:px-5">
             <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#ecfdf3] text-[#16a34a]">
-              <svg viewBox="0 0 12 12" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="2.5 6 5 8.5 9.5 3.5" /></svg>
+              <Check className="size-5" />
             </span>
             <div className="min-w-0 flex-1">
               <p className="text-[12px] text-[#16a34a]">Part 1 · Done</p>
@@ -175,7 +176,7 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
               {upcoming && (
                 <button type="button" onClick={() => onSchedule(m)} className="rounded-full border border-white/30 bg-white/15 backdrop-blur-sm px-4 py-2 text-[12px] font-medium text-white hover:bg-white/25 active:scale-[0.99] transition cursor-pointer flex items-center gap-1.5">
                   <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5 text-current" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="12" height="11" rx="2" /><path d="M2 7h12M5 1.5v3M11 1.5v3" /></svg>
-                  <span>{m.isScheduled ? 'Added to calendar ✓' : 'Add to calendar'}</span>
+                  <span>{m.isScheduled ? <span className="inline-flex items-center gap-1">Added to calendar <Check className="size-3.5" /></span> : 'Add to calendar'}</span>
                 </button>
               )}
             </>
@@ -220,7 +221,7 @@ function SessionCard({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => 
       {m.sessionState === 'upcoming' ? (
         m.isScheduled ? (
           <button type="button" onClick={() => onSchedule(m)} className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#bbf7d0] bg-[#f0fdf4] px-4 text-[14px] font-medium text-[#16a34a] transition hover:bg-[#e6fbec]">
-            <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.5 8.5l3 3 6-6.5" /></svg><span>Added to calendar</span>
+            <Check className="size-4" /><span>Added to calendar</span>
           </button>
         ) : (
           <Button size="md" showIcon={false} onClick={() => onSchedule(m)} className="shrink-0 max-sm:w-full">
@@ -419,7 +420,7 @@ export default function DashboardPage() {
           </div>
           {earned >= TOTAL_BADGES ? (
             <p className="mt-4 flex items-center gap-2 border-t border-[#f0f0f6] pt-4 text-[12.5px] text-[#7e7e96]">
-              <span className="grid size-4 shrink-0 place-items-center rounded-full bg-[#dcfce7] text-[#16a34a]"><svg viewBox="0 0 12 12" aria-hidden="true" className="size-2.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="2.5 6 5 8.5 9.5 3.5" /></svg></span>
+              <span className="grid size-4 shrink-0 place-items-center rounded-full bg-[#dcfce7] text-[#16a34a]"><Check className="size-3.5" /></span>
               <span className="min-w-0 truncate"><span className="font-medium text-[#151534]">All {TOTAL_BADGES} badges earned.</span> They’re all on your certificate.</span>
             </p>
           ) : nextBadge && (

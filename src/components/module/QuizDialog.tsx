@@ -8,6 +8,7 @@ import { ApiErrorResponse, errorMessage, quizApi } from '@/lib/api';
 import { dayTime } from '@/lib/format';
 import type { Module, Quiz, QuizAnswer, QuizHint, QuizResult } from '@/lib/types';
 import { Arrow } from '@/components/ui/Arrow';
+import { Check } from '@/components/ui/Check';
 
 export function HintButton({ hint, onRewatch }: { hint: QuizHint; onRewatch?: (h: QuizHint) => void }) {
   const inner = (
@@ -92,13 +93,15 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt="" className="mx-auto my-2 size-[84px] object-contain drop-shadow-[0_10px_20px_rgba(124,42,232,0.35)]" src={result.badgeEarned?.image ?? quiz.badge.image} />
           <h3 id="quiz-result-title" className="mt-4 text-[21px] font-medium text-[#171730]">Badge earned</h3>
-          <p className="mt-2 text-[12px] leading-relaxed text-[#5f5f7a] max-w-xs mx-auto">{badgeName} is yours. It’s on your dashboard now and counts toward the certificate you mint at the end of the cohort.</p>
+          <p className="mt-2 text-[12px] leading-relaxed text-[#5f5f7a] max-w-xs mx-auto">{badgeName} is yours. {result.certificateUnlocked ? 'That was the last one: your certificate is unlocked and ready to mint on Base.' : 'It’s on your dashboard now. Your certificate unlocks once every session and its quiz are done.'}</p>
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#bbf7d0] bg-[#f0fdf4] px-3 py-1 text-[11px] font-medium text-[#16a34a]">✓ {result.score} of {result.totalQuestions} correct</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#bbf7d0] bg-[#f0fdf4] px-3 py-1 text-[11px] font-medium text-[#16a34a]"><Check className="size-3.5" />{result.score} of {result.totalQuestions} correct</span>
             {result.certificateUnlocked && <span className="inline-flex items-center gap-1.5 rounded-full border border-[#eedffe] bg-[#f4effe] px-3 py-1 text-[11px] font-medium text-[#7c2ae8]">Certificate unlocked</span>}
           </div>
           <div className="mt-6 space-y-2.5">
-            <Button onClick={() => router.push('/certificate')}>View your certificate</Button>
+            {result.certificateUnlocked
+              ? <Button onClick={() => router.push('/certificate')}>View your certificate</Button>
+              : <Button onClick={() => router.push('/dashboard')}>Back to dashboard</Button>}
             <div className="grid grid-cols-2 gap-2">
               <button type="button" onClick={onClose} className="rounded-xl border border-[#e2e2ec] py-2.5 text-[12px] font-medium text-[#5f5f7a] hover:bg-gray-50 transition cursor-pointer">Back to module</button>
               <a href={shareUrl(`I just earned the "${badgeName}" badge in the Si Her DeFi cohort 🎉`)} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-[#f4effe] py-2.5 text-center text-[12px] font-medium text-[#7c2ae8] transition hover:bg-[#ede5fc]">Share on LinkedIn <Arrow dir="up-right" /></a>
@@ -156,11 +159,11 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
           const selected = answered?.selectedOption === o.key || picking === o.key;
           let box = 'border border-[#ececf2] bg-white hover:border-[#7c2ae8] hover:bg-[#faf8ff]';
           let dot = 'border border-[#d8d8e5] text-[#5f5f7a] bg-white';
-          let glyph = o.key;
+          let glyph: React.ReactNode = o.key;
           if (answered && selected) {
             box = answered.isCorrect ? 'border-2 border-[#16a34a] bg-[#f0fdf4]' : 'border-2 border-[#ef4444] bg-[#fef2f2]';
             dot = answered.isCorrect ? 'bg-[#16a34a] text-white' : 'bg-[#ef4444] text-white';
-            glyph = answered.isCorrect ? '✓' : '✕';
+            glyph = answered.isCorrect ? <Check className="size-3" strokeWidth={2.6} /> : '✕';
           } else if (answered) box = 'border border-[#ececf2] bg-white opacity-60';
           else if (selected) box = 'border-2 border-[#7c2ae8] bg-[#faf8ff]';
           return (
@@ -178,7 +181,7 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
       </div>
       {answered?.isCorrect && answered.explanation && (
         <div className="mt-4 rounded-xl border border-[#bbf7d0] bg-[#f0fdf4] p-3.5 text-[11.5px] leading-relaxed text-[#166534] flex items-start gap-2.5">
-          <span className="font-medium text-[13px] text-[#16a34a]">✓</span><span>{answered.explanation}</span>
+          <span className="mt-0.5 text-[#16a34a]"><Check className="size-4" /></span><span>{answered.explanation}</span>
         </div>
       )}
       {answered && !answered.isCorrect && (

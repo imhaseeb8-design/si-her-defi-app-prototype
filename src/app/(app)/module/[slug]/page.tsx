@@ -14,6 +14,7 @@ import { modulesApi, onboardApi, quizApi } from '@/lib/api';
 import { dayTime, timeUntil } from '@/lib/format';
 import type { Module, Quiz, QuizHint } from '@/lib/types';
 import { Arrow } from '@/components/ui/Arrow';
+import { Check } from '@/components/ui/Check';
 
 const card = 'rounded-2xl border border-[#ececf2] bg-white p-5 sm:p-6 shadow-2xs space-y-4';
 const share = (text: string) => `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(text)}`;
@@ -48,7 +49,7 @@ function OutOfAttempts({ m, quiz, last, onRestart, onSkip }: { m: Module; quiz: 
   );
 }
 
-function QuizCard({ m, quiz, part1Done, onStart, onChanged }: { m: Module; quiz: Quiz; part1Done: boolean; onStart: () => void; onChanged: () => Promise<void> }) {
+function QuizCard({ m, quiz, part1Done, onStart, onChanged, certificateUnlocked }: { m: Module; quiz: Quiz; part1Done: boolean; onStart: () => void; onChanged: () => Promise<void>; certificateUnlocked: boolean }) {
   const last = quiz.lastResult;
   if (quiz.isPassed) {
     return (
@@ -58,11 +59,13 @@ function QuizCard({ m, quiz, part1Done, onStart, onChanged }: { m: Module; quiz:
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt="" className="size-12 object-contain" src={quiz.badge.image} />
           <div>
-            <h4 className="text-[15px] font-medium text-[#171730]">Badge earned ✓</h4>
+            <h4 className="flex items-center gap-1.5 text-[15px] font-medium text-[#171730]">Badge earned <Check className="size-4 text-[#16a34a]" /></h4>
             <p className="text-[12px] text-[#5f5f7a]">{quiz.badge.name}</p>
           </div>
         </div>
-        <ButtonLink href="/certificate">View your certificate</ButtonLink>
+        {certificateUnlocked
+          ? <ButtonLink href="/certificate">View your certificate</ButtonLink>
+          : <ButtonLink href="/dashboard" variant="primary">Back to dashboard</ButtonLink>}
       </div>
     );
   }
@@ -90,7 +93,7 @@ function QuizCard({ m, quiz, part1Done, onStart, onChanged }: { m: Module; quiz:
         <p className="mt-1.5 text-[12px] leading-relaxed text-[#5f5f7a]">Answer all {quiz.totalQuestions} correctly to earn the badge. {quiz.maxAttempts} attempts — if you don’t pass, rewatch and retry.</p>
       </div>
       <ul className="space-y-2.5 text-[12px] text-[#5f5f7a]">
-        <li className="flex items-center gap-2.5"><span className="grid size-4 place-items-center rounded border border-[#b8b8cc] text-[10px]">✓</span><span>{quiz.totalQuestions} questions · all {quiz.passingScore} correct</span></li>
+        <li className="flex items-center gap-2.5"><span className="grid size-4 place-items-center rounded border border-[#b8b8cc] text-[#5f5f7a]"><Check className="size-3" /></span><span>{quiz.totalQuestions} questions · all {quiz.passingScore} correct</span></li>
         <li className="flex items-center gap-2.5"><span className="grid size-4 place-items-center text-[12px] text-[#8e8ea6]">★</span><span>Attempt {Math.min(quiz.attemptsUsed + 1, quiz.maxAttempts)} of {quiz.maxAttempts}</span></li>
       </ul>
       {retry && last && <p className="rounded-xl bg-[#fffbeb] p-3 text-[11.5px] text-[#92400e]">Last attempt: {last.score} of {last.totalQuestions}. Review the hints below the video, then try again.</p>}
@@ -212,7 +215,7 @@ export default function ModulePage() {
         </div>
 
         <div className="space-y-5 lg:col-span-4">
-          <QuizCard m={m} quiz={quiz} part1Done={part1Done} onStart={() => setQuizOpen(true)} onChanged={async () => { await load(); session.refresh(); }} />
+          <QuizCard m={m} quiz={quiz} part1Done={part1Done} certificateUnlocked={session.certificateUnlocked} onStart={() => setQuizOpen(true)} onChanged={async () => { await load(); session.refresh(); }} />
           {m.speakers.length > 0 && (
             <div className="space-y-3">
               <h3 className="px-1 text-[11px] font-medium text-[#8e8ea6]">Speakers ({m.speakers.length})</h3>

@@ -6,6 +6,7 @@ import { modulesApi } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
 import { sessionRange, tz } from '@/lib/format';
 import type { Module } from '@/lib/types';
+import { Check } from '@/components/ui/Check';
 
 type Provider = 'google' | 'apple' | 'outlook' | 'proton' | 'ics';
 const CTA: Record<Provider, string> = {
@@ -115,7 +116,7 @@ export function ScheduleModal({ module: m, onClose, onScheduled }: { module: Mod
         <div className="mt-3 flex items-center justify-between px-1">
           <button type="button" onClick={async () => { await navigator.clipboard?.writeText(details).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 1600); }} className="inline-flex items-center gap-1.5 text-[11.5px] font-medium text-[#7c2ae8] hover:text-[#5e19b5] transition cursor-pointer">
             <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-            <span>{copied ? 'Copied ✓' : 'Copy event details to clipboard'}</span>
+            <span>{copied ? <span className="inline-flex items-center gap-1.5">Copied <Check className="size-4" /></span> : 'Copy event details to clipboard'}</span>
           </button>
         </div>
         <div className="mt-4 space-y-2.5">

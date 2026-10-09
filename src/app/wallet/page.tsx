@@ -108,7 +108,7 @@ export default function WalletPage() {
                 <span className="grid size-14 place-items-center rounded-full bg-[#dcfce7] text-[#16a34a]">
                   <svg viewBox="0 0 24 24" className="size-7" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="9" strokeWidth="1.8" />
-                    <path d="m8.5 12.2 2.4 2.4 4.6-5" />
+                    <path d="M8 12.6l1.72 1.8c.45.46.67.7.95.7s.5-.24.95-.7L16 9" />
                   </svg>
                 </span>
                 <div>

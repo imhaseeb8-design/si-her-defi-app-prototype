@@ -9,6 +9,7 @@ import { CertificateArt } from '@/components/certificate/CertificateArt';
 import { Spinner } from '@/components/onboarding/OnboardingShell';
 import { assetPath, certificateApi } from '@/lib/api';
 import type { Certificate } from '@/lib/types';
+import { Check } from '@/components/ui/Check';
 
 export default function VerifyCertificatePage() {
   const { code } = useParams<{ code: string }>();
@@ -33,7 +34,7 @@ export default function VerifyCertificatePage() {
         ) : (
           <>
             <div className="flex items-center gap-2.5 rounded-xl border border-[#bbf7d0] bg-[#f0fdf4] px-4 py-3 text-[12.5px] text-[#166534]">
-              <span className="grid size-5 place-items-center rounded-full bg-[#16a34a] text-[11px] font-medium text-white">✓</span>
+              <span className="grid size-5 place-items-center rounded-full bg-[#16a34a] text-white"><Check className="size-3.5" strokeWidth={2.4} /></span>
               Valid credential · issued to <span className="font-medium">{cert.recipientName}</span> · ID {cert.verificationCode}
             </div>
             <CertificateArt cert={cert} preview={false} weekTitles={{}} />

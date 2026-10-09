@@ -12,6 +12,7 @@ import { tagCase } from '@/lib/format';
 import { IntroVideo, WATCH_THRESHOLD } from '@/components/onboarding/IntroVideo';
 import type { Part1, Part1Progress } from '@/lib/types';
 import { Arrow } from '@/components/ui/Arrow';
+import { Check } from '@/components/ui/Check';
 
 
 type StepState = 'done' | 'current' | 'todo';
@@ -23,7 +24,7 @@ function Step({ n, state, title, sub, children }: { n: number; state: StepState;
   const dot = state === 'done' ? 'bg-[#16a34a] text-white' : state === 'current' ? 'bg-[#7c2ae8] text-white' : 'border border-[#dcdce8] text-[#8e8ea6]';
   return (
     <div className="flex items-start gap-3">
-      <span className={`grid size-5 shrink-0 place-items-center rounded-full text-[11px] font-medium mt-0.5 ${dot}`}>{state === 'done' ? '✓' : n}</span>
+      <span className={`grid size-5 shrink-0 place-items-center rounded-full text-[11px] font-medium mt-0.5 ${dot}`}>{state === 'done' ? <Check className="size-3.5" strokeWidth={2.4} /> : n}</span>
       <div className="min-w-0 flex-1">
         <p className="text-[13px] font-medium text-[#171730]">{title}</p>
         <p className="text-[11px] text-[#8e8ea6]">{sub}</p>
@@ -106,7 +107,7 @@ export default function OnboardPage() {
               </div>
               {progress.videoWatched ? (
                 <span className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl border border-[#bbf7d0] bg-[#f0fdf4] px-4 text-[14px] font-medium text-[#16a34a]">
-                  <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.5 8.5l3 3 6-6.5" /></svg>Watched
+                  <Check className="size-4" />Watched
                 </span>
               ) : (
                 <div className="w-full shrink-0 sm:w-44" role="progressbar" aria-label="Video watched" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(watchFraction * 100)}>
@@ -149,7 +150,7 @@ export default function OnboardPage() {
                           onClick={() => { if (!followed) save({ followedSocialIds: [...progress.followedSocialIds, soc.id] }); }}
                           className={`inline-flex shrink-0 items-center gap-1 rounded-lg border px-2.5 py-1 text-[11.5px] font-medium transition ${followed ? 'border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]' : 'border-[#d4c2f5] bg-white text-[#7c2ae8] hover:bg-[#f8f5fe]'}`}
                         >
-                          {followed ? 'Followed ✓' : <>Follow <Arrow dir="up-right" /></>}
+                          {followed ? <>Followed <Check className="size-3.5" /></> : <>Follow <Arrow dir="up-right" /></>}
                         </a>
                         )}
                       </div>
@@ -222,7 +223,7 @@ export default function OnboardPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
           <div role="dialog" aria-modal="true" aria-labelledby="onboard-done-title" className="relative w-full rounded-2xl bg-white p-6 sm:p-7 shadow-2xl border border-[#ececf2] max-w-md text-center">
             <span className="mx-auto grid size-12 place-items-center rounded-full bg-[#dcfce7] text-[#16a34a]">
-              <svg className="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+              <Check className="size-7" />
             </span>
             <h3 id="onboard-done-title" className="mt-4 text-[20px] font-medium text-[#171730]">{c.completion.title}</h3>
             <p className="mt-2 text-[12.5px] leading-relaxed text-[#5f5f7a] max-w-xs mx-auto">{c.completion.message}</p>

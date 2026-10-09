@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { assetPath, authApi } from '@/lib/api';
+import { Check as FigmaCheck } from '@/components/ui/Check';
 
 export type HeaderRight = { kind: 'registered' } | { kind: 'help' } | { kind: 'account'; email: string };
 
@@ -35,9 +36,7 @@ export function OnboardingHeader({ right }: { right: HeaderRight }) {
           <div className="flex items-center gap-2.5">
             <div className="flex items-center gap-1.5 rounded-full border border-[#e3e3ed] bg-white px-2.5 py-1 shadow-xs">
               <span className="grid size-4 place-items-center rounded-full bg-[#16a34a] text-white">
-                <svg className="size-2.5" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="2.5 6 5 8.5 9.5 3.5" />
-                </svg>
+                <Check />
               </span>
               <span className="text-[12px] font-medium text-[#171730]">{right.email}</span>
             </div>
@@ -51,11 +50,8 @@ export function OnboardingHeader({ right }: { right: HeaderRight }) {
   );
 }
 
-const Check = () => (
-  <svg viewBox="0 0 12 12" aria-hidden="true" className="size-2.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="2.5 6 5 8.5 9.5 3.5" />
-  </svg>
-);
+// the Figma tick (components/ui/Check), sized for the small step dots
+const Check = () => <FigmaCheck className="size-3" strokeWidth={2.6} />;
 
 /** step: 0 = email, 1 = profile, 2 = wallet */
 export function Stepper({ step, zeroWidth = 'calc(0% - 0px)' }: { step: 0 | 1 | 2; zeroWidth?: string }) {

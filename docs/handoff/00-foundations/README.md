@@ -96,3 +96,6 @@ Figma: component set **Sidebar item** `1040:37` (Post-UX-Fixes, next to the Butt
 - "Back to dashboard", "Back to profile", Review, Edit profile, Connect, "Take the quiz", Back in the questions modal and similar: **no underline on hover**. A light lilac shape (`#F3EBFF`, radius 8, 3px × 8px padding) appears behind the text instead, a shade darker while pressed, with the button focus ring on keyboard focus (`after-text-cta-hover.png`).
 - One class, `.link-cta` in `globals.css`; negative side margins keep the text aligned where it was.
 - Links inside a sentence (e.g. "Verify at certifications…" on the certificate) stay plain links.
+
+## Tick icon
+- Every check mark uses the Figma tick (`check` `1045:1441`): `<Check />` in `src/components/ui/Check.tsx` (24px viewBox, takes the text colour, size via class). No more "✓" text characters or other tick SVGs: quiz answers and score, onboarding steps and follows, "Added to calendar", "Link copied", "Copied", the verified credential, the email chip, the wallet-connected icon, the completion modal.
