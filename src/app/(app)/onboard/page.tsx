@@ -18,14 +18,19 @@ const embed = (url: string) => {
 };
 
 type StepState = 'done' | 'current' | 'todo';
-function Step({ n, state, title, sub }: { n: number; state: StepState; title: string; sub: string }) {
+// Shown under the intro video. Prototype copy: in the real app these are CMS fields (e.g. video.title, video.description).
+const VIDEO_TITLE = 'A welcome from Kara Howard';
+const VIDEO_DESCRIPTION = 'Kara Howard, Co-Founder and Ecosystem Lead at SI<3>, welcomes you to the cohort. She covers what Si Her DeFi is, how the weekly sessions and quizzes work, and how you earn your badges and certificate.';
+
+function Step({ n, state, title, sub, children }: { n: number; state: StepState; title: string; sub: string; children?: React.ReactNode }) {
   const dot = state === 'done' ? 'bg-[#16a34a] text-white' : state === 'current' ? 'bg-[#7c2ae8] text-white' : 'border border-[#dcdce8] text-[#8e8ea6]';
   return (
     <div className="flex items-start gap-3">
       <span className={`grid size-5 shrink-0 place-items-center rounded-full text-[11px] font-medium mt-0.5 ${dot}`}>{state === 'done' ? '✓' : n}</span>
-      <div>
+      <div className="min-w-0 flex-1">
         <p className="text-[13px] font-medium text-[#171730]">{title}</p>
         <p className="text-[11px] text-[#8e8ea6]">{sub}</p>
+        {children}
       </div>
     </div>
   );
@@ -98,39 +103,26 @@ export default function OnboardPage() {
                 <p className="absolute inset-0 grid place-items-center text-[12px] text-white/60">The intro video will appear here soon.</p>
               )}
             </div>
-            {!progress.videoWatched && (
-              <div className="flex justify-end">
-                <button type="button" onClick={() => save({ videoWatched: true })} className="text-[11.5px] font-medium text-[#7c2ae8] hover:underline cursor-pointer">I’ve watched it ✓</button>
+            {/* what the video is about, and the button to mark it watched */}
+            <div className="flex flex-col gap-4 rounded-2xl border border-[#ececf2] bg-white p-4 sm:flex-row sm:items-center sm:p-5">
+              <div className="min-w-0 flex-1">
+                <p className="text-[15px] font-medium text-[#151534]">{VIDEO_TITLE}</p>
+                <p className="mt-1 text-[12.5px] leading-5 text-[#5f5f7a]">{VIDEO_DESCRIPTION}</p>
+                <p className="mt-1.5 text-[12px] text-[#8e8ea6]">{c.video.minutes} minutes</p>
               </div>
-            )}
-          </div>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-[13.5px] font-medium text-[#171730]">{c.socialsHeading}</h2>
-              <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${socialsDone ? 'bg-[#dcfce7] text-[#16a34a]' : 'bg-[#fef3c7] text-[#b45309]'}`}>{socialsDone ? 'Done' : 'Required'}</span>
+              {progress.videoWatched ? (
+                <span className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl border border-[#bbf7d0] bg-[#f0fdf4] px-4 text-[14px] font-medium text-[#16a34a]">
+                  <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.5 8.5l3 3 6-6.5" /></svg>Watched
+                </span>
+              ) : (
+                <Button size="md" showIcon={false} onClick={() => save({ videoWatched: true })} className="shrink-0 max-sm:w-full">
+                  <span className="inline-flex items-center gap-2"><svg viewBox="0 0 16 16" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.5 8.5l3 3 6-6.5" /></svg><span>I’ve watched it</span></span>
+                </Button>
+              )}
             </div>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {socials.map((s) => {
-                const followed = progress.followedSocialIds.includes(s.id);
-                return (
-                  <div key={s.id} className="flex items-center justify-between gap-3 rounded-xl border border-[#ececf2] bg-white p-3.5 shadow-xs">
-                    <div className="flex min-w-0 items-center gap-3">
-                      <span className={`grid size-8 shrink-0 place-items-center rounded-lg text-white font-medium text-xs ${s.platform === 'x' ? 'bg-black' : 'bg-[#0077b5]'}`}>{s.platform === 'x' ? '𝕏' : 'in'}</span>
-                      <div className="min-w-0">
-                        <p className="truncate text-[12.5px] font-medium text-[#171730]">{s.label}</p>
-                        <p className="truncate text-[11px] text-[#8e8ea6]">{s.handle}</p>
-                      </div>
-                    </div>
-                    <a
-                      href={s.url} target="_blank" rel="noopener noreferrer"
-                      onClick={() => { if (!followed) save({ followedSocialIds: [...progress.followedSocialIds, s.id] }); }}
-                      className={`shrink-0 rounded-full border px-3.5 py-1 text-[11.5px] font-medium transition cursor-pointer ${followed ? 'border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]' : 'border-[#e2e2ec] text-[#171730] hover:bg-gray-50 hover:border-[#7c2ae8]'}`}
-                    >
-                      {followed ? 'Followed ✓' : <>Follow <Arrow dir="up-right" /></>}
-                    </a>
-                  </div>
-                );
-              })}
+            <div className="flex items-start gap-2.5 rounded-xl bg-[#f0eafb] px-4 py-3 text-[12.5px] leading-5 text-[#5b21b6]">
+              <svg viewBox="0 0 16 16" aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-[#7c2ae8]" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><circle cx="8" cy="8" r="6.25" /><path d="M8 7.25v3.5M8 5.25h.01" /></svg>
+              <span>{c.taskNote}</span>
             </div>
           </div>
         </div>
@@ -139,12 +131,27 @@ export default function OnboardPage() {
             <h3 className="text-[11px] font-medium text-[#8e8ea6]">Your task</h3>
             <div className="space-y-4">
               <Step n={1} state={steps[0]} title={c.tasks.video} sub={`${c.video.minutes} minutes · ${progress.videoWatched ? 'watched' : 'start here'}`} />
-              <Step n={2} state={steps[1]} title={c.tasks.socials} sub={`${followedCount} of ${required.length} followed · Both required`} />
+              <Step n={2} state={steps[1]} title={c.tasks.socials} sub={`${followedCount} of ${required.length} followed · Both required`}>
+                <div className="mt-2.5 space-y-2">
+                  {socials.map((soc) => {
+                    const followed = progress.followedSocialIds.includes(soc.id);
+                    return (
+                      <div key={soc.id} className="flex items-center gap-2.5 rounded-xl border border-[#ececf2] bg-[#fbfbfd] p-2">
+                        <span className={`grid size-7 shrink-0 place-items-center rounded-lg text-[11px] font-medium text-white ${soc.platform === 'x' ? 'bg-black' : 'bg-[#0077b5]'}`}>{soc.platform === 'x' ? '𝕏' : 'in'}</span>
+                        <span className="min-w-0 flex-1 truncate text-[12.5px] font-medium text-[#45465f]" title={soc.handle}>{soc.platform === 'x' ? 'X' : 'LinkedIn'}</span>
+                        <a
+                          href={soc.url} target="_blank" rel="noopener noreferrer"
+                          onClick={() => { if (!followed) save({ followedSocialIds: [...progress.followedSocialIds, soc.id] }); }}
+                          className={`inline-flex shrink-0 items-center gap-1 rounded-lg border px-2.5 py-1 text-[11.5px] font-medium transition ${followed ? 'border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]' : 'border-[#d4c2f5] bg-white text-[#7c2ae8] hover:bg-[#f8f5fe]'}`}
+                        >
+                          {followed ? 'Followed ✓' : <>Follow <Arrow dir="up-right" /></>}
+                        </a>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Step>
               <Step n={3} state={steps[2]} title={c.tasks.questions} sub={`About ${c.questionsMinutes} minutes`} />
-            </div>
-            <div className="rounded-xl bg-[#f0eafb] p-3 text-[#5b21b6] text-[11.5px] leading-relaxed flex items-start gap-2">
-              <span className="text-[#7c2ae8] font-medium" aria-hidden="true">ℹ</span>
-              <span>{c.taskNote}</span>
             </div>
             {completed ? (
               <ButtonLink href="/dashboard">Back to dashboard</ButtonLink>
@@ -153,7 +160,7 @@ export default function OnboardPage() {
                 <Button disabled={!socialsDone} onClick={() => setQuestionIndex(Math.max(0, questions.findIndex((x) => !progress.answers[x.id]?.trim())))}>
                   {hasAnswers ? 'Resume questions' : 'Continue to questions'}
                 </Button>
-                {!socialsDone && <p className="text-center text-[11px] text-[#b45309]">Follow the required accounts above to continue.</p>}
+                {!socialsDone && <p className="text-center text-[11px] text-[#b45309]">Follow both accounts in step 2 to continue.</p>}
               </>
             )}
             <p className="text-center text-[11px] font-medium text-[#8e8ea6]">Required before the modules open</p>
