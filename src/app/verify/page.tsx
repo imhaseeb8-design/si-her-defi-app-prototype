@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useRef, useState } from 'react';
-import { OnboardingShell, Spinner, cardClass, submitClass } from '@/components/onboarding/OnboardingShell';
+import { OnboardingShell, cardClass } from '@/components/onboarding/OnboardingShell';
 import { authApi, errorMessage, nextOnboardingRoute, setAuthToken, setAuthUser } from '@/lib/api';
+import { Button } from '@/components/ui/Button';
 
 const RESEND_SECONDS = 40;
 
@@ -55,7 +56,9 @@ function VerifyForm() {
       const res = await authApi.verifyOtp(email, code);
       setAuthToken(res.token);
       setAuthUser(res.user);
-      router.replace(res.profile?.name ? nextOnboardingRoute({ name: res.profile.name, walletAddress: res.user.walletAddress }) : '/verified');
+      // Straight on to the next step — the separate "Email verified" screen was removed (Phase 2):
+      // new applicants land on Create your profile, returning ones wherever they left off.
+      router.replace(nextOnboardingRoute({ name: res.profile?.name, walletAddress: res.user.walletAddress }));
     } catch (err) {
       setError(errorMessage(err));
       setBusy(false);
@@ -95,9 +98,9 @@ function VerifyForm() {
           ))}
         </div>
         {error && <p role="alert" className="mt-3 text-center text-[12px] font-medium text-red-500">{error}</p>}
-        <button type="submit" disabled={!complete || busy} aria-busy={busy} className={`mt-5 ${submitClass(complete)}`}>
-          {busy ? (<><Spinner /> Verifying…</>) : 'Verify email'}
-        </button>
+        <div className="mt-5">
+          <Button type="submit" disabled={!complete} loading={busy} loadingLabel="Verifying…" showIcon={false}>Verify email</Button>
+        </div>
         <p className="mt-4 text-center text-[12px] text-muted">
           {left > 0 ? (
             <>Didn’t get it? Resend in <span className="font-semibold text-ink tabular-nums">{mm}:{ss}</span></>

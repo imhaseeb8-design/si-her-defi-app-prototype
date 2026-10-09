@@ -29,7 +29,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, { src: string; poster?: stri
         onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onTimeUpdate={(e) => setT(e.currentTarget.currentTime)} onLoadedMetadata={(e) => setD(e.currentTarget.duration)}
       />
       <div className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/60 ${chrome}`} />
-      <div className={`absolute top-4 left-4 right-4 flex items-center justify-between text-[11px] font-mono tracking-wider text-white/80 ${chrome}`}>
+      <div className={`absolute top-4 left-4 right-4 flex items-center justify-between text-[11px] tabular-nums text-white/80 ${chrome}`}>
         <span className="truncate max-w-[180px] sm:max-w-none text-[10px] sm:text-[11px]">{label}</span>
       </div>
       {!playing && (
@@ -58,7 +58,7 @@ export const VideoPlayer = forwardRef<PlayerHandle, { src: string; poster?: stri
                 <svg className="size-4" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
               )}
             </button>
-            <span className="font-mono text-[11.5px] select-none tabular-nums">{fmt(t)} / {fmt(d)}</span>
+            <span className="tabular-nums text-[11.5px] select-none tabular-nums">{fmt(t)} / {fmt(d)}</span>
           </div>
           <div className="flex items-center gap-2.5">
             <button type="button" onClick={() => { if (video.current) { video.current.muted = !muted; setMuted(!muted); } }} className="text-white/90 hover:text-white transition cursor-pointer p-1" aria-label={muted ? 'Unmute' : 'Mute'}>

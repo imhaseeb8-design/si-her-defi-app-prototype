@@ -3,6 +3,7 @@
 // returns the result (badge earned, or review + retry).
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/Button';
 import { ApiErrorResponse, errorMessage, quizApi } from '@/lib/api';
 import { dayTime, timeUntil } from '@/lib/format';
 import type { Module, Quiz, QuizAnswer, QuizHint, QuizResult } from '@/lib/types';
@@ -11,7 +12,7 @@ export function HintButton({ hint, onRewatch }: { hint: QuizHint; onRewatch?: (h
   const inner = (
     <>
       <div className="flex items-center gap-2">
-        <span className="font-mono font-bold text-[#d97706]">{hint.timestamp}</span>
+        <span className="tabular-nums font-bold text-[#d97706]">{hint.timestamp}</span>
         <span className="text-[#171730]">{hint.title || 'Rewatch this part of the session'}</span>
       </div>
       {onRewatch && <span className="text-[#d97706] font-bold">›</span>}
@@ -77,7 +78,7 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
       <div className="text-center">
         <h3 id="quiz-closed-title" className="text-[18px] font-bold text-[#171730]">This quiz isn’t open yet</h3>
         <p className="mt-2 text-[12.5px] leading-relaxed text-[#5f5f7a]">It opens after the live session on {dayTime(m.scheduledDate)}.</p>
-        <button type="button" onClick={onClose} className="mt-5 rounded-full bg-[#171730] px-5 py-2 text-[12px] font-semibold text-white hover:bg-black cursor-pointer">Got it</button>
+        <div className="mt-5 flex justify-center"><Button size="md" showIcon={false} onClick={onClose}>Got it</Button></div>
       </div>
     ));
   }
@@ -96,7 +97,7 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
             {result.certificateUnlocked && <span className="inline-flex items-center gap-1.5 rounded-full border border-[#eedffe] bg-[#f4effe] px-3 py-1 text-[11px] font-semibold text-[#7c2ae8]">Certificate unlocked</span>}
           </div>
           <div className="mt-6 space-y-2.5">
-            <button type="button" onClick={() => router.push('/certificate')} className="w-full rounded-xl bg-gradient-to-r from-[#5b1ea6] via-[#7526dd] to-[#8a33ea] py-3 text-[13px] font-semibold text-white shadow-md shadow-purple-950/20 transition hover:brightness-105 cursor-pointer">View your certificate →</button>
+            <Button onClick={() => router.push('/certificate')}>View your certificate</Button>
             <div className="grid grid-cols-2 gap-2">
               <button type="button" onClick={onClose} className="rounded-xl border border-[#e2e2ec] py-2.5 text-[12px] font-semibold text-[#5f5f7a] hover:bg-gray-50 transition cursor-pointer">Back to module</button>
               <a href={shareUrl(`I just earned the "${badgeName}" badge in the Si Her DeFi cohort 🎉`)} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-[#f4effe] py-2.5 text-center text-[12px] font-semibold text-[#7c2ae8] transition hover:bg-[#ede5fc]">Share on LinkedIn ↗</a>
@@ -127,7 +128,7 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
         <div className="mt-5 flex items-center justify-between border-t border-[#f0f0f5] pt-3.5">
           <button type="button" onClick={onClose} className="text-[12px] font-medium text-[#5f5f7a] hover:text-[#171730] cursor-pointer">← Back to module</button>
           {result.attemptsRemaining > 0 && (
-            <button type="button" onClick={() => { setResult(null); setAnswers({}); setIndex(0); setAttempt((a) => a + 1); }} className="rounded-full bg-[#171730] px-4 py-2 text-[12px] font-semibold text-white hover:bg-black cursor-pointer">Try again →</button>
+            <Button size="md" onClick={() => { setResult(null); setAnswers({}); setIndex(0); setAttempt((a) => a + 1); }}>Try again</Button>
           )}
         </div>
       </div>
@@ -138,8 +139,8 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
   return frame('quiz-question-title', (
     <>
       <div className="flex items-center justify-between gap-3">
-        <span className="truncate rounded-full bg-[#f4effe] px-2.5 py-0.5 text-[9.5px] font-bold tracking-wider text-[#7c2ae8] uppercase">WEEK {String(m.week).padStart(2, '0')} QUIZ{tag ? ` · ${tag}` : ''}</span>
-        <span className="shrink-0 text-[9.5px] font-bold tracking-wider text-[#8e8ea6] uppercase">ATTEMPT {attempt} OF {quiz.maxAttempts}</span>
+        <span className="truncate rounded-full bg-[#f4effe] px-2.5 py-0.5 text-[11px] font-bold text-[#7c2ae8]">Week {String(m.week).padStart(2, '0')} quiz{tag ? ` · ${tag}` : ''}</span>
+        <span className="shrink-0 text-[11px] font-bold text-[#8e8ea6]">Attempt {attempt} of {quiz.maxAttempts}</span>
       </div>
       <div className="mt-4 flex items-center justify-between gap-3">
         <div className="flex flex-1 items-center gap-1.5">
@@ -191,7 +192,7 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
       <div className="mt-5 flex items-center justify-between border-t border-[#f0f0f5] pt-3.5">
         <button type="button" onClick={onClose} disabled={!!picking} className="text-[11.5px] font-medium text-[#5f5f7a] hover:text-[#171730] cursor-pointer disabled:opacity-50">← Close</button>
         <span className="text-[10.5px] text-[#8e8ea6]">{answered ? 'Answer locked' : 'Choose an answer — it locks once picked'}</span>
-        <button type="button" disabled={!answered} onClick={() => setIndex((i) => Math.min(i + 1, questions.length - 1))} className="rounded-full px-4 py-2 text-[12px] font-semibold transition-all shadow-xs bg-[#171730] text-white hover:bg-black cursor-pointer disabled:cursor-not-allowed disabled:bg-[#e2e2ec] disabled:text-[#a0a0b2]">Next question →</button>
+        <Button size="md" disabled={!answered} onClick={() => setIndex((i) => Math.min(i + 1, questions.length - 1))}>Next question</Button>
       </div>
     </>
   ));

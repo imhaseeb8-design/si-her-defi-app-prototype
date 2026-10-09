@@ -20,7 +20,7 @@ export default function VerifyCertificatePage() {
     <div className="min-h-screen bg-[#f8f8fc] text-[#171730]">
       <header className="flex h-16 items-center justify-between border-b border-[#ececf2] bg-white px-6 sm:px-10">
         <Link href="/login"><Image alt="Si Her DeFi Artwork" width={100} height={100} src={assetPath('/Logo · SI HER DeFi.png')} style={{ width: 'auto', height: 'auto' }} /></Link>
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-[#f9fafc] px-3 py-1 text-[10px] font-bold tracking-wider"><span className="size-2 rounded-full bg-[#0052ff]" />VERIFIED ON BASE</span>
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-[#f9fafc] px-3 py-1 text-[10px] font-bold"><span className="size-2 rounded-full bg-[#0052ff]" />Verified on Base</span>
       </header>
       <main className="mx-auto max-w-[760px] px-4 py-10 space-y-5">
         {missing ? (

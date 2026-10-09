@@ -11,6 +11,11 @@ A faithful React replica of the live Si Her DeFi app (`certifications.si3.space/
 - **No real personal data in the repo.** Captures of a real account go in `capture/_private/` (git-ignored). Unsanitized API responses go in `tools/capture/fixtures-raw/` (git-ignored).
 - **Never write to the live API.** The capture tools block every non-GET request and answer it locally.
 
+## Design rules (from Haseeb, Phase 2)
+- **Geist only, no Geist Mono.** Small tags and labels use sentence case with normal letter spacing; no ALL-CAPS tracked tags. Brand wordmarks such as "BASE" keep their own casing. Applied platform-wide (see docs/handoff/00-foundations); keep it that way on every new screen.
+- Every text field uses `LabelInput` from `src/components/ui/LabelInput.tsx` (floating label; `multiline` for textareas; optional fields say "(optional)" in the label). The 6-digit code boxes are the exception.
+- Every main CTA uses `Button` / `ButtonLink` from `src/components/ui/Button.tsx`: `variant="primary"` on light surfaces, `"white"` on dark or image backgrounds; `size="md"` in dialog footers and inline cards.
+
 ## Useful commands
 ```bash
 npm run dev                                   # prototype on :3120/siherdefi

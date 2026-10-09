@@ -7,13 +7,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { Avatar } from '@/components/app/AppShell';
 import { useSession } from '@/components/app/SessionProvider';
 import { ScheduleModal } from '@/components/dashboard/ScheduleModal';
+import { ButtonLink } from '@/components/ui/Button';
 import { Spinner } from '@/components/onboarding/OnboardingShell';
 import { assetPath, badgeApi, certificateApi, modulesApi, onboardApi, partnerApi } from '@/lib/api';
-import { dayTime, firstName, shortAddress, shortDate } from '@/lib/format';
+import { dayTime, firstName, shortAddress, shortDate, tagCase } from '@/lib/format';
 import type { Badges, Certificate, Module, OnboardStatus, Partner } from '@/lib/types';
 
 const TOTAL_BADGES = 12;
-const sectionTitle = 'text-[11.5px] font-bold tracking-wider text-[#8e8ea6] uppercase';
+const sectionTitle = 'text-[11.5px] font-bold text-[#8e8ea6]';
 
 const CalendarIcon = ({ className = 'size-3.5 text-[#7954ad]', strokeWidth = '1.7', rx = '2' }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
@@ -74,16 +75,14 @@ function StartHere({ status }: { status: OnboardStatus }) {
       <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/75 pointer-events-none" />
       <div className="relative z-10 flex h-full flex-col justify-between gap-6">
         <div>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[9.5px] font-bold tracking-wider text-white uppercase">● {card.stepLabel}</span>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[11px] font-bold text-white">● {tagCase(card.stepLabel)}</span>
           <h3 className="mt-2 text-[20px] sm:text-[22px] font-bold tracking-tight text-white">{card.title}</h3>
           <p className="mt-1.5 max-w-xl text-[12.5px] leading-relaxed text-white/80">{card.description}</p>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
           <div className="flex items-center gap-3">
-            <Link className="rounded-full bg-white px-4 py-2 text-[12.5px] font-bold text-[#171730] shadow-sm transition hover:bg-gray-100 cursor-pointer" href="/onboard">
-              {status.part1Status === 'draft' ? 'Continue →' : 'Start here →'}
-            </Link>
-            <span className="text-[10.5px] font-medium tracking-wider text-white/75 uppercase">{card.questionCount} QUESTIONS · ABOUT {card.questionsMinutes} MINUTES</span>
+            <ButtonLink href="/onboard" variant="white" size="md">{status.part1Status === 'draft' ? 'Continue' : 'Start here'}</ButtonLink>
+            <span className="text-[11.5px] font-medium text-white/75">{card.questionCount} questions · about {card.questionsMinutes} minutes</span>
           </div>
           <p className="text-[11px] text-white/65 italic">Required before Si Her DeFi modules unlock*</p>
         </div>
@@ -99,12 +98,12 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
       {m.thumbnailUrl && <Image alt="" fill sizes="(min-width: 1024px) 960px, 100vw" className="object-cover object-center opacity-30 mix-blend-screen" src={m.thumbnailUrl} />}
       <div className="absolute inset-0 bg-gradient-to-r from-[#131124]/95 via-[#1a142e]/70 to-transparent pointer-events-none" />
       <div className="relative z-10">
-        <div className="text-[10.5px] font-bold tracking-widest text-white/60 uppercase mb-2">LIVE SESSION · {m.companyTag}</div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[9.5px] font-bold tracking-wider text-white uppercase">● {m.dateLabel}</span>
+        <div className="text-[11.5px] font-bold text-white/60 mb-2">Live session · {m.companyTag}</div>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[11px] font-bold text-white">● {m.dateLabel}</span>
         <h3 className="mt-2 text-[20px] font-bold tracking-tight text-white">{m.title}</h3>
         <p className="mt-1.5 max-w-xl text-[12px] leading-relaxed text-white/80 line-clamp-2">{m.description}</p>
         <div className="mt-3 flex items-center gap-2">
-          <span className="grid size-5 place-items-center rounded bg-black/60 font-mono text-[11px] font-bold text-white/90">{m.companyTag.slice(0, 3)}</span>
+          <span className="grid size-5 place-items-center rounded bg-black/60 tabular-nums text-[11px] font-bold text-white/90">{m.companyTag.slice(0, 3)}</span>
           <span className="text-[11px] text-white/75">Presented by {m.presenter}{m.partnerName ? ` (${m.partnerName})` : ''}</span>
         </div>
       </div>
@@ -112,7 +111,7 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
         <div className="flex flex-wrap items-center gap-3">
           {part1Done ? (
             <>
-              <Link className="rounded-full bg-gradient-to-r from-[#501c9c] to-[#983cf4] px-4 py-2 text-[12.5px] font-semibold text-white shadow-sm transition hover:brightness-105 cursor-pointer" href={`/module/${m.slug}`}>Start session →</Link>
+              <ButtonLink href={`/module/${m.slug}`} size="md">Start session</ButtonLink>
               {upcoming && (
                 <button type="button" onClick={() => onSchedule(m)} className="rounded-full border border-white/30 bg-white/15 backdrop-blur-sm px-4 py-2 text-[12px] font-semibold text-white hover:bg-white/25 active:scale-[0.99] transition cursor-pointer flex items-center gap-1.5">
                   <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5 text-current" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="12" height="11" rx="2" /><path d="M2 7h12M5 1.5v3M11 1.5v3" /></svg>
@@ -125,7 +124,7 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
               <span aria-hidden="true">🔒</span>Finish Part 1 to unlock
             </Link>
           )}
-          <span className="text-[10px] font-medium tracking-wider text-white/75 uppercase">{!upcoming && m.videoUrl ? '1 VIDEO · ' : ''}{m.quiz.questionCount} QUESTIONS · 1 BADGE</span>
+          <span className="text-[11px] font-medium text-white/75">{!upcoming && m.videoUrl ? '1 video · ' : ''}{m.quiz.questionCount} questions · 1 badge</span>
         </div>
         <div className="flex items-center gap-2">
           {upcoming ? (
@@ -149,7 +148,7 @@ function SessionRow({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => v
       <div className="flex items-center gap-4">
         <span className="shrink-0 text-[#9a9cbd]"><CalendarIcon className="size-5 text-[#8688AE]" strokeWidth="1.6" rx="2.5" /></span>
         <div>
-          <span className="text-[10.5px] font-normal tracking-wider text-[#8688AE] uppercase">{m.dateLabel}</span>
+          <span className="text-[11.5px] font-normal text-[#8688AE]">{m.dateLabel}</span>
           <h3 className="text-[13.5px] font-medium text-[#4C4D77] mt-0.5">{m.title}</h3>
           <div className="mt-1 flex items-center gap-1.5">
             <span className="grid size-4 place-items-center rounded bg-[#eef0f6] text-[8.5px] font-bold text-[#8e90a8]">{m.companyTag.slice(0, 3)}</span>
@@ -198,9 +197,7 @@ function CertificateRow({ unlocked }: { unlocked: boolean }) {
       </div>
       <div className="w-full sm:w-auto flex justify-end">
         {unlocked ? (
-          <Link className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#501c9c] via-[#6d25d6] to-[#983cf4] px-4 py-2 text-[12px] font-semibold text-white shadow-xs hover:brightness-105 transition cursor-pointer shrink-0" href="/certificate">
-            <span>View Certificate</span><span>→</span>
-          </Link>
+          <ButtonLink href="/certificate" size="md">View certificate</ButtonLink>
         ) : (
           <span className="rounded-full border border-[#e2e4ef] bg-transparent px-4 py-1.5 text-[11.5px] text-[#9698b4] shrink-0">Unlocks after Week 1 quiz</span>
         )}
@@ -215,11 +212,11 @@ function ReadyToMint() {
       <Image alt="Your certificate is ready" fill sizes="(min-width: 1024px) 960px, 100vw" className="object-cover object-right" src={assetPath('/Your certificate is ready.png')} />
       <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-transparent pointer-events-none" />
       <div className="relative z-10 max-w-md space-y-3">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 px-3 py-1 text-[10px] font-bold tracking-wider text-purple-200 uppercase backdrop-blur-sm">● READY TO MINT</span>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 px-3 py-1 text-[11px] font-bold text-purple-200 backdrop-blur-sm">● Ready to mint</span>
         <h2 className="text-[24px] sm:text-[28px] font-bold tracking-tight text-white leading-tight">Your certificate is ready</h2>
         <p className="text-[12.5px] leading-relaxed text-white/80">Twelve modules, thirteen badges, one verifiable record on Base. Minting writes it to your wallet — it’s yours, not ours.</p>
         <div className="pt-2 flex flex-wrap items-center gap-4">
-          <Link className="rounded-full bg-white px-5 py-2.5 text-[13px] font-bold text-[#171730] shadow-lg transition hover:bg-gray-100 cursor-pointer" href="/certificate">Mint on Base →</Link>
+          <ButtonLink href="/certificate" variant="white" size="md">Mint on Base</ButtonLink>
           <div className="flex items-center gap-2">
             <div className="flex -space-x-1.5">
               <span className="size-5 rounded-full bg-purple-400 border border-white" />
@@ -246,7 +243,7 @@ function PartnerCard({ p }: { p: Partner }) {
         <div>
           <div className="flex items-start justify-between gap-2">
             <span className="text-[11.5px] font-bold text-[#171730]">{p.title}</span>
-            <span className="shrink-0 rounded-full bg-[#f4f4fa] px-2 py-0.5 text-[8.5px] font-bold tracking-wider text-[#7e7e96] uppercase">{p.tag}</span>
+            <span className="shrink-0 rounded-full bg-[#f4f4fa] px-2 py-0.5 text-[11px] font-bold text-[#7e7e96]">{p.tag}</span>
           </div>
           <p className="mt-2 text-[11.5px] leading-relaxed text-[#5f5f7a] line-clamp-2">{p.description}</p>
         </div>
@@ -304,7 +301,7 @@ export default function DashboardPage() {
             <a href={`https://basescan.org/address/${wallet}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-[#e4e4ed] bg-white px-3 py-1.5 shadow-xs hover:shadow-md transition" title={wallet}>
               <span className="size-2 rounded-full bg-[#0052ff]" />
               <span className="text-[11px] font-semibold text-[#171730]">Base</span>
-              <span className="font-mono text-[11px] text-[#8e8ea6]">{shortAddress(wallet)}</span>
+              <span className="tabular-nums text-[11px] text-[#8e8ea6]">{shortAddress(wallet)}</span>
               <span className="text-[10px] text-[#9ca3af]">↗</span>
             </a>
           </div>
@@ -331,7 +328,7 @@ export default function DashboardPage() {
         <section className="flex flex-col justify-between rounded-2xl border border-[#ececf2] bg-white p-6 shadow-[0_2px_12px_rgba(23,23,48,0.03)]">
           <div>
             <div className="flex items-center justify-between">
-              <h3 className="text-[11px] font-bold tracking-wider text-[#8e8ea6] uppercase">Badges earned</h3>
+              <h3 className="text-[11px] font-bold text-[#8e8ea6]">Badges earned</h3>
               <span className="text-[11px] font-semibold text-[#7c2ae8] tabular-nums">{earned} of {TOTAL_BADGES}</span>
             </div>
             <BadgeSlots modules={modules} badges={badges} />
@@ -341,23 +338,23 @@ export default function DashboardPage() {
       </div>
 
       <section className="space-y-3">
-        <h2 className={sectionTitle}>START HERE</h2>
+        <h2 className={sectionTitle}>Start here</h2>
         <StartHere status={status} />
       </section>
 
       <section className="space-y-5">
         <div className="flex items-center justify-between">
           {unlocked ? (
-            <><h2 className={sectionTitle}>MODULES & CREDENTIALS</h2><span className="text-[11px] font-semibold text-[#16a34a]">● Certificate unlocked</span></>
+            <><h2 className={sectionTitle}>Modules & credentials</h2><span className="text-[11px] font-semibold text-[#16a34a]">● Certificate unlocked</span></>
           ) : (
-            <><h2 className={sectionTitle}>THIS WEEK</h2><span className="text-[11px] text-[#9ca3af]">{status.part1Done ? 'Pass the quiz to unlock your certificate' : 'Opens once Part 1 is done'}</span></>
+            <><h2 className={sectionTitle}>This week</h2><span className="text-[11px] text-[#9ca3af]">{status.part1Done ? 'Pass the quiz to unlock your certificate' : 'Opens once Part 1 is done'}</span></>
           )}
         </div>
         <div className="space-y-4">
           {featured && <FeaturedModule m={featured} part1Done={status.part1Done} onSchedule={setScheduling} />}
           <div className="space-y-3 pt-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-[11.5px] font-semibold tracking-wider text-[#9a9cbd] uppercase">UPCOMING SESSIONS ({rest.length})</h2>
+              <h2 className="text-[11.5px] font-semibold text-[#9a9cbd]">Upcoming sessions ({rest.length})</h2>
               <span className="text-[11.5px] text-[#9a9cbd]">Add them to your calendar now</span>
             </div>
             <div className="space-y-3">{rest.map((m) => <SessionRow key={m.slug} m={m} onSchedule={setScheduling} />)}</div>
@@ -370,14 +367,14 @@ export default function DashboardPage() {
       {partners.length > 0 && (
         <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className={sectionTitle}>FROM OUR PARTNERS ({partners.length})</h2>
+            <h2 className={sectionTitle}>From our partners ({partners.length})</h2>
             <span className="text-[11px] text-[#9ca3af]">Verified ecosystem partners · opens in new tab</span>
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">{partners.map((p) => <PartnerCard key={p.id} p={p} />)}</div>
         </section>
       )}
 
-      <footer className="py-6 text-center text-[11px] text-[#9ca3af]">© 2026 · SI HER DEFI</footer>
+      <footer className="py-6 text-center text-[11px] text-[#9ca3af]">© 2026 · Si Her DeFi</footer>
 
       {scheduling && <ScheduleModal module={scheduling} onClose={() => setScheduling(null)} onScheduled={() => { load(); refresh(); }} />}
     </div>

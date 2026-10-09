@@ -5,7 +5,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Spinner } from '@/components/onboarding/OnboardingShell';
+import { Button, ButtonLink } from '@/components/ui/Button';
+import { LabelInput } from '@/components/ui/LabelInput';
 import { onboardApi } from '@/lib/api';
+import { tagCase } from '@/lib/format';
 import type { Part1, Part1Progress } from '@/lib/types';
 
 const embed = (url: string) => {
@@ -81,7 +84,7 @@ export default function OnboardPage() {
     <div className="mx-auto max-w-5xl space-y-6">
       <Link className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#7c2ae8] transition-colors hover:underline" href="/dashboard">← Back to dashboard</Link>
       <div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f0eafb] px-3 py-1 text-[10px] font-bold tracking-wider text-[#7c2ae8] uppercase">● {c.stepLabel}</span>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f0eafb] px-3 py-1 text-[11px] font-bold text-[#7c2ae8]">● {tagCase(c.stepLabel)}</span>
         <h1 className="mt-2 text-[24px] sm:text-[26px] font-bold tracking-tight text-[#171730]">{c.page.title}</h1>
         <p className="mt-1 text-[13px] leading-relaxed text-[#5f5f7a]">{c.page.subtitle}</p>
       </div>
@@ -104,7 +107,7 @@ export default function OnboardPage() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="text-[13.5px] font-bold text-[#171730]">{c.socialsHeading}</h2>
-              <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold tracking-wider uppercase ${socialsDone ? 'bg-[#dcfce7] text-[#16a34a]' : 'bg-[#fef3c7] text-[#b45309]'}`}>{socialsDone ? 'DONE' : 'REQUIRED'}</span>
+              <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${socialsDone ? 'bg-[#dcfce7] text-[#16a34a]' : 'bg-[#fef3c7] text-[#b45309]'}`}>{socialsDone ? 'Done' : 'Required'}</span>
             </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {socials.map((s) => {
@@ -133,7 +136,7 @@ export default function OnboardPage() {
         </div>
         <div className="lg:col-span-4">
           <div className="rounded-2xl border border-[#ececf2] bg-white p-5 sm:p-6 shadow-xs space-y-4">
-            <h3 className="text-[11px] font-bold tracking-wider text-[#8e8ea6] uppercase">YOUR TASK</h3>
+            <h3 className="text-[11px] font-bold text-[#8e8ea6]">Your task</h3>
             <div className="space-y-4">
               <Step n={1} state={steps[0]} title={c.tasks.video} sub={`${c.video.minutes} minutes · ${progress.videoWatched ? 'watched' : 'start here'}`} />
               <Step n={2} state={steps[1]} title={c.tasks.socials} sub={`${followedCount} of ${required.length} followed · Both required`} />
@@ -144,16 +147,16 @@ export default function OnboardPage() {
               <span>{c.taskNote}</span>
             </div>
             {completed ? (
-              <Link href="/dashboard" className="block w-full rounded-xl bg-gradient-to-r from-[#501c9c] via-[#6d25d6] to-[#983cf4] py-3 text-center text-[13.5px] font-semibold text-white shadow-md shadow-purple-950/20 transition hover:brightness-105">Back to dashboard →</Link>
+              <ButtonLink href="/dashboard">Back to dashboard</ButtonLink>
             ) : (
               <>
-                <button type="button" disabled={!socialsDone} onClick={() => setQuestionIndex(Math.max(0, questions.findIndex((x) => !progress.answers[x.id]?.trim())))} className="w-full rounded-xl bg-gradient-to-r from-[#501c9c] via-[#6d25d6] to-[#983cf4] py-3 text-[13.5px] font-semibold text-white shadow-md shadow-purple-950/20 transition hover:brightness-105 active:scale-[0.99] cursor-pointer disabled:cursor-not-allowed disabled:opacity-50">
-                  {hasAnswers ? 'Resume questions →' : 'Continue to questions →'}
-                </button>
+                <Button disabled={!socialsDone} onClick={() => setQuestionIndex(Math.max(0, questions.findIndex((x) => !progress.answers[x.id]?.trim())))}>
+                  {hasAnswers ? 'Resume questions' : 'Continue to questions'}
+                </Button>
                 {!socialsDone && <p className="text-center text-[11px] text-[#b45309]">Follow the required accounts above to continue.</p>}
               </>
             )}
-            <p className="text-center text-[9.5px] font-bold tracking-wider text-[#8e8ea6] uppercase">REQUIRED BEFORE THE MODULES OPEN</p>
+            <p className="text-center text-[11px] font-bold text-[#8e8ea6]">Required before the modules open</p>
           </div>
         </div>
       </div>
@@ -162,8 +165,8 @@ export default function OnboardPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
           <div role="dialog" aria-modal="true" aria-labelledby="onboard-question-title" className="relative w-full rounded-2xl bg-white p-6 sm:p-7 shadow-2xl border border-[#ececf2] max-w-lg">
             <div>
-              <div className="flex items-center justify-between text-[10px] font-bold tracking-wider text-[#8e8ea6] uppercase">
-                <span>{c.questionsHeader}</span><span>{questionIndex + 1} of {questions.length}</span>
+              <div className="flex items-center justify-between text-[11px] font-bold text-[#8e8ea6]">
+                <span>{tagCase(c.questionsHeader)}</span><span>{questionIndex + 1} of {questions.length}</span>
               </div>
               <div className="relative mt-2 h-1 w-full rounded-full bg-[#e4e4ee]">
                 <div className="absolute top-0 left-0 h-full rounded-full bg-[#7c2ae8] transition-all duration-300" style={{ width: `${((questionIndex + 1) / questions.length) * 100}%` }} />
@@ -174,26 +177,25 @@ export default function OnboardPage() {
               {q.question}{!q.required && <span className="ml-1.5 text-[12px] font-normal text-[#8e8ea6]">— optional</span>}
             </h3>
             <div className="mt-3">
-              <textarea
-                key={q.id} autoFocus rows={4} maxLength={q.maxLength} placeholder={q.placeholder} aria-label={q.question} value={answer}
-                onChange={(e) => setProgress({ ...progress, answers: { ...progress.answers, [q.id]: e.target.value } })}
-                className="w-full rounded-xl border border-[#7c2ae8] p-3.5 text-[13px] text-[#171730] outline-none ring-1 ring-[#7c2ae8] transition placeholder:text-[#9ca3af] resize-none"
+              <LabelInput
+                key={q.id} id={q.id} label={q.required ? 'Your answer' : 'Your answer (optional)'} multiline height={112} corner={12}
+                autoFocus maxLength={q.maxLength} placeholder={q.placeholder} value={answer}
+                onChange={(v) => setProgress({ ...progress, answers: { ...progress.answers, [q.id]: v } })}
               />
               <div className="mt-1 flex items-start justify-between gap-3 text-[11px] text-[#8e8ea6]">
                 <span>{q.hint}</span>
-                <span className="shrink-0 font-mono">{answer.length} / {q.maxLength}</span>
+                <span className="shrink-0">Max {q.maxLength} characters</span>
               </div>
             </div>
             <div className="mt-6 flex items-center justify-between pt-3 border-t border-[#f0f0f5]">
               <button type="button" disabled={questionIndex === 0 || busy} onClick={() => setQuestionIndex(questionIndex - 1)} className="text-[12.5px] font-semibold text-[#7c2ae8] hover:underline cursor-pointer disabled:opacity-50">← Back</button>
               <button type="button" disabled={busy} onClick={async () => { await save({}); setQuestionIndex(null); }} className="text-[12px] text-[#8e8ea6] hover:text-[#171730] cursor-pointer disabled:opacity-50">Save & exit</button>
-              <button
-                type="button" disabled={(q.required && !answer.trim()) || busy}
+              <Button
+                size="md" showIcon={!isLast} disabled={q.required && !answer.trim()} loading={busy} loadingLabel={isLast ? 'Submitting…' : 'Saving…'}
                 onClick={async () => { if (isLast) await submit(); else { await save({}); setQuestionIndex(questionIndex + 1); } }}
-                className="rounded-full bg-[#171730] px-5 py-2 text-[12.5px] font-bold text-white transition hover:bg-black cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
               >
-                {isLast ? (busy ? 'Submitting…' : 'Submit') : 'Next'}
-              </button>
+                {isLast ? 'Submit' : 'Next'}
+              </Button>
             </div>
           </div>
         </div>
@@ -207,7 +209,7 @@ export default function OnboardPage() {
             </span>
             <h3 id="onboard-done-title" className="mt-4 text-[20px] font-bold text-[#171730]">{c.completion.title}</h3>
             <p className="mt-2 text-[12.5px] leading-relaxed text-[#5f5f7a] max-w-xs mx-auto">{c.completion.message}</p>
-            <button type="button" onClick={() => router.push('/dashboard')} className="mt-6 w-full rounded-xl bg-gradient-to-r from-[#501c9c] via-[#6d25d6] to-[#983cf4] py-3 text-[14px] font-semibold text-white shadow-md shadow-purple-950/20 transition hover:brightness-105 cursor-pointer">Back to dashboard</button>
+            <div className="mt-6"><Button onClick={() => router.push('/dashboard')}>Back to dashboard</Button></div>
             <p className="mt-3.5 text-[11px] text-[#8e8ea6]">🔒 {c.completion.nextStepNote}</p>
           </div>
         </div>

@@ -1,10 +1,13 @@
 'use client';
-// "Label input" from Bencho (bencho.dev/licence, MIT), adapted for real forms in this project:
+// "Label input" from Bencho (bencho.dev/licence, MIT), adapted as this project's standard text field:
 //  - fills its container instead of a fixed 280px: the outline is drawn from the measured width
-//  - controlled (value/onChange), with name, autoComplete, invalid and disabled for forms
-//  - height is a prop (the Figma field is 48px), and the lift follows half of it
+//  - controlled (value/onChange), with name, autoComplete, required, invalid and disabled for forms
+//  - height is a prop (the Figma field is 48px), and the lift follows the label's resting line
+//  - `multiline` renders a textarea: the label rests on its first line and lifts the same way
+//  - `placeholder` is a hint shown only once you are in an empty field (the label is the placeholder)
+//  - `adornment` sits inside the field on the right (e.g. "From your application") and steps aside while you type
 // Styles live in globals.css under "Label input". Comments below are Bencho's, kept on purpose.
-import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 
 /* ══ Label input ══════════════════════════════════════════
@@ -32,14 +35,19 @@ const S = 0.78;
 /* the stroke sits half a stroke inside the box so none of it
    is clipped by the svg's own edge */
 const IN = 0.75;
+/* a multi-line field's label rests on its first line: 14px of
+   padding plus half of a 20px line */
+const FIRST_LINE = 24;
 
 export function LabelInput({
   field = 'Email',
   label: labelText,
+  type,
+  multiline = false,
   /* the field's corner, px — at half the height it is a pill */
   corner = 14,
   /* the field's height, px (Bencho's is 52; the Figma field is 48) */
-  height = 52,
+  height,
   /* a showcase, not a form: on a touch screen, keep the device's
      keyboard down. Off by default — a real field wants its
      keyboard — and the bench turns it on for its feed */
@@ -48,13 +56,20 @@ export function LabelInput({
   onChange,
   name,
   autoComplete = 'off',
+  placeholder,
+  maxLength,
+  required = false,
   invalid = false,
   disabled = false,
+  autoFocus = false,
   describedBy,
+  adornment,
   id: idProp,
 }: {
   field?: 'Email' | 'Password';
   label?: string;
+  type?: 'text' | 'email' | 'url';
+  multiline?: boolean;
   corner?: number;
   height?: number;
   showcase?: boolean;
@@ -62,15 +77,21 @@ export function LabelInput({
   onChange?: (value: string) => void;
   name?: string;
   autoComplete?: string;
+  placeholder?: string;
+  maxLength?: number;
+  required?: boolean;
   invalid?: boolean;
   disabled?: boolean;
+  autoFocus?: boolean;
   describedBy?: string;
+  adornment?: ReactNode;
   id?: string;
 } = {}) {
-  const H = height;
+  const H = height ?? (multiline ? 104 : 52);
   const r = clamp(corner, 0, H / 2);
-  const secret = field === 'Password';
+  const secret = !multiline && field === 'Password' && !type;
   const label = labelText ?? (secret ? 'Password' : 'Email');
+  const inputType = type ?? (secret ? 'password' : 'email');
   const auto = `lbi-${useId().replace(/:/g, '')}`;
   const id = idProp ?? auto;
 
@@ -104,6 +125,13 @@ export function LabelInput({
   useLayoutEffect(() => {
     if (lab.current) setLw(lab.current.offsetWidth);
   }, [label]);
+
+  /* the adornment's width is kept clear of the text */
+  const adorn = useRef<HTMLSpanElement | null>(null);
+  const [aw, setAw] = useState(0);
+  useLayoutEffect(() => {
+    setAw(adornment && adorn.current ? adorn.current.offsetWidth + 12 : 0);
+  }, [adornment]);
 
   /* a different kind of field starts empty — an email left in
      a password box would be shown in the clear */
@@ -143,12 +171,35 @@ export function LabelInput({
     setFlip((f) => f + 1);
   };
 
+  /* where the label rests, and how far it travels to the edge:
+     half the field for one line, the first line for many */
+  const rest = multiline ? `${FIRST_LINE}px` : '50%';
+  const lift = multiline ? FIRST_LINE : H / 2;
+  const padRight = secret ? 48 : Math.max(lx, aw);
+
+  const shared = {
+    id,
+    name,
+    className: 'lbi-field',
+    value,
+    disabled,
+    required,
+    maxLength,
+    placeholder,
+    autoFocus,
+    'aria-invalid': invalid,
+    'aria-describedby': describedBy,
+    onFocus: () => setFocus(true),
+    onBlur: () => setFocus(false),
+    spellCheck: false,
+  };
+
   return (
-    <div className="lbi" data-up={up} data-focus={focus} data-filled={value.length > 0} data-invalid={invalid} data-disabled={disabled}>
+    <div className="lbi" data-up={up} data-focus={focus} data-filled={value.length > 0} data-invalid={invalid} data-disabled={disabled} data-multiline={multiline}>
       <div
         ref={box}
         className="lbi-box"
-        style={{ width: '100%', height: H, borderRadius: r, '--lbi-x': `${lx}px`, '--lbi-lift': `${H / 2}px` } as React.CSSProperties}
+        style={{ width: '100%', height: H, borderRadius: r, '--lbi-x': `${lx}px`, '--lbi-rest': rest, '--lbi-lift': `${lift}px` } as React.CSSProperties}
       >
         <svg className="lbi-ring" width={W} height={H} viewBox={`0 0 ${W} ${H}`} aria-hidden="true">
           <path d={right} />
@@ -163,38 +214,39 @@ export function LabelInput({
           ))}
         </label>
 
-        <input
-          ref={input}
-          id={id}
-          name={name}
-          className="lbi-field"
-          data-flip={flip % 2}
-          type={secret && !show ? 'password' : secret ? 'text' : 'email'}
-          value={value}
-          disabled={disabled}
-          aria-invalid={invalid}
-          aria-describedby={describedBy}
-          onChange={(e) => { setValue(e.target.value); if (autofilled) setAutofilled(false); }}
-          onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
-          /* a browser's autofill sets the value without a change
-             event; the field hears it through a no-op animation
-             (see .lbi-field:-webkit-autofill) and lifts the label */
-          onAnimationStart={(e) => { if (e.animationName === 'lbi-autofill') setAutofilled(true); }}
-          autoComplete={autoComplete}
-          autoCapitalize="none"
-          spellCheck={false}
-          /* ── no keyboard, when it is only being shown ─────
-             In a feed you are scrolling on a phone, a tap that
-             lands on the field threw the keyboard up over the
-             page. inputMode "none" keeps everything the block is
-             about — the focus, the label lifting, the gap
-             opening — and only tells the device not to raise its
-             keyboard. A mouse and a hardware keyboard are
-             untouched, and so is any real use of this field. */
-          inputMode={quiet ? 'none' : secret ? undefined : 'email'}
-          style={{ paddingRight: secret ? 48 : lx }}
-        />
+        {multiline ? (
+          <textarea
+            {...shared}
+            onChange={(e) => setValue(e.target.value)}
+            style={{ paddingRight: padRight }}
+          />
+        ) : (
+          <input
+            {...shared}
+            ref={input}
+            data-flip={flip % 2}
+            type={secret && show ? 'text' : inputType === 'password' && !secret ? 'text' : inputType}
+            onChange={(e) => { setValue(e.target.value); if (autofilled) setAutofilled(false); }}
+            /* a browser's autofill sets the value without a change
+               event; the field hears it through a no-op animation
+               (see .lbi-field:-webkit-autofill) and lifts the label */
+            onAnimationStart={(e) => { if (e.animationName === 'lbi-autofill') setAutofilled(true); }}
+            autoComplete={autoComplete}
+            autoCapitalize={inputType === 'text' ? undefined : 'none'}
+            /* ── no keyboard, when it is only being shown ─────
+               In a feed you are scrolling on a phone, a tap that
+               lands on the field threw the keyboard up over the
+               page. inputMode "none" keeps everything the block is
+               about — the focus, the label lifting, the gap
+               opening — and only tells the device not to raise its
+               keyboard. A mouse and a hardware keyboard are
+               untouched, and so is any real use of this field. */
+            inputMode={quiet ? 'none' : inputType === 'email' ? 'email' : inputType === 'url' ? 'url' : undefined}
+            style={{ paddingRight: padRight }}
+          />
+        )}
+
+        {adornment && <span ref={adorn} className="lbi-adorn" aria-hidden="true">{adornment}</span>}
 
         {secret && (
           <button

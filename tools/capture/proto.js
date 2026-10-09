@@ -58,8 +58,7 @@ const scenarios = [
     await h.type('input[type=email]', 'ada@example.com'); await h.shot('A02-signin-email-filled');
     await h.click('Send my code'); await sleep(1200); await h.shot('A03-signin-code-empty');
     await h.page.click('input[autocomplete=one-time-code]'); await h.page.keyboard.type('482913', { delay: 40 }); await h.shot('A05-signin-code-filled');
-    await h.click('Verify email'); await sleep(1500); await h.shot('A06-signin-verified');
-    await h.click('Continue'); await sleep(1500); await h.shot('B01-profile-prefilled');
+    await h.click('Verify email'); await sleep(2000); await h.shot('B01-profile-prefilled');
   }),
   S('A-errors', async (h) => {
     await h.setup('new', { emailNotFound: true }); await h.goto('/login'); await h.type('input[type=email]', 'someone@example.com'); await h.click('Send my code'); await sleep(800); await h.shot('A07-signin-email-not-found');
@@ -106,19 +105,19 @@ const scenarios = [
   }),
   S('F-module', async (h) => {
     await h.setup('part1-done'); await h.goto('/module/si-her-collective-capital'); await sleep(800); await h.shot('F01-module-week1');
-    await h.click('Start quiz →'); await h.shot('F02-quiz-start', { full: false });
+    await h.click('Start quiz'); await h.shot('F02-quiz-start', { full: false });
     await h.click('Members pool resources', '[role=radio]'); await sleep(400); await h.shot('F03-quiz-pass-q1-answered', { full: false });
-    await h.click('Next question →'); await h.click('To make funding decisions transparent', '[role=radio]'); await h.click('Next question →');
+    await h.click('Next question'); await h.click('To make funding decisions transparent', '[role=radio]'); await h.click('Next question');
     await h.click('Who contributes, who decides', '[role=radio]'); await sleep(600); await h.shot('F03-quiz-pass-result', { full: false });
     await h.click('Back to module'); await sleep(800); await h.shot('F04-module-week1-passed');
-    await h.setup('part1-done', { quizMode: 'fail' }); await h.goto('/module/si-her-collective-capital'); await h.click('Start quiz →');
-    await h.click('Members pool resources', '[role=radio]'); await h.click('Next question →'); await h.click('To make funding decisions transparent', '[role=radio]'); await sleep(400); await h.shot('F05-quiz-fail-q2-answered', { full: false });
-    await h.click('Next question →'); await h.click('Who contributes, who decides', '[role=radio]'); await sleep(600); await h.shot('F05-quiz-fail-result', { full: false });
+    await h.setup('part1-done', { quizMode: 'fail' }); await h.goto('/module/si-her-collective-capital'); await h.click('Start quiz');
+    await h.click('Members pool resources', '[role=radio]'); await h.click('Next question'); await h.click('To make funding decisions transparent', '[role=radio]'); await sleep(400); await h.shot('F05-quiz-fail-q2-answered', { full: false });
+    await h.click('Next question'); await h.click('Who contributes, who decides', '[role=radio]'); await sleep(600); await h.shot('F05-quiz-fail-result', { full: false });
     await h.click('← Back to module'); await sleep(800); await h.shot('F06-module-week1-retry-later');
     await h.goto('/module/token-fundamentals'); await sleep(800); await h.shot('F07-module-upcoming');
     await h.setup('part1-done', { quizMode: 'fail' }, "s.quizzes['si-her-collective-capital']={attemptsUsed:2,passed:false,answers:[],lastResult:null,retryAvailableAt:null}");
-    await h.goto('/module/si-her-collective-capital'); await h.click('Start quiz →');
-    await h.click('Members pool resources', '[role=radio]'); await h.click('Next question →'); await h.click('To make funding decisions transparent', '[role=radio]'); await h.click('Next question →'); await h.click('Who contributes, who decides', '[role=radio]'); await sleep(600);
+    await h.goto('/module/si-her-collective-capital'); await h.click('Start quiz');
+    await h.click('Members pool resources', '[role=radio]'); await h.click('Next question'); await h.click('To make funding decisions transparent', '[role=radio]'); await h.click('Next question'); await h.click('Who contributes, who decides', '[role=radio]'); await sleep(600);
     await h.shot('F08-quiz-fail-last-result', { full: false });
     await h.click('← Back to module'); await sleep(800); await h.shot('F09-module-week1-locked-24h');
   }),

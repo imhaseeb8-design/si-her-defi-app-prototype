@@ -23,9 +23,9 @@ const Icon = {
 
 const PoweredBy = ({ py = 'py-1' }: { py?: string }) => (
   <span className={`inline-flex items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-[#f9fafc] px-2.5 ${py}`}>
-    <span className="text-[9px] font-semibold tracking-[0.14em] text-[#8e8ea6]">POWERED BY</span>
+    <span className="text-[9px] font-medium text-[#8688ae]">Powered by</span>
     <span className="size-2 rounded-full bg-[#0052ff]" />
-    <span className="text-[9.5px] font-bold tracking-[0.14em] text-[#171730]">BASE</span>
+    <span className="text-[11px] font-semibold text-[#0052ff]">BASE</span>
   </span>
 );
 
@@ -72,7 +72,7 @@ function WalletChip({ wallet }: { wallet: string | null }) {
       {wallet ? (
         <>
           <div className="flex items-center gap-2 font-medium text-[#171730]"><span className="size-2 rounded-full bg-[#0052ff]" /><span>Base</span></div>
-          <a href={`https://basescan.org/address/${wallet}`} target="_blank" rel="noopener noreferrer" className="font-mono text-[11px] text-[#8e8ea6] hover:text-[#0052ff] transition" title="View on BaseScan">{short(wallet)}</a>
+          <a href={`https://basescan.org/address/${wallet}`} target="_blank" rel="noopener noreferrer" className="tabular-nums text-[11px] text-[#8e8ea6] hover:text-[#0052ff] transition" title="View on BaseScan">{short(wallet)}</a>
         </>
       ) : (
         <>
@@ -208,7 +208,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <Link className="flex items-center gap-2" href="/dashboard"><Logo /></Link>
         <div className="flex items-center gap-2">
           {wallet ? (
-            <button type="button" className="inline-flex items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-[#f9fafc] px-2.5 py-1 text-[11px] font-mono text-[#5f5f7a] shadow-2xs">
+            <button type="button" className="inline-flex items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-[#f9fafc] px-2.5 py-1 text-[11px] tabular-nums text-[#5f5f7a] shadow-2xs">
               <span className="size-1.5 rounded-full bg-[#0052ff]" /><span>{short(wallet)}</span>
             </button>
           ) : (

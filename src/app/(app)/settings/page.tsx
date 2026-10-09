@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Avatar } from '@/components/app/AppShell';
 import { useSession } from '@/components/app/SessionProvider';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { settingsApi, walletApi } from '@/lib/api';
 import type { Settings } from '@/lib/types';
 
@@ -52,12 +53,10 @@ export default function SettingsPage() {
       <section className={`${section} space-y-5`}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-[16px] font-bold text-[#171730]">Profile Information</h2>
+            <h2 className="text-[16px] font-bold text-[#171730]">Profile information</h2>
             <p className="text-[12px] text-[#8e8ea6]">This is how your credentials appear on your on-chain certificate.</p>
           </div>
-          <Link className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#501c9c] via-[#6d25d6] to-[#983cf4] px-4 py-2 text-[12.5px] font-semibold text-white shadow-sm hover:brightness-105 transition self-start sm:self-auto" href="/profile?from=dashboard">
-            <span>Edit profile</span><span>→</span>
-          </Link>
+          <ButtonLink href="/profile?from=dashboard" size="md" className="self-start sm:self-auto">Edit profile</ButtonLink>
         </div>
         <div className="flex items-center gap-4 pt-2">
           <Avatar src={profile?.photoUrl} name={profile?.name} className="size-16 shadow-xs" />
@@ -69,25 +68,25 @@ export default function SettingsPage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-[12.5px]">
           <div className="p-3 rounded-xl bg-[#f9f9fc] border border-[#ececf2]">
-            <span className="text-[#8e8ea6] block text-[11px] font-medium uppercase tracking-wider">Social Profile</span>
+            <span className="text-[#8e8ea6] block text-[11px] font-medium">Social profile</span>
             <span className="text-[#171730] font-medium truncate block mt-0.5">{profile?.socialLink || '—'}</span>
           </div>
           <div className="p-3 rounded-xl bg-[#f9f9fc] border border-[#ececf2]">
-            <span className="text-[#8e8ea6] block text-[11px] font-medium uppercase tracking-wider">Cohort</span>
+            <span className="text-[#8e8ea6] block text-[11px] font-medium">Cohort</span>
             <span className="text-[#171730] font-medium block mt-0.5">Cohort 01 — Si Her DeFi</span>
           </div>
         </div>
       </section>
 
       <section className={`${section} space-y-4`}>
-        <h2 className="text-[16px] font-bold text-[#171730]">Connected Wallet</h2>
+        <h2 className="text-[16px] font-bold text-[#171730]">Connected wallet</h2>
         <p className="text-[12px] text-[#8e8ea6]">Your on-chain certificate will be minted to this address on Base Mainnet.</p>
         {wallet ? (
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-[#f9f9fc] border border-[#e4e4ed]">
             <div className="flex items-center gap-3">
               <span className="size-3 shrink-0 rounded-full bg-[#0052ff]" />
               <div>
-                <p className="font-mono text-[13px] font-semibold text-[#171730] break-all sm:break-normal">{wallet}</p>
+                <p className="tabular-nums text-[13px] font-semibold text-[#171730] break-all sm:break-normal">{wallet}</p>
                 <p className="text-[11px] text-[#8e8ea6]">Base Mainnet</p>
               </div>
             </div>
@@ -102,13 +101,13 @@ export default function SettingsPage() {
               <p className="text-[13px] font-semibold text-[#171730]">No wallet connected</p>
               <p className="text-[11px] text-[#8e8ea6]">Connect a wallet to receive your certificate.</p>
             </div>
-            <button type="button" onClick={() => router.push('/wallet')} className="rounded-xl bg-[#7c2ae8] text-white px-4 py-2 text-[12px] font-semibold hover:bg-[#6a22c9] transition cursor-pointer">Connect wallet</button>
+            <Button size="md" onClick={() => router.push('/wallet')}>Connect wallet</Button>
           </div>
         )}
       </section>
 
       <section className={`${section} space-y-4`}>
-        <h2 className="text-[16px] font-bold text-[#171730]">Account Preferences</h2>
+        <h2 className="text-[16px] font-bold text-[#171730]">Account preferences</h2>
         <div className="divide-y divide-[#f0f0f5] text-[13px]">
           <div className="py-3.5 flex items-center justify-between gap-4">
             <div>

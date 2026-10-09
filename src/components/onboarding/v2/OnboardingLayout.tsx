@@ -1,7 +1,7 @@
 'use client';
 // Redesigned onboarding layout (Figma "Post-UX-Fixes" → "Email sign up" → "01 · Sign up — default",
-// node 1023:234). A full-width white nav (72px) over two columns: the centred steps + card on
-// #f4f5fc, and the artwork rail (440 of 1280) filling the height under the nav.
+// node 1023:234). A full-width white nav (72px) over two columns: the steps + card centred
+// (both ways) on #f4f5fc, and the artwork rail (440 of 1280) filling the height under the nav.
 // Responsive: below lg the rail moves under the form and the nav/card tighten their padding.
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,7 +17,7 @@ export function BrandNav({ right }: { right?: ReactNode }) {
           <img src={assetPath('/v2/logo-si-her-defi.svg')} alt="Si Her DeFi" width={108} height={27} className="block h-[27px] w-[108px]" />
         </Link>
         <span className="inline-flex h-7 sm:h-8 shrink-0 items-center gap-1.5 rounded-full border border-[#e7e7f1] bg-[#f5f5fc] px-3 sm:px-3.5">
-          <span className="font-mono text-[9px] font-medium uppercase tracking-[1.08px] text-[#8688ae]">Powered by</span>
+          <span className="text-[9px] font-medium text-[#8688ae]">Powered by</span>
           <span className="inline-flex items-center gap-1">
             <span className="size-[11px] rounded-full bg-[#0052ff]" />
             <span className="text-[11px] font-semibold text-[#0052ff]">BASE</span>
@@ -118,7 +118,9 @@ export function OnboardingLayout({ step, navRight, children }: { step: 0 | 1 | 2
     <div className="flex min-h-dvh flex-col bg-[#f4f5fc] font-sans text-[#151534] antialiased">
       <BrandNav right={navRight} />
       <div className="flex flex-1 flex-col lg:flex-row">
-        <main className="flex min-w-0 flex-1 justify-center px-4 pb-10 pt-6 sm:px-10 sm:pb-16 sm:pt-14 lg:pt-[110px]">
+        {/* the form sits in the middle of the space under the nav at every size; when it is taller
+            than that space (short phones) it simply starts at the top padding */}
+        <main className="flex min-h-[calc(100dvh-64px)] min-w-0 flex-1 items-center justify-center px-4 py-6 sm:min-h-[calc(100dvh-72px)] sm:px-10 sm:py-12">
           <div className="flex w-full max-w-[420px] flex-col gap-6 sm:gap-8">
             <StepProgress step={step} />
             {children}

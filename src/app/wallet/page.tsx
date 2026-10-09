@@ -11,6 +11,7 @@ import { errorMessage, profileApi, walletApi } from '@/lib/api';
 import { useDemo } from '@/lib/hooks/useDemo';
 import { useRequireAuth } from '@/lib/hooks/useAuth';
 import { DEMO_ADDRESS } from '@/lib/mock/server';
+import { ButtonLink } from '@/components/ui/Button';
 
 type Phase = { status: 'idle' } | { status: 'connecting' } | { status: 'signing'; address: string } | { status: 'connected'; address: string } | { status: 'disconnecting'; address: string } | { status: 'error'; message: string };
 type Modal = null | 'switch' | 'reown' | { qr: string };
@@ -21,8 +22,8 @@ const REJECT_CONNECT = 'Connection rejected. Please approve the request in your 
 const REJECT_SIGN = "Signature request rejected. Please approve it in your wallet to link it — it's free and doesn't send a transaction.";
 
 const BaseChip = () => (
-  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-[#f9fafc] px-2.5 py-1 text-[10px] font-bold tracking-wider text-[#171730]">
-    <span className="size-2 rounded-full bg-[#0052ff]" />BASE MAINNET
+  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-[#f9fafc] px-2.5 py-1 text-[10px] font-bold text-[#171730]">
+    <span className="size-2 rounded-full bg-[#0052ff]" />Base Mainnet
   </span>
 );
 
@@ -111,7 +112,7 @@ export default function WalletPage() {
                 </span>
                 <div>
                   <p className="text-[13px] font-bold text-[#171730]">Wallet connected</p>
-                  <p className="mt-1 font-mono text-[12px] text-[#5f5f7a]">{short(address)}</p>
+                  <p className="mt-1 tabular-nums text-[12px] text-[#5f5f7a]">{short(address)}</p>
                 </div>
                 <BaseChip />
                 {phase.status === 'signing' ? (
@@ -127,21 +128,13 @@ export default function WalletPage() {
                 )}
               </div>
               <div className="rounded-xl border border-[#e4e4ed] bg-[#f9fafc] px-4 py-3 flex items-center justify-between gap-3">
-                <span className="text-[11px] font-semibold tracking-wider text-[#8e8ea6] uppercase">Address</span>
-                <span className="font-mono text-[11.5px] text-[#171730] break-all text-right">{address}</span>
+                <span className="text-[11px] font-semibold text-[#8e8ea6]">Address</span>
+                <span className="tabular-nums text-[11.5px] text-[#171730] break-all text-right">{address}</span>
               </div>
               <a href={`https://basescan.org/address/${address}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 rounded-xl border border-[#e2e2ec] px-4 py-2.5 text-[12.5px] font-semibold text-[#5f5f7a] transition hover:bg-gray-50 hover:text-[#171730]">
                 <span className="size-2 rounded-full bg-[#0052ff]" />View on BaseScan ↗
               </a>
-              {phase.status === 'connected' ? (
-                <Link className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#501c9c] via-[#6d25d6] to-[#983cf4] px-4 py-3.5 text-[14.5px] font-semibold text-white shadow-md shadow-purple-950/20 transition hover:brightness-105 active:scale-[0.99]" href="/dashboard">
-                  Go to my dashboard <span aria-hidden="true">→</span>
-                </Link>
-              ) : (
-                <span aria-disabled="true" className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#501c9c] via-[#6d25d6] to-[#983cf4] px-4 py-3.5 text-[14.5px] font-semibold text-white opacity-50">
-                  Go to my dashboard <span aria-hidden="true">→</span>
-                </span>
-              )}
+              <ButtonLink href="/dashboard" disabled={phase.status !== 'connected'}>Go to my dashboard</ButtonLink>
               <button type="button" onClick={disconnect} disabled={phase.status !== 'connected'} className="w-full text-center text-[11.5px] text-[#8e8ea6] hover:text-[#5f5f7a] transition cursor-pointer disabled:opacity-50">
                 {phase.status === 'connected' ? 'Connect a different wallet' : 'Disconnecting…'}
               </button>
@@ -149,7 +142,7 @@ export default function WalletPage() {
           ) : (
             <div className="w-full space-y-4">
               <div className="flex items-center justify-between">
-                <p className="text-[12px] font-semibold tracking-wider text-[#8e8ea6] uppercase">Choose wallet</p>
+                <p className="text-[12px] font-semibold text-[#8e8ea6]">Choose wallet</p>
                 <BaseChip />
               </div>
               <div className="space-y-2.5">
@@ -181,8 +174,8 @@ export default function WalletPage() {
                       </div>
                     </button>
                     <div className="flex items-center gap-2 shrink-0">
-                      <button type="button" onClick={() => setModal({ qr: '1inch Wallet' })} className="rounded-full bg-[#ede9fe] text-[#6d25d6] hover:bg-[#ddd6fe] border border-[#ddd6fe] px-2.5 py-1 text-[10px] font-bold tracking-wider transition cursor-pointer flex items-center gap-1 shadow-2xs">
-                        <QrGlyph /><span>QR CODE</span>
+                      <button type="button" onClick={() => setModal({ qr: '1inch Wallet' })} className="rounded-full bg-[#ede9fe] text-[#6d25d6] hover:bg-[#ddd6fe] border border-[#ddd6fe] px-2.5 py-1 text-[10px] font-bold transition cursor-pointer flex items-center gap-1 shadow-2xs">
+                        <QrGlyph /><span>QR code</span>
                       </button>
                       <a href="https://1inch.io/wallet/" target="_blank" rel="noopener noreferrer" title="Visit official website" className="p-1 rounded-lg text-[#9ca3af] hover:text-[#171730] hover:bg-gray-100 transition text-[11px]">↗</a>
                     </div>
@@ -196,7 +189,7 @@ export default function WalletPage() {
                       <p className="text-[11px] text-[#8e8ea6]">Scan with your mobile wallet app to connect</p>
                     </div>
                   </div>
-                  <span className="shrink-0 rounded-full bg-[#ede9fe] text-[#6d25d6] border border-[#ddd6fe] px-2.5 py-0.5 text-[10px] font-bold">QR CODE</span>
+                  <span className="shrink-0 rounded-full bg-[#ede9fe] text-[#6d25d6] border border-[#ddd6fe] px-2.5 py-0.5 text-[10px] font-bold">QR code</span>
                 </button>
               </div>
               {!detected && (

@@ -26,7 +26,8 @@
   --color-muted: var(--muted);
   --color-placeholder: var(--placeholder);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Geist only — no Geist Mono anywhere (numbers use tabular-nums instead) */
+  --font-mono: var(--font-geist-sans);
 }
 
 body {
@@ -80,6 +81,9 @@ body {
 .lbi-ring {
   position: absolute;
   inset: 0;
+  /* project addition: drawn above the input, so a browser's autofill
+     fill inside the input can't hide the outline */
+  z-index: 1;
   overflow: visible;
   pointer-events: none;}
 
@@ -123,7 +127,8 @@ body {
 .lbi-label {
   position: absolute;
   left: var(--lbi-x);
-  top: 50%;
+  /* 50% for one line; a multi-line field sets its first line */
+  top: var(--lbi-rest, 50%);
   font-size: 15px;
   line-height: 1;
   letter-spacing: -0.005em;
@@ -132,6 +137,9 @@ body {
   transform-origin: left center;
   transform: translateY(-50%);
   transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), color 200ms ease;
+  /* project addition: above the input too (a click on it still lands
+     on the field, through htmlFor) */
+  z-index: 1;
   cursor: text;
   -webkit-user-select: none;
   user-select: none;}
@@ -165,12 +173,42 @@ body {
   color: var(--fill-on, var(--ink));
   outline: none;}
 
+/* project additions: the hint shows only once you are in an
+   empty field — until then the label is the placeholder */
+.lbi-field::placeholder { color: var(--ink-4); opacity: 0; transition: opacity 160ms ease; }
+.lbi[data-focus="true"] .lbi-field::placeholder { opacity: 1; }
+
+/* a multi-line field: text starts on the label's resting line */
+.lbi-field:is(textarea) {
+  padding-top: 14px;
+  padding-bottom: 12px;
+  line-height: 20px;
+  resize: none;}
+
+/* something inside the field on the right (e.g. "From your
+   application"); it steps aside while you are typing */
+.lbi-adorn {
+  position: absolute;
+  z-index: 1;
+  right: 12px;
+  top: var(--lbi-rest, 50%);
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: opacity 160ms ease;}
+.lbi[data-focus="true"] .lbi-adorn { opacity: 0; }
+
 /* project addition: autofill paints its own background and
    sets the value without a change event — keep the field white
    and let the component hear it through this no-op animation */
-.lbi-field:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px #fff inset;
+.lbi-field:-webkit-autofill,
+.lbi-field:-webkit-autofill:hover,
+.lbi-field:-webkit-autofill:focus {
+  /* fill the autofill tint with the card's white, and hold Chrome's own
+     background change off indefinitely */
+  -webkit-box-shadow: 0 0 0 1000px var(--lbi-fill, #fff) inset;
   -webkit-text-fill-color: var(--fill-on);
+  caret-color: var(--fill-on);
+  transition: background-color 9999s ease-out 0s;
   animation-name: lbi-autofill;
   animation-duration: 1ms;}
 
@@ -314,3 +352,62 @@ body {
   .btn-primary { transition-duration: 1ms; }
   .btn-primary__spinner { animation-duration: 2.4s; }
 }
+
+/* ══ Button · White ════════════════════════════════════════
+   Figma "Button · White" (node 1027:731) — for CTAs on dark or
+   image backgrounds. Same size and type as .btn-primary; the
+   lilac inner glow stays, the dark inner edge is softened to
+   10% so the white reads clean. Use with .btn-primary:
+   <Button variant="white"> renders "btn-primary btn-white". */
+.btn-white {
+  --btn-inner: inset 0 0 6px rgba(0, 0, 0, 0.1), inset 0 0 4px #dcc2f2;
+  background: #fff;
+  color: #151534;}
+
+@media (hover: hover) {
+  .btn-white:not(:disabled):not([aria-busy="true"]):hover {
+    background: #f8f3fe;
+    box-shadow: 0 6px 18px rgba(220, 194, 242, 0.45), inset 0 0 6px rgba(0, 0, 0, 0.06), inset 0 0 6px #dcc2f2;}
+}
+
+.btn-white:not(:disabled):not([aria-busy="true"]):active {
+  background: #eee4fa;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.18), inset 0 0 3px rgba(220, 194, 242, 0.7);}
+
+/* no white gap on a white button — just the 3px lilac ring */
+.btn-white:focus-visible {
+  box-shadow: 0 0 0 3px #b98be8, var(--btn-inner);}
+
+.btn-white:disabled:not([aria-busy="true"]) {
+  background: #eeeaf4;
+  color: #a39db8;
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.8);}
+
+/* the spinner turns brand purple on white */
+.btn-white .btn-primary__spinner { color: #7733b4; }
+
+/* compact size of the same component: dialog footers, inline cards */
+.btn-md {
+  width: auto;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 12px;
+  font-size: 14px;}
+
+.btn-md .btn-primary__icon { width: 18px; height: 18px; }
+
+/* a link can't be :disabled — this mirrors the Disabled state for it */
+.btn-primary.btn-disabled {
+  background: #ece4f7;
+  color: #a894c8;
+  box-shadow: inset 0 0 6px rgba(119, 51, 180, 0.08), inset 0 0 4px rgba(255, 255, 255, 0.9);
+  cursor: not-allowed;
+  pointer-events: none;}
+
+.btn-white.btn-disabled {
+  background: #eeeaf4;
+  color: #a39db8;
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.8);}
+
+/* links styled as buttons don't get underlines */
+a.btn-primary { text-decoration: none; }

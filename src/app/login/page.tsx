@@ -1,21 +1,18 @@
 'use client';
 // "Claim your seat" — redesigned (Figma Post-UX-Fixes → Email sign up → "01 · Sign up — default", node 1023:234).
 // Live baseline: capture/shots/A01–A02, A07–A08 (and git history for the previous version).
-// The email field is Bencho's floating-label input by default; the Prototype panel switches it
-// back to the plain Figma field for comparison.
+// The email field is Bencho's floating-label input — now the standard for every text field.
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { OnboardingLayout, cardV2 } from '@/components/onboarding/v2/OnboardingLayout';
 import { Button } from '@/components/ui/Button';
 import { LabelInput } from '@/components/ui/LabelInput';
 import { authApi, errorMessage } from '@/lib/api';
-import { useDemo } from '@/lib/hooks/useDemo';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export default function LoginPage() {
   const router = useRouter();
-  const floating = useDemo().flags.emailField !== 'classic';
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -51,29 +48,14 @@ export default function LoginPage() {
           </div>
 
           <form noValidate onSubmit={submit}>
-            {floating ? (
-              <div className="pt-4">
-                <LabelInput
-                  field="Email" label="Email address" corner={12} height={48}
-                  id="email" name="email" autoComplete="email"
-                  value={email} onChange={change} disabled={busy}
-                  invalid={!!error} describedBy={error ? 'email-error' : undefined}
-                />
-              </div>
-            ) : (
-              <div className="flex flex-col gap-2 pt-[26px]">
-                <label htmlFor="email" className="text-[13px] font-medium text-[#151534]">Email address</label>
-                <input
-                  id="email" name="email" type="email" inputMode="email" autoComplete="email" autoCapitalize="none" spellCheck={false}
-                  placeholder="you@example.com" value={email} disabled={busy}
-                  aria-invalid={!!error} aria-describedby={error ? 'email-error' : undefined}
-                  onChange={(e) => change(e.target.value)}
-                  className={`h-12 w-full rounded-[12px] border bg-white px-[14px] text-[15px] text-[#151534] outline-none transition placeholder:text-[#8688ae] focus:ring-2 disabled:opacity-60 ${
-                    error ? 'border-red-400 focus:border-red-400 focus:ring-red-200' : 'border-[#e7e7f1] focus:border-[#7b2fbe] focus:ring-[#7b2fbe]/15'
-                  }`}
-                />
-              </div>
-            )}
+            <div className="pt-4">
+              <LabelInput
+                field="Email" label="Email address" corner={12} height={48}
+                id="email" name="email" autoComplete="email"
+                value={email} onChange={change} disabled={busy}
+                invalid={!!error} describedBy={error ? 'email-error' : undefined}
+              />
+            </div>
             {error && <p id="email-error" role="alert" className="mt-2 text-[12px] leading-4 text-red-500">{error}</p>}
 
             <div className="pt-5">

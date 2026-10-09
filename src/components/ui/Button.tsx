@@ -1,9 +1,14 @@
 'use client';
-// Primary button — Figma "Button · Primary" (node 1025:32): Default, Hover, Pressed, Focus,
-// Disabled and Loading. States are plain CSS (.btn-primary in globals.css) so they can be
-// copied into the real codebase as they are.
+// Buttons — Figma "Button · Primary" (node 1025:32) and "Button · White" (node 1027:731), each with
+// Default, Hover, Pressed, Focus, Disabled and Loading. States are plain CSS (.btn-primary /
+// .btn-white in globals.css) so they can be copied into the real codebase as they are.
+// Sizes: "lg" is the Figma 48px full-width button; "md" is a compact 40px, content-width version
+// of the same component for dialog footers and inline cards (same fills, glow and states).
 import Link from 'next/link';
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
+
+type Variant = 'primary' | 'white';
+type Size = 'lg' | 'md';
 
 const Spinner = () => (
   <svg viewBox="0 0 16 16" aria-hidden="true" className="btn-primary__spinner" fill="none">
@@ -12,6 +17,9 @@ const Spinner = () => (
   </svg>
 );
 
+const cls = (variant: Variant, size: Size, className: string) =>
+  ['btn-primary', variant === 'white' && 'btn-white', size === 'md' && 'btn-md', className].filter(Boolean).join(' ');
+
 type Props = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
   children: ReactNode;
   /** Shows the spinner and the loading label; the button stops reacting. */
@@ -19,9 +27,12 @@ type Props = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
   loadingLabel?: ReactNode;
   /** The trailing arrow (Figma "Show icon"). */
   showIcon?: boolean;
+  /** "white" for CTAs on dark or image backgrounds. */
+  variant?: Variant;
+  size?: Size;
 };
 
-export function Button({ children, loading = false, loadingLabel, showIcon = true, className = '', onClick, type = 'button', ...rest }: Props) {
+export function Button({ children, loading = false, loadingLabel, showIcon = true, variant = 'primary', size = 'lg', className = '', onClick, type = 'button', ...rest }: Props) {
   return (
     <button
       {...rest}
@@ -29,7 +40,7 @@ export function Button({ children, loading = false, loadingLabel, showIcon = tru
       aria-busy={loading || undefined}
       aria-disabled={loading || rest.disabled || undefined}
       onClick={(e) => { if (loading) { e.preventDefault(); return; } onClick?.(e); }}
-      className={`btn-primary ${className}`}
+      className={cls(variant, size, className)}
     >
       {loading ? (
         <><Spinner /><span>{loadingLabel ?? children}</span></>
@@ -40,12 +51,12 @@ export function Button({ children, loading = false, loadingLabel, showIcon = tru
   );
 }
 
-/** Same look, for navigation (e.g. "Continue"). */
-export function ButtonLink({ href, children, showIcon = true, className = '' }: { href: string; children: ReactNode; showIcon?: boolean; className?: string }) {
-  return (
-    <Link href={href} className={`btn-primary ${className}`}>
-      <span>{children}</span>
-      {showIcon && <span aria-hidden="true" className="btn-primary__icon" />}
-    </Link>
-  );
+/** Same look, for navigation. `external` opens in a new tab; `disabled` renders the Disabled state. */
+export function ButtonLink({ href, children, showIcon = true, variant = 'primary', size = 'lg', external = false, disabled = false, className = '', title }: {
+  href: string; children: ReactNode; showIcon?: boolean; variant?: Variant; size?: Size; external?: boolean; disabled?: boolean; className?: string; title?: string;
+}) {
+  const inner = (<><span>{children}</span>{showIcon && <span aria-hidden="true" className="btn-primary__icon" />}</>);
+  if (disabled) return <span aria-disabled="true" className={`${cls(variant, size, className)} btn-disabled`}>{inner}</span>;
+  if (external) return <a href={href} target="_blank" rel="noopener noreferrer" title={title} className={cls(variant, size, className)}>{inner}</a>;
+  return <Link href={href} title={title} className={cls(variant, size, className)}>{inner}</Link>;
 }

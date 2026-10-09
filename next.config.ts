@@ -8,7 +8,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [{ protocol: 'https', hostname: 'silver-causal-rodent-516.mypinata.cloud' }],
   },
   async redirects() {
-    return [{ source: '/', destination: '/siherdefi', basePath: false, permanent: false }];
+    return [
+      { source: '/', destination: '/siherdefi', basePath: false, permanent: false },
+      // the "Email verified" interstitial was removed; old links go to the profile step
+      { source: '/verified', destination: '/profile', permanent: false },
+    ];
   },
 };
 

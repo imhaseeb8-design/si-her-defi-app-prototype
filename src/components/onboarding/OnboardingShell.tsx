@@ -21,9 +21,9 @@ export function OnboardingHeader({ right }: { right: HeaderRight }) {
           <Image alt="Si Her DeFi Artwork" width={100} height={100} src={assetPath('/Logo · SI HER DeFi.png')} style={{ width: 'auto', height: 'auto' }} />
         </span>
         <span className="hidden items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-[#f9fafc] px-3 py-1 sm:inline-flex">
-          <span className="text-[9px] font-semibold tracking-[0.14em] text-[#8e8ea6]">POWERED BY</span>
+          <span className="text-[9px] font-medium text-[#8688ae]">Powered by</span>
           <span className="size-2 rounded-full bg-[#0052ff]" />
-          <span className="text-[9.5px] font-bold tracking-[0.14em] text-[#171730]">BASE</span>
+          <span className="text-[11px] font-semibold text-[#0052ff]">BASE</span>
         </span>
       </div>
       <div className="text-[13px]">
@@ -132,7 +132,7 @@ const ASIDES: Record<'login' | 'profile' | 'wallet', { title: string; body: stri
 export function OnboardingAside({ variant }: { variant: keyof typeof ASIDES }) {
   const a = ASIDES[variant];
   return (
-    <aside className="relative flex flex-1 flex-col justify-between overflow-hidden bg-[#0d0f18] p-6 sm:p-12 min-h-[440px] lg:min-h-[calc(100vh-64px)] lg:p-16">
+    <aside className="relative flex flex-1 flex-col justify-between overflow-hidden bg-[#0d0f18] p-6 sm:p-12 min-h-[440px] lg:min-h-0 lg:p-16">
       <Image alt="Si Her DeFi Artwork" fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover object-center" src={assetPath('/logIn.png')} />
       <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/10 to-black/85 pointer-events-none" />
       <div className="relative z-10 max-w-lg">
@@ -161,11 +161,13 @@ export function OnboardingAside({ variant }: { variant: keyof typeof ASIDES }) {
 export function OnboardingShell({ right, step, aside, zeroWidth, children }: {
   right: HeaderRight; step: 0 | 1 | 2; aside: 'login' | 'profile' | 'wallet'; zeroWidth?: string; children: ReactNode;
 }) {
+  // Desktop: the page is exactly the window — the form column scrolls on its own and the
+  // artwork stays put, so there's never white space under either. Below lg it's one page.
   return (
-    <div className="flex min-h-screen flex-col bg-white font-sans antialiased text-[#171730]">
+    <div className="flex min-h-dvh flex-col bg-[#f7f7fb] font-sans antialiased text-[#171730] lg:h-dvh">
       <OnboardingHeader right={right} />
-      <main className="flex flex-1 flex-col lg:flex-row overflow-y-auto">
-        <div className="flex flex-2 items-start lg:items-center justify-center bg-[#f7f7fb] px-4 py-6 sm:px-8 lg:py-8 lg:max-h-[calc(100vh-64px)]">
+      <main className="flex flex-1 flex-col lg:min-h-0 lg:flex-row">
+        <div className="flex flex-2 justify-center bg-[#f7f7fb] px-4 py-6 sm:px-8 lg:min-h-0 lg:overflow-y-auto lg:py-8">
           <div className="w-full max-w-[440px] my-auto">
             <Stepper step={step} zeroWidth={zeroWidth} />
             {children}
@@ -179,13 +181,6 @@ export function OnboardingShell({ right, step, aside, zeroWidth, children }: {
 
 export const cardClass = 'rounded-2xl sm:rounded-3xl border border-[#ececf2] bg-white p-5 sm:p-9 shadow-[0_2px_16px_rgba(23,23,48,0.03),0_12px_32px_-12px_rgba(23,23,48,0.06)]';
 
-export function submitClass(enabled: boolean) {
-  return `flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-[14.5px] font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7c2ae8] ${
-    enabled
-      ? 'bg-gradient-to-r from-[#501c9c] via-[#6d25d6] to-[#983cf4] text-white shadow-md shadow-purple-950/20 hover:brightness-105 active:scale-[0.99] cursor-pointer'
-      : 'bg-[#ece7fb] text-[#a99ccc] cursor-not-allowed'
-  }`;
-}
 
 export const Spinner = ({ className = 'size-4' }: { className?: string }) => (
   <svg viewBox="0 0 24 24" aria-hidden="true" className={`${className} animate-spin`} fill="none">

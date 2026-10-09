@@ -31,3 +31,18 @@ export function timeUntil(iso: string): string | null {
 export const shortAddress = (a: string) => `${a.slice(0, 6)}…${a.slice(-4)}`;
 
 export const firstName = (name?: string | null) => (name || '').trim().split(/\s+/)[0] || 'there';
+
+/** Sentence case for ALL-CAPS labels that arrive from content (e.g. "GET STARTED · SI HER DEFI"),
+ *  keeping brand names intact. Mixed-case strings are returned unchanged. */
+export function tagCase(s?: string | null): string {
+  if (!s) return '';
+  if (/[a-z]/.test(s)) return s;
+  const lower = s.toLowerCase();
+  const out = lower.charAt(0).toUpperCase() + lower.slice(1);
+  return out
+    .replace(/si her defi/gi, 'Si Her DeFi')
+    .replace(/si<3>/gi, 'SI<3>')
+    .replace(/\bdefi\b/gi, 'DeFi')
+    .replace(/\bbase\b/gi, 'Base')
+    .replace(/\b(et|pm|am)\b/g, (m) => m.toUpperCase());
+}

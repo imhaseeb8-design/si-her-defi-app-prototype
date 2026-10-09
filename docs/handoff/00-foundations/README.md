@@ -1,0 +1,70 @@
+# 00 · Foundations: type and buttons (platform-wide)
+
+These apply to every screen, not just redesigned ones. Screenshots: `after-screens.jpg` (type + buttons), `after-fields.jpg` (fields, autofill, errors), `after-scroll.jpg` (layout).
+
+## Type
+- **Geist only.** Geist Mono is removed. Numbers that should line up (codes, addresses, timestamps, counters) use Geist with `font-variant-numeric: tabular-nums`.
+- **No ALL-CAPS tags.** Small tags, section labels and eyebrow text use sentence case with normal letter spacing. Tags that were 9–10.5px caps move up to 11–11.5px, so they keep their visual weight without capitals.
+  - "START HERE" → "Start here"
+  - "UPCOMING SESSIONS (6)" → "Upcoming sessions (6)"
+  - "WEEK 01 QUIZ · SI" → "Week 01 quiz · SI"
+  - "POWERED BY" → "Powered by"
+- **Content from the CMS** that arrives in capitals (e.g. "GET STARTED · SI HER DEFI", "YOUR STARTING POINT") is shown in sentence case with brand names kept: "Get started · Si Her DeFi". The prototype uses `tagCase()` in `src/lib/format.ts`. In the real app either apply the same transform or fix the CMS copy.
+- **Kept as is:** brand wordmarks ("BASE" in the Powered-by pill, "SI HER DAO", "SI<3>") and the 2–3 letter company monograms ("SI", "FIN").
+
+## Text fields
+Every text field is the floating-label field (Bencho "Label input", MIT): `src/components/ui/LabelInput.tsx`, CSS "Label input" in `globals.css`.
+- The label sits in the field and lifts into the top border on focus or once there's a value. The outline turns brand purple on focus and red on error. Height 48, radius 12.
+- **Optional fields** say so in the label: "Professional role (optional)".
+- **Hints** (the old placeholders, e.g. "Engineer, Writer, etc.") show only once you're in an empty field.
+- **Multi-line** (`multiline`): Bio, onboarding answers. The label rests on the first line and lifts the same way; the limit sits under the field as "Max 300 characters" (the field stops at the limit).
+- **"From your application"** sits inside the field on the right. It hides while you type and disappears once you change the pre-filled value.
+- **Errors** are the app's own message under the field, never the browser's "Please fill out this field" bubble (IMPROVEMENTS #4).
+- **Browser autofill:** the outline and label are drawn above the input (`z-index`), and the autofill tint is filled with white, so a saved email can't hide them.
+- **Not changed:** the 6-digit code boxes.
+- Used on: sign in (email), profile (name, role, organization, social link, bio), onboarding questions (answer).
+
+## Flow
+- The separate **"Email verified" screen is removed.** After the 6-digit code, new applicants go straight to Create your profile; returning ones go wherever they left off. `/verified` redirects to `/profile` (`next.config.ts`). The "Email verified ✓" chip stays in the profile header.
+
+## Layout (onboarding steps)
+- **Desktop:** the code, profile and wallet steps fit the window exactly. The form column scrolls on its own and the artwork panel stays fixed, so there's never white space below either (`OnboardingShell`). Below 1024px it's one normal scrolling page.
+- **Sign in (new layout):** the steps and card sit in the middle of the space under the nav at every size, and the artwork rail stays in place while the page scrolls.
+
+## Buttons
+Two components from Figma (section "Button components", `1027:759`):
+
+| Component | Figma | Use on | Code |
+|---|---|---|---|
+| Button · Primary | `1025:32` | light surfaces; also the main action on dark cards | `<Button>` / `<ButtonLink>` |
+| Button · White | `1027:731` | dark or image backgrounds | `variant="white"` |
+
+- **Sizes:** `lg` is the Figma button (48px, full width). `md` is a compact 40px, content-width version of the same component (radius 12, 14px label), used in dialog footers and inline cards. It isn't in Figma yet; add it there if you want it designed.
+- **States:** Default, Hover (pointer devices only), Pressed, Focus (keyboard), Disabled and Loading. All of them are plain CSS in `src/app/globals.css` (`.btn-primary`, `.btn-white`, `.btn-md`).
+- **Arrow:** the arrow is the Figma icon, drawn with a CSS mask so it takes the label colour. The "→" characters were removed from labels.
+
+### Where each CTA now uses a component
+| Screen | CTA | Component |
+|---|---|---|
+| Sign in | Send my code | Primary lg |
+| Code | Verify email (loading "Verifying…") | Primary lg, no arrow |
+| Email verified | Continue | Primary lg |
+| Profile | Save & continue / Save changes (loading "Saving profile") | Primary lg |
+| Wallet | Go to my dashboard (Disabled while signing) | Primary lg |
+| Dashboard · Start here card | Start here / Continue | **White** md |
+| Dashboard · this week card | Start session | Primary md |
+| Dashboard · certificate row | View certificate | Primary md |
+| Dashboard · ready to mint | Mint on Base | **White** md |
+| Add to calendar dialog | Add to Google Calendar / … / Download .ics | Primary lg, no arrow |
+| Onboarding Part 1 | Continue to questions / Resume questions / Back to dashboard | Primary lg |
+| Onboarding questions | Next / Submit | Primary md |
+| Onboarding done | Back to dashboard | Primary lg |
+| Module | Start quiz / Try again / Finish Part 1 to unlock / View your certificate | Primary lg |
+| Module (live) | Join live session | **White** md |
+| Quiz | Next question · Try again · Got it | Primary md |
+| Quiz passed | View your certificate | Primary lg |
+| Certificate | Go to Week 1 · Add to LinkedIn profile ↗ | Primary lg |
+| Certificate | Mint on Base — coming soon | Primary lg, **Disabled** |
+| Settings | Edit profile · Connect wallet | Primary md |
+
+Secondary and outline actions stay as they were, since no secondary component exists yet: Add to calendar (outline), Open, Visit partner site, Share on LinkedIn, Download image, Copy verification link, View public page, View on BaseScan, Back, Save & exit, Disconnect.

@@ -2,22 +2,26 @@
 // "Set up your profile" (captures B01–B06). `?from=dashboard` = editing later ("Save changes").
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useRef, useState } from 'react';
-import { OnboardingShell, Spinner } from '@/components/onboarding/OnboardingShell';
+import { OnboardingShell } from '@/components/onboarding/OnboardingShell';
 import { errorMessage, profileApi } from '@/lib/api';
 import { useRequireAuth } from '@/lib/hooks/useAuth';
 import type { Profile } from '@/lib/types';
+import { Button } from '@/components/ui/Button';
+import { LabelInput } from '@/components/ui/LabelInput';
 
 type Field = 'name' | 'role' | 'organization' | 'socialLink' | 'bio';
-const FIELDS: { key: Exclude<Field, 'bio'>; id: string; label: string; placeholder: string; optional?: boolean }[] = [
-  { key: 'name', id: 'name', label: 'Your name', placeholder: 'Firstname Lastname' },
-  { key: 'role', id: 'role', label: 'Professional role', placeholder: 'Engineer, Writer, etc.', optional: true },
-  { key: 'organization', id: 'org', label: 'Organization', placeholder: 'Name of your organization', optional: true },
-  { key: 'socialLink', id: 'social', label: 'Social link', placeholder: 'https://linkedin.com/in/your-username', optional: true },
+// Every text field is the floating-label LabelInput (same as the sign-in email field).
+// Optional fields say so in their label; the old placeholders become hints shown on focus.
+const FIELDS: { key: Exclude<Field, 'bio'>; id: string; label: string; placeholder: string; type?: 'text' | 'url'; autoComplete?: string }[] = [
+  { key: 'name', id: 'name', label: 'Your name', placeholder: 'Firstname Lastname', autoComplete: 'name' },
+  { key: 'role', id: 'role', label: 'Professional role (optional)', placeholder: 'Engineer, Writer, etc.', autoComplete: 'organization-title' },
+  { key: 'organization', id: 'org', label: 'Organization (optional)', placeholder: 'Name of your organization', autoComplete: 'organization' },
+  { key: 'socialLink', id: 'social', label: 'Social link (optional)', placeholder: 'https://linkedin.com/in/your-username', type: 'url', autoComplete: 'url' },
 ];
-const inputClass = 'w-full rounded-xl border border-[#e2e2ec] bg-white px-3.5 py-2 text-[13px] font-normal text-[#171730] shadow-xs outline-none transition focus:border-[#7c2ae8] focus:ring-1 focus:ring-[#7c2ae8]';
 
+/** Shown inside a field while its value is still the one from the application. */
 const Tag = () => (
-  <span className="rounded-full bg-[#eeeef6] px-2 py-0.5 text-[8.5px] font-bold tracking-wider text-[#7e7e96] uppercase">FROM YOUR APPLICATION</span>
+  <span className="rounded-full bg-[#eeeef6] px-2 py-0.5 text-[11px] font-semibold text-[#7e7e96] whitespace-nowrap">From your application</span>
 );
 
 async function toDataUrl(file: File, max = 512): Promise<string> {
@@ -38,7 +42,8 @@ function ProfileForm({ email }: { email: string }) {
   const fromDashboard = useSearchParams().get('from') === 'dashboard';
   const [values, setValues] = useState<Record<Field, string>>({ name: '', role: '', organization: '', socialLink: '', bio: '' });
   const [photo, setPhoto] = useState('');
-  const [prefilled, setPrefilled] = useState<Set<Field>>(new Set());
+  const [prefilled, setPrefilled] = useState<Partial<Record<Field, string>>>({});
+  const [nameError, setNameError] = useState<string | null>(null);
   const [banner, setBanner] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +58,7 @@ function ProfileForm({ email }: { email: string }) {
       setPhoto(profile?.photoUrl || '');
       const fromApp = (prefill?.prefilledFields?.length ?? 0) > 0;
       setBanner(fromApp);
-      setPrefilled(new Set(fromApp ? (Object.keys(v) as Field[]).filter((k) => v[k]) : []));
+      setPrefilled(fromApp ? Object.fromEntries((Object.keys(v) as Field[]).filter((k) => v[k]).map((k) => [k, v[k]])) : {});
     })();
   }, []);
 
@@ -65,6 +70,8 @@ function ProfileForm({ email }: { email: string }) {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // the app's own error under the field, not the browser's "Please fill out this field" bubble
+    if (!values.name.trim()) { setNameError('Add your name — it’s the one printed on your certificate.'); return; }
     setBusy(true);
     setError(null);
     try {
@@ -79,7 +86,7 @@ function ProfileForm({ email }: { email: string }) {
   return (
     <OnboardingShell right={{ kind: 'account', email }} step={1} aside="profile">
       <div className="w-full">
-        <form className="w-full" onSubmit={submit}>
+        <form className="w-full" noValidate onSubmit={submit}>
           <input ref={file} accept="image/png,image/jpeg,image/webp" className="hidden" placeholder="Upload your profile picture" type="file" onChange={(e) => pick(e.target.files?.[0])} />
           <div>
             <h1 className="text-[22px] sm:text-[24px] font-bold tracking-tight text-[#171730]">Set up your profile</h1>
@@ -124,31 +131,37 @@ function ProfileForm({ email }: { email: string }) {
               )}
             </div>
           </div>
-          <div className="mt-4.5 space-y-3">
-            {FIELDS.map((f) => (
-              <div key={f.key}>
-                <div className="mb-1 flex items-center justify-between">
-                  <label htmlFor={f.id} className="text-[12px] font-semibold text-[#171730]">
-                    {f.label}{f.optional && <> <span className="font-normal text-[#8e8ea6]">— optional</span></>}
-                  </label>
-                  {prefilled.has(f.key) && <Tag />}
+          <div className="mt-3 space-y-2">
+            {FIELDS.map((f) => {
+              const fromApp = !!prefilled[f.key] && values[f.key] === prefilled[f.key];
+              return (
+                <div key={f.key}>
+                  <LabelInput
+                    id={f.id} name={f.key} label={f.label} type={f.type ?? 'text'} corner={12} height={48}
+                    placeholder={f.placeholder} autoComplete={f.autoComplete}
+                    value={values[f.key]} disabled={busy}
+                    invalid={f.key === 'name' && !!nameError} describedBy={f.key === 'name' && nameError ? 'name-error' : undefined}
+                    adornment={fromApp ? <Tag /> : undefined}
+                    onChange={(v) => { setValues({ ...values, [f.key]: v }); if (f.key === 'name' && nameError) setNameError(null); }}
+                  />
+                  {f.key === 'name' && nameError && <p id="name-error" role="alert" className="mt-1.5 text-[12px] text-red-500">{nameError}</p>}
                 </div>
-                <input id={f.id} placeholder={f.placeholder} required={!f.optional} className={inputClass} type="text" value={values[f.key]} onChange={(e) => setValues({ ...values, [f.key]: e.target.value })} />
-              </div>
-            ))}
+              );
+            })}
             <div>
-              <div className="mb-1 flex items-center justify-between">
-                <label htmlFor="bio" className="text-[12px] font-semibold text-[#171730]">Bio <span className="font-normal text-[#8e8ea6]">— optional</span></label>
-                {prefilled.has('bio') && <Tag />}
-              </div>
-              <textarea id="bio" rows={3} maxLength={300} placeholder="A line about you and what you're building" className={`resize-none ${inputClass}`} value={values.bio} onChange={(e) => setValues({ ...values, bio: e.target.value })} />
-              <p className="mt-0.5 text-right text-[10.5px] text-[#8e8ea6] tabular-nums">{values.bio.length} / 300</p>
+              <LabelInput
+                id="bio" name="bio" label="Bio (optional)" multiline height={96} corner={12} maxLength={300}
+                placeholder="A line about you and what you're building" value={values.bio} disabled={busy}
+                adornment={prefilled.bio && values.bio === prefilled.bio ? <Tag /> : undefined}
+                onChange={(v) => setValues({ ...values, bio: v })}
+              />
+              <p className="mt-1 text-right text-[11px] text-[#8e8ea6]">Max 300 characters</p>
             </div>
           </div>
           {error && <p role="alert" className="mt-3 text-[12px] text-red-500">{error}</p>}
-          <button type="submit" disabled={busy} className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#501c9c] via-[#6d25d6] to-[#983cf4] px-4 py-3 text-[14px] font-semibold text-white shadow-md shadow-purple-950/20 transition-all hover:brightness-105 active:scale-[0.99] disabled:opacity-90 cursor-pointer">
-            {busy ? (<><Spinner /><span>Saving profile</span></>) : (<><span>{fromDashboard ? 'Save changes' : 'Save & continue'}</span><span aria-hidden="true" className="text-base font-normal">→</span></>)}
-          </button>
+          <div className="mt-5">
+            <Button type="submit" loading={busy} loadingLabel="Saving profile">{fromDashboard ? 'Save changes' : 'Save & continue'}</Button>
+          </div>
           <p className="mt-3 text-[11.5px] leading-relaxed text-[#8e8ea6]">Only your name is required. Next: connect a wallet on Base — it’s where your certificate lands.</p>
         </form>
       </div>

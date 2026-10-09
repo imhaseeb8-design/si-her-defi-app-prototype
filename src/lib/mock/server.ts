@@ -42,8 +42,6 @@ export interface DemoState {
     wrongCode: boolean;
     walletMode: WalletMode;
     quizMode: 'pass' | 'fail';
-    /** Sign-in email field: Bencho floating label, or the plain Figma field. */
-    emailField: 'floating' | 'classic';
     latency: number;
     /** ISO date the prototype treats as "now", or null for the real clock. */
     now: string | null;
@@ -74,7 +72,7 @@ export function initialState(): DemoState {
     scheduled: {},
     minted: false,
     settings: clone((settingsFx as { data: Settings }).data),
-    flags: { emailNotFound: false, wrongCode: false, walletMode: 'metamask', quizMode: 'pass', emailField: 'floating', latency: 450, now: DEFAULT_NOW },
+    flags: { emailNotFound: false, wrongCode: false, walletMode: 'metamask', quizMode: 'pass', latency: 450, now: DEFAULT_NOW },
   };
 }
 

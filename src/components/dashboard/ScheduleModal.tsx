@@ -3,6 +3,7 @@
 // the call to POST /modules/:slug/schedule is what the live app records.
 import { useEffect, useState } from 'react';
 import { modulesApi } from '@/lib/api';
+import { Button } from '@/components/ui/Button';
 import { sessionRange, tz } from '@/lib/format';
 import type { Module } from '@/lib/types';
 
@@ -118,7 +119,7 @@ export function ScheduleModal({ module: m, onClose, onScheduled }: { module: Mod
           </button>
         </div>
         <div className="mt-4 space-y-2.5">
-          <button type="button" disabled={busy} onClick={add} className="w-full rounded-xl bg-[#1c1435] py-3 text-[13px] font-bold text-white shadow-md hover:bg-[#281b4d] active:scale-[0.99] transition cursor-pointer disabled:opacity-50">{CTA[provider]}</button>
+          <Button loading={busy} loadingLabel="Adding…" showIcon={false} onClick={add}>{CTA[provider]}</Button>
           <button type="button" onClick={onClose} className="w-full text-center text-[12px] font-medium text-[#8e8ea6] hover:text-[#171730] transition cursor-pointer py-1">Close</button>
         </div>
       </div>
