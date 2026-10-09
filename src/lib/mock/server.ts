@@ -42,6 +42,8 @@ export interface DemoState {
     wrongCode: boolean;
     walletMode: WalletMode;
     quizMode: 'pass' | 'fail';
+    /** Sign-in email field: Bencho floating label, or the plain Figma field. */
+    emailField: 'floating' | 'classic';
     latency: number;
     /** ISO date the prototype treats as "now", or null for the real clock. */
     now: string | null;
@@ -72,7 +74,7 @@ export function initialState(): DemoState {
     scheduled: {},
     minted: false,
     settings: clone((settingsFx as { data: Settings }).data),
-    flags: { emailNotFound: false, wrongCode: false, walletMode: 'metamask', quizMode: 'pass', latency: 450, now: DEFAULT_NOW },
+    flags: { emailNotFound: false, wrongCode: false, walletMode: 'metamask', quizMode: 'pass', emailField: 'floating', latency: 450, now: DEFAULT_NOW },
   };
 }
 
@@ -86,7 +88,9 @@ export function getState(): DemoState {
   if (typeof window === 'undefined') return initialState();
   try {
     const raw = window.localStorage.getItem(KEY);
-    cache = raw ? { ...initialState(), ...JSON.parse(raw) } : initialState();
+    const base = initialState();
+    const saved = raw ? JSON.parse(raw) : null;
+    cache = saved ? { ...base, ...saved, flags: { ...base.flags, ...saved.flags } } : base;
   } catch {
     cache = initialState();
   }
@@ -95,8 +99,9 @@ export function getState(): DemoState {
 
 export function setState(next: DemoState | ((s: DemoState) => void)) {
   const s = getState();
-  if (typeof next === 'function') next(s); else cache = next;
-  try { window.localStorage.setItem(KEY, JSON.stringify(cache ?? s)); } catch { /* private mode */ }
+  // A fresh top-level object on every change, so useSyncExternalStore subscribers re-render.
+  if (typeof next === 'function') { next(s); cache = { ...s, flags: { ...s.flags } }; } else cache = next;
+  try { window.localStorage.setItem(KEY, JSON.stringify(cache)); } catch { /* private mode */ }
   listeners.forEach((l) => l());
 }
 

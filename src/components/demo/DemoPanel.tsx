@@ -84,6 +84,12 @@ export function DemoPanel() {
         {WALLET_MODES.map((m) => <option key={m.id} value={m.id}>{m.label}</option>)}
       </select>
 
+      <span className={label}>Sign-in email field</span>
+      <select value={demo.flags.emailField} onChange={(e) => flag('emailField', e.target.value as 'floating' | 'classic')} className="mb-4 w-full rounded-lg border border-[#e2e2ec] px-2 py-1.5">
+        <option value="floating">Floating label (Bencho)</option>
+        <option value="classic">Classic label above (Figma)</option>
+      </select>
+
       <span className={label}>Errors & outcomes</span>
       <div className="mb-4 space-y-1.5">
         <label className="flex items-center gap-2"><input type="checkbox" checked={demo.flags.emailNotFound} onChange={(e) => flag('emailNotFound', e.target.checked)} /> Email not on the applicant list</label>
