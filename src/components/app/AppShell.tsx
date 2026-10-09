@@ -147,7 +147,7 @@ function AccountMenu({ collapsed }: { collapsed: boolean }) {
             </div>
           </div>
           <div className="py-1 space-y-0.5">
-            <Link className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-[12px] font-medium text-[#5f5f7a] hover:bg-[#f9f9fc] hover:text-[#171730] transition" href="/profile?from=dashboard">
+            <Link className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-[12px] font-medium text-[#5f5f7a] hover:bg-[#f9f9fc] hover:text-[#171730] transition" href="/settings#profile">
               <svg viewBox="0 0 24 24" className="size-4 text-[#8e8ea6]" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
               <span>Edit profile</span>
             </Link>
@@ -195,7 +195,7 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
               </div>
             </div>
             <div className="space-y-1 pt-1 border-t border-[#f0f0f5]">
-              <Link onClick={onClose} className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-[12px] font-medium text-[#5f5f7a] hover:bg-gray-50 hover:text-[#171730] transition" href="/profile?from=dashboard">
+              <Link onClick={onClose} className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-[12px] font-medium text-[#5f5f7a] hover:bg-gray-50 hover:text-[#171730] transition" href="/settings#profile">
                 <svg viewBox="0 0 20 20" aria-hidden="true" className="size-3.5 text-[#8e8ea6]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m13.5 3.5 3 3L6 17H3v-3L13.5 3.5z" /></svg>
                 <span>Edit profile</span>
               </Link>

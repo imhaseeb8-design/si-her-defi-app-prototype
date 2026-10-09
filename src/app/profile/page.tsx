@@ -8,6 +8,7 @@ import { useRequireAuth } from '@/lib/hooks/useAuth';
 import type { Profile } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
 import { LabelInput } from '@/components/ui/LabelInput';
+import { toDataUrl } from '@/lib/image';
 
 type Field = 'name' | 'role' | 'organization' | 'socialLink' | 'bio';
 // Every text field is the floating-label LabelInput (same as the sign-in email field).
@@ -24,18 +25,6 @@ const Tag = () => (
   <span className="rounded-full bg-[#eeeef6] px-2 py-0.5 text-[11px] font-medium text-[#7e7e96] whitespace-nowrap">From your application</span>
 );
 
-async function toDataUrl(file: File, max = 512): Promise<string> {
-  const url = URL.createObjectURL(file);
-  const img = new Image();
-  await new Promise((r, j) => { img.onload = r; img.onerror = j; img.src = url; });
-  const scale = Math.min(1, max / Math.max(img.width, img.height));
-  const c = document.createElement('canvas');
-  c.width = Math.round(img.width * scale);
-  c.height = Math.round(img.height * scale);
-  c.getContext('2d')!.drawImage(img, 0, 0, c.width, c.height);
-  URL.revokeObjectURL(url);
-  return c.toDataURL('image/jpeg', 0.85);
-}
 
 function ProfileForm({ email }: { email: string }) {
   const router = useRouter();

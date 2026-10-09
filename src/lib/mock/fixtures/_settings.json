@@ -1,1 +1,1 @@
-{"success":true,"message":"Account settings retrieved","data":{"emailNotifications":false,"onChainVerificationPrivacy":true}}
+{"success":true,"message":"Account settings retrieved","data":{"emailNotifications":true,"onChainVerificationPrivacy":true}}

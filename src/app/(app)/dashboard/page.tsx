@@ -65,7 +65,7 @@ function ProfileCard({ profile }: { profile: Profile }) {
         {profile.bio ? (
           <p className="mt-4 line-clamp-2 text-[12.5px] leading-5 text-[#5f5f7a]">{profile.bio}</p>
         ) : (
-          <Link href="/profile?from=dashboard" className="mt-4 block text-[12.5px] leading-5 text-[#9a9cbd] hover:text-[#7c2ae8]">Add a short bio. Partners see it on your profile.</Link>
+          <Link href="/settings#profile" className="mt-4 block text-[12.5px] leading-5 text-[#9a9cbd] hover:text-[#7c2ae8]">Add a short bio. Partners see it on your profile.</Link>
         )}
       </div>
       <div className="relative mt-4 flex items-center justify-between gap-3 border-t border-[#f0f0f6] pt-4 text-[12.5px]">
@@ -75,7 +75,7 @@ function ProfileCard({ profile }: { profile: Profile }) {
             <span className="truncate">{link}</span>
           </a>
         ) : <span className="text-[#9a9cbd]">No social link yet</span>}
-        <Link href="/profile?from=dashboard" className="inline-flex shrink-0 items-center gap-1.5 font-medium text-[#7c2ae8] transition-colors hover:text-[#5e3295]">
+        <Link href="/settings#profile" className="inline-flex shrink-0 items-center gap-1.5 font-medium text-[#7c2ae8] transition-colors hover:text-[#5e3295]">
           <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M11.5 2.5a1.414 1.414 0 0 1 2 2L5 13H2v-3l8.5-8.5z" /></svg>
           Edit profile
         </Link>
