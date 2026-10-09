@@ -52,7 +52,6 @@ function ProfileCard({ profile }: { profile: Profile }) {
   const meta = [profile.role, profile.organization].filter(Boolean).join(' · ');
   return (
     <section className="relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[#ececf2] bg-white p-6 shadow-[0_2px_12px_rgba(23,23,48,0.03)]">
-      <div aria-hidden="true" className="pointer-events-none absolute -left-16 -top-20 size-56 rounded-full bg-[radial-gradient(closest-side,rgba(155,77,255,0.14),transparent)]" />
       <div className="relative">
         <div className="flex items-center gap-4">
           <span className="shrink-0 rounded-full bg-gradient-to-br from-[#9b4dff] via-[#c77dff] to-[#f0abfc] p-[2px]">
@@ -105,20 +104,20 @@ function StartHere({ status }: { status: OnboardStatus }) {
   }
   return (
     <div className="relative min-h-[190px] overflow-hidden rounded-2xl bg-[#0f0c1b] p-6 sm:p-7 text-white shadow-md">
-      <Image alt="" fill sizes="(min-width: 1024px) 960px, 100vw" className="object-cover object-center opacity-85" src={card.imageUrl} />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/75 pointer-events-none" />
+      <Image alt="" fill sizes="(min-width: 1024px) 960px, 100vw" className="scale-[1.22] object-cover object-center" src={card.imageUrl} />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/35 to-black/20 pointer-events-none" />
       <div className="relative z-10 flex h-full flex-col justify-between gap-6">
         <div>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[11px] font-bold text-white">● {tagCase(card.stepLabel)}</span>
-          <h3 className="mt-2 text-[20px] sm:text-[22px] font-bold tracking-tight text-white">{card.title}</h3>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[11px] font-medium text-white">● {tagCase(card.stepLabel).split(' · ')[0]}</span>
+          <h3 className="mt-2 text-[20px] sm:text-[22px] font-medium tracking-tight text-white">{card.title}</h3>
           <p className="mt-1.5 max-w-xl text-[12.5px] leading-relaxed text-white/80">{card.description}</p>
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
+        <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3 pt-2">
           <div className="flex items-center gap-3">
             <ButtonLink href="/onboard" variant="white" size="md">{status.part1Status === 'draft' ? 'Continue' : 'Start here'}</ButtonLink>
-            <span className="text-[11.5px] font-medium text-white/75">{card.questionCount} questions · about {card.questionsMinutes} minutes</span>
+            <span className="text-[11.5px] text-white/80">{card.questionCount} questions · about {card.questionsMinutes} minutes</span>
           </div>
-          <p className="text-[11px] text-white/65 italic">Required before Si Her DeFi modules unlock*</p>
+          <p className="ml-auto text-right text-[11px] italic leading-4 text-white/70">Required before Si Her DeFi modules unlock*</p>
         </div>
       </div>
     </div>
