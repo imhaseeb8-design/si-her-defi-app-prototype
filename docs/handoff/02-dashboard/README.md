@@ -95,3 +95,10 @@ Screenshot: `after-onboarding-card.jpg`.
 - **Part 1** row: green check tile, "Part 1 · Done", the title, the CMS done message, and **Review** (back to the Part 1 page).
 - **Part 2** row: lock tile, "Part 2", "Onboarding Part 2", "Opens later in the cohort. We'll let you know when it's ready.", and a **Locked** tag. Uses `part2Unlocked` / `part2Done` from the status API; the title and copy are placeholders until Part 2 has CMS content.
 - **Placement:** before Part 1 is done, the onboarding card leads the page under "Begin your journey". Once Part 1 is done it moves down into "Your learning path", after the sessions and right before "Your certificate", under a small "Your onboarding" label (`after-onboarding-moved.jpg`).
+
+## From our partners
+Screenshot: `after-partners.jpg` (desktop 3-up, mobile stacked).
+- Three partners, each built around one action: **DeFi For Good Foundation · Donate**, **Tangem · Get a wallet**, **KAST · Sign up** (demo data in `_partners.json`).
+- Card: logo tile + action tag (lilac pill, sentence case) on top, partner name, one-line description, a full-width outline CTA ("Donate on their site ↗", "Shop on their site ↗", "Sign up on their site ↗"), then the site domain and either "✓ Verified" or "Referral link". No more dark placeholder block, no all-caps or mono tags.
+- One line under the grid explains referral links: "Si Her DAO may earn a referral fee from links marked 'Referral link'."
+- 3 columns on desktop, 2 on tablet, 1 on mobile. Logos are text wordmarks in the prototype; add a logo image field to the CMS for production.

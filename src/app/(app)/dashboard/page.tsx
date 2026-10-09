@@ -298,28 +298,35 @@ function ReadyToMint() {
   );
 }
 
+// Partner wordmarks for the prototype (the CMS has no logos yet: add a logo field and use the image).
+const PARTNER_MARK: Record<string, React.ReactNode> = {
+  'partner-defi-for-good-foundation': <span className="text-[15px] font-medium tracking-[-0.02em]"><span className="text-[#1d6fe0]">DeFi</span> <span className="text-[12px] text-[#22a06b]">for Good</span></span>,
+  'partner-tangem': <span className="flex items-center gap-1.5 text-[15px] font-medium tracking-[-0.02em] text-[#111]"><span className="grid h-3.5 w-3.5 grid-rows-[1fr_2fr] gap-[2px]" aria-hidden="true"><span className="bg-[#111]" /><span className="mx-auto w-1.5 bg-[#111]" /></span>tangem</span>,
+  'partner-kast': <span className="rounded bg-[#111] px-2 py-0.5 text-[13px] font-medium tracking-[0.02em] text-white">KAST</span>,
+};
+const domain = (url: string) => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return url; } };
+
+/** One partner and the one thing you can do with them; opens their site in a new tab. */
 function PartnerCard({ p }: { p: Partner }) {
+  const referral = /referral/i.test(p.footerText);
   return (
-    <div className="flex flex-col justify-between overflow-hidden rounded-2xl border border-[#ececf2] bg-white shadow-xs transition hover:shadow-md">
-      <div className="relative h-28 bg-[#1e1538] flex items-center justify-center overflow-hidden">
-        {p.imageUrl ? <Image alt="" fill sizes="240px" className="object-cover" src={p.imageUrl} /> : (
-          <span className="grid size-11 place-items-center rounded-full bg-[#2a1f4d] text-white/90 border border-white/10 font-medium text-sm">{p.title.charAt(0)}</span>
-        )}
-      </div>
-      <div className="flex flex-1 flex-col justify-between p-4.5">
-        <div>
-          <div className="flex items-start justify-between gap-2">
-            <span className="text-[11.5px] font-medium text-[#171730]">{p.title}</span>
-            <span className="shrink-0 rounded-full bg-[#f4f4fa] px-2 py-0.5 text-[11px] font-medium text-[#7e7e96]">{p.tag}</span>
-          </div>
-          <p className="mt-2 text-[11.5px] leading-relaxed text-[#5f5f7a] line-clamp-2">{p.description}</p>
+    <article className="group flex flex-col rounded-2xl border border-[#ececf2] bg-white p-5 transition hover:border-[#dcd0f2]">
+      <div className="flex items-start justify-between gap-3">
+        <div className="grid h-11 min-w-11 place-items-center rounded-xl border border-[#ececf2] bg-white px-3">
+          {PARTNER_MARK[p.id] ?? <span className="text-[14px] font-medium text-[#151534]">{p.title.charAt(0)}</span>}
         </div>
-        <div className="mt-4 pt-3 border-t border-[#f0f0f5]">
-          <a href={p.actionUrl} target="_blank" rel="noopener noreferrer" className="block text-center w-full rounded-xl border border-[#e2e2ec] py-2 text-[12px] font-medium text-[#171730] transition hover:bg-gray-50 cursor-pointer">{p.actionText.replace(/\s*↗\s*$/, '')} <Arrow dir="up-right" /></a>
-          <p className="mt-2 text-center text-[10px] text-[#9ca3af]">{p.footerText}</p>
-        </div>
+        <span className="shrink-0 rounded-full bg-[#f4effe] px-2.5 py-1 text-[11.5px] font-medium text-[#7c2ae8]">{tagCase(p.tag)}</span>
       </div>
-    </div>
+      <h3 className="mt-4 text-[15px] font-medium text-[#151534]">{p.title}</h3>
+      <p className="mt-1 flex-1 text-[12.5px] leading-5 text-[#5f5f7a]">{p.description}</p>
+      <a href={p.actionUrl} target="_blank" rel="noopener noreferrer" className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-[#d4c2f5] text-[13.5px] font-medium text-[#7c2ae8] transition hover:border-[#b794ef] hover:bg-[#f8f5fe]">
+        {p.actionText.replace(/\s*↗\s*$/, '')} <Arrow dir="up-right" />
+      </a>
+      <div className="mt-3 flex items-center justify-between gap-2 text-[11.5px] text-[#9a9cbd]">
+        <span className="truncate">{domain(p.actionUrl)}</span>
+        {referral ? <span className="shrink-0" title={p.footerText}>Referral link</span> : <span className="inline-flex shrink-0 items-center gap-1 text-[#16a34a]"><Check className="size-3.5" />Verified</span>}
+      </div>
+    </article>
   );
 }
 
@@ -491,9 +498,10 @@ export default function DashboardPage() {
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className={sectionTitle}>From our partners</h2>
-            <span className="text-[11px] text-[#9ca3af]">Verified ecosystem partners · opens in new tab</span>
+            <span className="text-[12.5px] text-[#8e8ea6]">Verified ecosystem partners · open in a new tab</span>
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">{partners.map((p) => <PartnerCard key={p.id} p={p} />)}</div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">{partners.map((p) => <PartnerCard key={p.id} p={p} />)}</div>
+          {partners.some((p) => /referral/i.test(p.footerText)) && <p className="text-[11.5px] text-[#9a9cbd]">Si Her DAO may earn a referral fee from links marked “Referral link”.</p>}
         </section>
       )}
 
