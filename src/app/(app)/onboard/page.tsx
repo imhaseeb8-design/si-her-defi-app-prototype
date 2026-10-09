@@ -85,8 +85,7 @@ export default function OnboardPage() {
     <div className="mx-auto max-w-5xl space-y-6">
       <Link className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#7c2ae8] transition-colors hover:underline" href="/dashboard"><Arrow dir="left" /> Back to dashboard</Link>
       <div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f0eafb] px-3 py-1 text-[11px] font-medium text-[#7c2ae8]">● {tagCase(c.stepLabel)}</span>
-        <h1 className="mt-2 text-[24px] sm:text-[26px] font-medium tracking-tight text-[#171730]">{c.page.title}</h1>
+        <h1 className="text-[24px] sm:text-[26px] font-medium tracking-tight text-[#171730]">{c.page.title}</h1>
         <p className="mt-1 text-[13px] leading-relaxed text-[#5f5f7a]">{c.page.subtitle}</p>
       </div>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
