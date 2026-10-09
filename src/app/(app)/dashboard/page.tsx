@@ -137,9 +137,8 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
         <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[11px] font-medium text-white">Week {String(m.week).padStart(2, '0')} · {m.videoUrl ? 'Session recording' : 'Recording after the live session'}</span>
         <h3 className="mt-2 text-[20px] font-medium tracking-tight text-white">{m.title}</h3>
         <p className="mt-1.5 max-w-xl text-[12px] leading-relaxed text-white/80 line-clamp-2">{m.description}</p>
-        <div className="mt-3 flex items-center gap-2">
-          <span className="grid size-5 place-items-center rounded bg-black/60 tabular-nums text-[11px] font-medium text-white/90">{m.companyTag.slice(0, 3)}</span>
-          <span className="text-[11px] text-white/75">Presented by {m.presenter}{m.partnerName ? ` (${m.partnerName})` : ''}</span>
+        <div className="mt-3">
+          <span className="text-[11px] text-white/75">Presented by {m.presenter}{m.partnerName ? ` · ${m.partnerName}` : ''}</span>
         </div>
       </div>
       <div className="relative z-10 mt-5 flex flex-wrap items-center justify-between gap-4 pt-2">
