@@ -46,3 +46,17 @@ export function tagCase(s?: string | null): string {
     .replace(/\bbase\b/gi, 'Base')
     .replace(/\b(et|pm|am)\b/g, (m) => m.toUpperCase());
 }
+
+/** A session's time, always in one format from its start/end (not the CMS's free-text dateLabel):
+ *  { month: 'Oct', day: '15', weekday: 'Thursday', time: '12:00–1:00 PM ET' } in US Eastern time. */
+export function sessionWhen(start: string, end?: string) {
+  const tz = 'America/New_York';
+  const s = new Date(start);
+  const part = (o: Intl.DateTimeFormatOptions, d = s) => new Intl.DateTimeFormat('en-US', { timeZone: tz, ...o }).format(d);
+  const clock = (d: Date) => part({ hour: 'numeric', minute: '2-digit', hour12: true }, d);
+  const from = clock(s);
+  const to = end ? clock(new Date(end)) : '';
+  // "12:00 PM–1:00 PM" → "12:00–1:00 PM" when both share AM/PM
+  const time = to ? (from.slice(-2) === to.slice(-2) ? `${from.slice(0, -3)}–${to}` : `${from}–${to}`) : from;
+  return { month: part({ month: 'short' }), day: part({ day: 'numeric' }), weekday: part({ weekday: 'long' }), time: `${time} ET` };
+}

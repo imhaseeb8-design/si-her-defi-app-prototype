@@ -54,3 +54,10 @@ Screenshot: `after-sessions-more.jpg`.
 - The list shows the first **3** sessions. Below it, **Show more sessions (N)** reveals 3 more each click, with N the number still hidden. Once everything is showing it becomes **Show fewer**, which goes back to 3.
 - The heading still counts them all ("Upcoming sessions (6)"), so any number of sessions can come from the CMS without stretching the page.
 - With 3 or fewer sessions, no button shows.
+
+## Upcoming session card (trial, first row only)
+Screenshot: `after-session-card-trial.jpg`. Pending approval before it's applied to every row.
+- **Why:** the old rows printed the CMS's free-text `dateLabel`, so formats differed ("Thursday, October 15, 2026 · 12:00–1:00 PM ET" vs "Oct 22 · 12–1 PM ET"), and the "Opens Oct 15" pill repeated the date.
+- **New card:** date tile on the left (month in purple, day large), then title (15px), "Thursday, Oct 15 · 12:00–1:00 PM ET", then speaker · company with the monogram. "Add to calendar" on the right (full width under the content on mobile); once added it turns green, "In your calendar". Solid border, white card; the "Opens" pill is gone.
+- **Formatting:** built from `scheduledDate`/`endDate` in US Eastern time with `sessionWhen()` (`src/lib/format.ts`), so every card reads the same whatever is typed in the CMS.
+- **Data issue found:** "From TradFi to DeFi" has `scheduledDate` 12:00 UTC (= 8:00 AM ET) but its label says 12:00–1:00 PM ET. Fix the start/end time in the CMS (should be 16:00–17:00 UTC).

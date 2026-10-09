@@ -10,7 +10,7 @@ import { ScheduleModal } from '@/components/dashboard/ScheduleModal';
 import { ButtonLink } from '@/components/ui/Button';
 import { Spinner } from '@/components/onboarding/OnboardingShell';
 import { assetPath, badgeApi, certificateApi, modulesApi, onboardApi, partnerApi } from '@/lib/api';
-import { firstName, shortAddress, shortDate, tagCase } from '@/lib/format';
+import { firstName, sessionWhen, shortAddress, shortDate, tagCase } from '@/lib/format';
 import type { Badges, Certificate, Module, OnboardStatus, Partner, Profile } from '@/lib/types';
 import { Arrow } from '@/components/ui/Arrow';
 
@@ -171,6 +171,32 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
         </div>
         )}
       </div>
+    </div>
+  );
+}
+
+/** Proposed upcoming-session card (trial on the first row only): date tile, title, day + time, speaker, Add to calendar. */
+function SessionCard({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => void }) {
+  const when = sessionWhen(m.scheduledDate, m.endDate);
+  return (
+    <div className="flex flex-col gap-4 rounded-2xl border border-[#ececf2] bg-white p-4 shadow-[0_2px_12px_rgba(23,23,48,0.03)] transition hover:border-[#dcd0f2] sm:flex-row sm:items-center sm:p-5">
+      <div className="flex min-w-0 flex-1 items-center gap-4">
+        <div className="flex w-14 shrink-0 flex-col items-center rounded-xl border border-[#ebe3fa] bg-[#f8f5fe] py-2 leading-none" aria-hidden="true">
+          <span className="text-[11.5px] font-medium text-[#7c2ae8]">{when.month}</span>
+          <span className="mt-1 text-[22px] font-medium tabular-nums text-[#151534]">{when.day}</span>
+        </div>
+        <div className="min-w-0">
+          <h3 className="truncate text-[15px] font-medium text-[#151534]">{m.title}</h3>
+          <p className="mt-1 text-[12.5px] text-[#5f5f7a]"><time dateTime={m.scheduledDate}>{when.weekday}, {when.month} {when.day} · {when.time}</time></p>
+          <p className="mt-1 flex items-center gap-1.5 text-[12.5px] text-[#7e7e96]">
+            <span className="grid h-4 min-w-4 place-items-center rounded bg-[#eef0f6] px-0.5 text-[8.5px] font-medium text-[#6b6d8f]">{m.companyTag.slice(0, 3)}</span>
+            <span className="truncate"><span className="text-[#45465f]">{m.presenter}</span>{m.partnerName ? ` · ${m.partnerName}` : ''}</span>
+          </p>
+        </div>
+      </div>
+      <button type="button" onClick={() => onSchedule(m)} className={`inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border px-4 py-2 text-[12.5px] font-medium transition ${m.isScheduled ? 'border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]' : 'border-[#d4c2f5] text-[#7c2ae8] hover:border-[#b794ef] hover:bg-[#f8f5fe]'}`}>
+        <CalendarIcon /><span>{m.isScheduled ? 'In your calendar' : 'Add to calendar'}</span>
+      </button>
     </div>
   );
 }
@@ -418,7 +444,7 @@ export default function DashboardPage() {
               <h2 className="text-[11.5px] font-medium text-[#9a9cbd]">Upcoming sessions ({rest.length})</h2>
               <span className="text-[11.5px] text-[#9a9cbd]">Add them to your calendar now</span>
             </div>
-            <div className="space-y-3">{rest.slice(0, shown).map((m) => <SessionRow key={m.slug} m={m} onSchedule={setScheduling} />)}</div>
+            <div className="space-y-3">{rest.slice(0, shown).map((m, i) => (i === 0 && m.sessionState === 'upcoming' && !m.quiz.isPassed ? <SessionCard key={m.slug} m={m} onSchedule={setScheduling} /> : <SessionRow key={m.slug} m={m} onSchedule={setScheduling} />))}</div>
             {rest.length > SESSIONS_STEP && (
               <div className="flex justify-center pt-1">
                 {shown < rest.length ? (
