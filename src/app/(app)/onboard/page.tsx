@@ -9,13 +9,10 @@ import { Button, ButtonLink } from '@/components/ui/Button';
 import { LabelInput } from '@/components/ui/LabelInput';
 import { onboardApi } from '@/lib/api';
 import { tagCase } from '@/lib/format';
+import { IntroVideo, WATCH_THRESHOLD } from '@/components/onboarding/IntroVideo';
 import type { Part1, Part1Progress } from '@/lib/types';
 import { Arrow } from '@/components/ui/Arrow';
 
-const embed = (url: string) => {
-  const id = url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/)?.[1];
-  return id ? `https://www.youtube-nocookie.com/embed/${id}?rel=0` : url;
-};
 
 type StepState = 'done' | 'current' | 'todo';
 // Shown under the intro video. Prototype copy: in the real app these are CMS fields (e.g. video.title, video.description).
@@ -43,6 +40,7 @@ export default function OnboardPage() {
   const [questionIndex, setQuestionIndex] = useState<number | null>(null);
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [watchFraction, setWatchFraction] = useState(0);
 
   useEffect(() => {
     onboardApi.getPart1().then((d) => { setData(d); setProgress(d.progress); }).catch(() => {});
@@ -77,6 +75,8 @@ export default function OnboardPage() {
   const answer = q ? progress.answers[q.id] ?? '' : '';
   const isLast = questionIndex === questions.length - 1;
 
+  const closeQuestions = async () => { await save({}); setQuestionIndex(null); };
+
   const submit = async () => {
     setBusy(true);
     await onboardApi.submitPart1({ videoWatched: progress.videoWatched, followedSocialIds: progress.followedSocialIds, answers: progress.answers });
@@ -96,13 +96,7 @@ export default function OnboardPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         <div className="space-y-6 lg:col-span-8">
           <div className="space-y-2">
-            <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-[#0e0c18] shadow-md">
-              {c.video.url ? (
-                <iframe src={embed(c.video.url)} title={c.video.caption} className="absolute inset-0 size-full" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowFullScreen />
-              ) : (
-                <p className="absolute inset-0 grid place-items-center text-[12px] text-white/60">The intro video will appear here soon.</p>
-              )}
-            </div>
+            <IntroVideo url={c.video.url} title={c.video.caption} watched={progress.videoWatched} onProgress={setWatchFraction} onWatched={() => save({ videoWatched: true })} />
             {/* what the video is about, and the button to mark it watched */}
             <div className="flex flex-col gap-4 rounded-2xl border border-[#ececf2] bg-white p-4 sm:flex-row sm:items-center sm:p-5">
               <div className="min-w-0 flex-1">
@@ -115,9 +109,17 @@ export default function OnboardPage() {
                   <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.5 8.5l3 3 6-6.5" /></svg>Watched
                 </span>
               ) : (
-                <Button size="md" showIcon={false} onClick={() => save({ videoWatched: true })} className="shrink-0 max-sm:w-full">
-                  <span className="inline-flex items-center gap-2"><svg viewBox="0 0 16 16" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.5 8.5l3 3 6-6.5" /></svg><span>I’ve watched it</span></span>
-                </Button>
+                <div className="w-full shrink-0 sm:w-44" role="progressbar" aria-label="Video watched" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(watchFraction * 100)}>
+                  <div className="flex items-baseline justify-between text-[12px]">
+                    <span className="text-[#5f5f7a]">Watched</span>
+                    <span className="font-medium tabular-nums text-[#151534]">{Math.round(watchFraction * 100)}%</span>
+                  </div>
+                  <div className="relative mt-1.5 h-1.5 overflow-hidden rounded-full bg-[#f0f0f6]">
+                    <div className="h-full rounded-full bg-gradient-to-r from-[#9b4dff] to-[#7c2ae8] transition-[width] duration-500" style={{ width: `${watchFraction * 100}%` }} />
+                    <span className="absolute inset-y-0 w-px bg-[#7c2ae8]/40" style={{ left: `${WATCH_THRESHOLD * 100}%` }} aria-hidden="true" />
+                  </div>
+                  <p className="mt-1.5 text-[11.5px] text-[#8e8ea6]">Watch {WATCH_THRESHOLD * 100}% to unlock the next steps</p>
+                </div>
               )}
             </div>
             <div className="flex items-start gap-2.5 rounded-xl bg-[#f0eafb] px-4 py-3 text-[12.5px] leading-5 text-[#5b21b6]">
@@ -139,6 +141,9 @@ export default function OnboardPage() {
                       <div key={soc.id} className="flex items-center gap-2.5 rounded-xl border border-[#ececf2] bg-[#fbfbfd] p-2">
                         <span className={`grid size-7 shrink-0 place-items-center rounded-lg text-[11px] font-medium text-white ${soc.platform === 'x' ? 'bg-black' : 'bg-[#0077b5]'}`}>{soc.platform === 'x' ? '𝕏' : 'in'}</span>
                         <span className="min-w-0 flex-1 truncate text-[12.5px] font-medium text-[#45465f]" title={soc.handle}>{soc.platform === 'x' ? 'X' : 'LinkedIn'}</span>
+                        {!progress.videoWatched ? (
+                          <span className="inline-flex shrink-0 cursor-not-allowed items-center gap-1 rounded-lg border border-[#ece8f4] bg-white px-2.5 py-1 text-[11.5px] font-medium text-[#b9aed0]" title="Watch Kara's intro first">Follow <Arrow dir="up-right" /></span>
+                        ) : (
                         <a
                           href={soc.url} target="_blank" rel="noopener noreferrer"
                           onClick={() => { if (!followed) save({ followedSocialIds: [...progress.followedSocialIds, soc.id] }); }}
@@ -146,6 +151,7 @@ export default function OnboardPage() {
                         >
                           {followed ? 'Followed ✓' : <>Follow <Arrow dir="up-right" /></>}
                         </a>
+                        )}
                       </div>
                     );
                   })}
@@ -157,10 +163,10 @@ export default function OnboardPage() {
               <ButtonLink href="/dashboard">Back to dashboard</ButtonLink>
             ) : (
               <>
-                <Button disabled={!socialsDone} onClick={() => setQuestionIndex(Math.max(0, questions.findIndex((x) => !progress.answers[x.id]?.trim())))}>
+                <Button disabled={!progress.videoWatched || !socialsDone} onClick={() => setQuestionIndex(Math.max(0, questions.findIndex((x) => !progress.answers[x.id]?.trim())))}>
                   {hasAnswers ? 'Resume questions' : 'Continue to questions'}
                 </Button>
-                {!socialsDone && <p className="text-center text-[11px] text-[#b45309]">Follow both accounts in step 2 to continue.</p>}
+                {!(progress.videoWatched && socialsDone) && <p className="text-center text-[11px] text-[#b45309]">{!progress.videoWatched ? `Watch ${WATCH_THRESHOLD * 100}% of Kara’s intro to unlock the next steps.` : 'Follow both accounts in step 2 to continue.'}</p>}
               </>
             )}
             <p className="text-center text-[11px] font-medium text-[#8e8ea6]">Required before the modules open</p>
@@ -170,10 +176,15 @@ export default function OnboardPage() {
 
       {q && questionIndex !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div role="dialog" aria-modal="true" aria-labelledby="onboard-question-title" className="relative w-full rounded-2xl bg-white p-6 sm:p-7 shadow-2xl border border-[#ececf2] max-w-lg">
+          <div role="dialog" aria-modal="true" aria-labelledby="onboard-question-title" onKeyDown={(e) => { if (e.key === 'Escape' && !busy) closeQuestions(); }} className="relative w-full rounded-2xl bg-white p-6 sm:p-7 shadow-2xl border border-[#ececf2] max-w-lg">
+            {/* close sits on the card's corner; it saves your answers so far, like the old "Save & exit" */}
+            <button type="button" disabled={busy} onClick={closeQuestions} aria-label="Close, your answers are saved" title="Close, your answers are saved" className="absolute -right-3 -top-3 grid size-9 cursor-pointer place-items-center rounded-full border border-[#ececf2] bg-white text-[#5f5f7a] transition hover:text-[#171730] hover:bg-[#f8f8fc] disabled:opacity-50">
+              <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+            </button>
             <div>
-              <div className="flex items-center justify-between text-[11px] font-medium text-[#8e8ea6]">
-                <span>{tagCase(c.questionsHeader)}</span><span>{questionIndex + 1} of {questions.length}</span>
+              <div className="flex items-center justify-between gap-3 text-[11px] font-medium text-[#8e8ea6]">
+                <span>{tagCase(c.questionsHeader)}</span>
+                <span className="tabular-nums">{questionIndex + 1} of {questions.length}</span>
               </div>
               <div className="relative mt-2 h-1 w-full rounded-full bg-[#e4e4ee]">
                 <div className="absolute top-0 left-0 h-full rounded-full bg-[#7c2ae8] transition-all duration-300" style={{ width: `${((questionIndex + 1) / questions.length) * 100}%` }} />
@@ -196,7 +207,6 @@ export default function OnboardPage() {
             </div>
             <div className="mt-6 flex items-center justify-between pt-3 border-t border-[#f0f0f5]">
               <button type="button" disabled={questionIndex === 0 || busy} onClick={() => setQuestionIndex(questionIndex - 1)} className="text-[12.5px] font-medium text-[#7c2ae8] hover:underline cursor-pointer disabled:opacity-50"><Arrow dir="left" /> Back</button>
-              <button type="button" disabled={busy} onClick={async () => { await save({}); setQuestionIndex(null); }} className="text-[12px] text-[#8e8ea6] hover:text-[#171730] cursor-pointer disabled:opacity-50">Save & exit</button>
               <Button
                 size="md" showIcon={!isLast} disabled={q.required && !answer.trim()} loading={busy} loadingLabel={isLast ? 'Submitting…' : 'Saving…'}
                 onClick={async () => { if (isLast) await submit(); else { await save({}); setQuestionIndex(questionIndex + 1); } }}
