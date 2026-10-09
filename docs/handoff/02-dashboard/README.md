@@ -8,3 +8,10 @@
   - White, `#e7e7f1` border, fully rounded, 12.5px.
   - No wallet: "● Base | Connect wallet", linking to `/wallet`.
 - **Phones:** the page-level chip is hidden, and the top bar chip shows the same "Base | Active" in place of the address.
+
+## Badges earned card
+Screenshot: `after-badges.jpg` (0 badges, 1 badge, mobile).
+- The 12 dashed hexagons are replaced by a compact **segmented progress bar**: one segment per weekly badge. Earned segments fill in brand purple, the next one to earn is light purple, the rest are grey. Hovering a segment shows the week and module title.
+- Header: "Badges earned" (15px semibold) with the count on the right as "0 / 12".
+- One line of help text under the bar, then a **"Next badge: Week 01 · {module title}"** row at the bottom. That row also fills the height the card gets from sitting next to the profile card on desktop.
+- Handles 13 badges: the segment count follows the number of modules.

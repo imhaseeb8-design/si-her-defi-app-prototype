@@ -23,32 +23,26 @@ const CalendarIcon = ({ className = 'size-3.5 text-[#7954ad]', strokeWidth = '1.
   </svg>
 );
 
+/** One segment per weekly badge: earned ones fill in brand purple, the next one to earn is tinted. */
 function BadgeSlots({ modules, badges }: { modules: Module[]; badges: Badges | null }) {
   const earned = new Set(badges?.badges.map((b) => b.week));
+  const total = Math.max(TOTAL_BADGES, modules.length);
+  const weeks = Array.from({ length: total }, (_, i) => i + 1);
+  const next = weeks.find((w) => !earned.has(w));
   return (
-    <div className="mt-4 flex flex-wrap gap-2.5 items-center">
-      {Array.from({ length: TOTAL_BADGES }, (_, i) => i + 1).map((week) => {
+    <ol className="mt-4 flex gap-1" aria-label={`${earned.size} of ${total} badges earned`}>
+      {weeks.map((week) => {
         const m = modules.find((x) => x.week === week);
         const got = earned.has(week);
         return (
-          <div key={week} className="relative size-[34px] shrink-0 flex items-center justify-center transition-transform hover:scale-105" title={`Week ${week}: ${m?.title ?? `Week ${week} Module`} (${got ? 'Earned ✓' : 'Locked — Pass quiz to earn'})`}>
-            <svg viewBox="0 0 36 40" className="size-full">
-              {got ? (
-                <>
-                  <polygon points="18,1 35,10 35,30 18,39 1,30 1,10" className="fill-[#7c2ae8] stroke-[#6a1fc9] stroke-1" />
-                  <g transform="translate(10.5, 12)">
-                    <circle cx="7.5" cy="8" r="6" className="fill-[#10b981]" />
-                    <path d="M4.5 8l2 2 4-4" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                  </g>
-                </>
-              ) : (
-                <polygon points="18,1 35,10 35,30 18,39 1,30 1,10" fill="#f8f8fc" stroke="#dcdce8" strokeWidth="1.5" strokeDasharray="2 2" />
-              )}
-            </svg>
-          </div>
+          <li
+            key={week}
+            title={`Week ${week}: ${m?.title ?? `Week ${week} module`} · ${got ? 'Earned' : week === next ? 'Next to earn' : 'Not earned yet'}`}
+            className={`h-2 flex-1 rounded-full transition-colors duration-300 ${got ? 'bg-gradient-to-r from-[#9b4dff] to-[#7c2ae8]' : week === next ? 'bg-[#e4d4ff]' : 'bg-[#f0f0f6]'}`}
+          />
         );
       })}
-    </div>
+    </ol>
   );
 }
 
@@ -281,6 +275,8 @@ export default function DashboardPage() {
   const featured = modules.find((m) => !m.quiz.isPassed) ?? null;
   const rest = modules.filter((m) => m !== featured);
   const earned = badges?.earnedCount ?? 0;
+  const earnedWeeks = new Set(badges?.badges.map((b) => b.week));
+  const nextBadge = [...modules].sort((x, y) => x.week - y.week).find((m) => !earnedWeeks.has(m.week));
   const unlocked = !!cert && cert.status !== 'locked';
   const subtitle = !status.part1Done
     ? "Let's get you set up for Si Her DeFi. Start with onboarding below."
@@ -343,13 +339,19 @@ export default function DashboardPage() {
         </section>
         <section className="flex flex-col justify-between rounded-2xl border border-[#ececf2] bg-white p-6 shadow-[0_2px_12px_rgba(23,23,48,0.03)]">
           <div>
-            <div className="flex items-center justify-between">
-              <h3 className="text-[11px] font-bold text-[#8e8ea6]">Badges earned</h3>
-              <span className="text-[11px] font-semibold text-[#7c2ae8] tabular-nums">{earned} of {TOTAL_BADGES}</span>
+            <div className="flex items-baseline justify-between">
+              <h3 className="text-[15px] font-semibold text-[#151534]">Badges earned</h3>
+              <span className="text-[13px] font-semibold text-[#151534] tabular-nums">{earned}<span className="font-medium text-[#9a9cbd]"> / {TOTAL_BADGES}</span></span>
             </div>
             <BadgeSlots modules={modules} badges={badges} />
+            <p className="mt-3 text-[12.5px] leading-5 text-[#7e7e96]">{earned > 0 ? 'Every badge is a passed quiz. Your certificate lists the ones you earn.' : 'Pass each week’s quiz to earn that partner’s badge for your certificate.'}</p>
           </div>
-          <p className="mt-5 text-[11px] leading-relaxed text-[#9ca3af]">{earned > 0 ? 'Every badge is a passed quiz. Your certificate lists the ones you earn.' : 'Complete weekly module quizzes to earn partner badges for your certificate.'}</p>
+          {nextBadge && (
+            <p className="mt-4 flex items-center gap-2 border-t border-[#f0f0f6] pt-4 text-[12.5px] text-[#7e7e96]">
+              <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4 shrink-0 text-[#9b4dff]" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><path d="M8 1.5l5.6 3.25v6.5L8 14.5l-5.6-3.25v-6.5z" /></svg>
+              <span className="min-w-0 truncate">Next badge: <span className="font-medium text-[#151534]">Week {String(nextBadge.week).padStart(2, '0')} · {nextBadge.title}</span></span>
+            </p>
+          )}
         </section>
       </div>
 
