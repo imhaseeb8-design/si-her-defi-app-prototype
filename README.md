@@ -2,6 +2,8 @@
 
 A working React replica of the Si Her DeFi certification app ([certifications.si3.space/siherdefi](https://certifications.si3.space/siherdefi)). We use it to design and test UX/UI improvements, then hand them to the developer to apply in the real codebase.
 
+**Live link:** https://si-her-defi-app-prototype.vercel.app/siherdefi. Every push to `main` redeploys it (Vercel project `si-her-defi-app-prototype`).
+
 **Status:** Phase 1 is done. Every screen, flow and state of the live app is rebuilt and checked side by side against captures of the live app. Phase 2 (the improvements) starts from here.
 
 ## Run it
