@@ -214,28 +214,33 @@ function SessionCard({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => 
 }
 
 
-function CertificateRow({ unlocked }: { unlocked: boolean }) {
+/** Your certificate: locked until every session's quiz is passed, then a link to it. */
+function CertificateRow({ unlocked, passed, total }: { unlocked: boolean; passed: number; total: number }) {
+  const lockIcon = <svg viewBox="0 0 20 20" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="9" width="10" height="8" rx="1.5" /><path d="M7 9V6a3 3 0 0 1 6 0v3" /></svg>;
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-dashed border-[#eaddf8] bg-transparent px-5 sm:px-6 py-4.5 sm:py-5 shadow-none transition-all">
-      <div className="flex items-center gap-4">
-        <div className="relative size-7 shrink-0 flex items-center justify-center">
-          <svg className="size-7 text-[#e0d0fa]" viewBox="0 0 28 32" fill="none" stroke="currentColor" strokeWidth="1.2"><path d="M14 2 L25 8.2 L25 23.8 L14 30 L3 23.8 L3 8.2 Z" stroke="currentColor" strokeLinejoin="round" /></svg>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <svg className="size-3.5 text-[#9a70d8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="9" r="4.5" /><path d="M9.5 13.5L8.5 20.5l3.5-2 3.5 2-1-7" /></svg>
-          </div>
+    <div className={`flex flex-col gap-4 rounded-2xl border p-4 sm:flex-row sm:items-center sm:p-5 ${unlocked ? 'border-[#ececf2] bg-white' : 'border-[#ececf2] bg-[#fbfaff]'}`}>
+      <div className="flex min-w-0 flex-1 items-center gap-4">
+        <div className={`grid size-[60px] shrink-0 place-items-center rounded-xl border ${unlocked ? 'border-[#e6e0f2] bg-[#f8f5fe] text-[#7c2ae8]' : 'border-[#ece8f4] bg-white text-[#a894c8]'}`}>
+          {unlocked
+            ? <svg className="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5" /><path d="M9.2 13.5 8 21l4-2.2 4 2.2-1.2-7.5" /></svg>
+            : <span className="[&>svg]:size-6">{lockIcon}</span>}
         </div>
-        <div>
-          <h3 className="text-[13.5px] font-medium text-[#1e1e38]">Your certificate</h3>
-          <p className="text-[11.5px] text-[#8e90a8] mt-0.5">Minted on Base at the end of the cohort, showing the badges you earned.</p>
+        <div className="min-w-0">
+          <h3 className="flex items-center gap-2 text-[15px] font-medium text-[#151534]">
+            Your certificate
+            {!unlocked && <span className="rounded-full bg-[#f1ecf8] px-2 py-0.5 text-[11px] font-medium text-[#8a6fb8]">Locked</span>}
+          </h3>
+          <p className="mt-1 text-[12.5px] leading-5 text-[#5f5f7a]">
+            {unlocked
+              ? 'Minted on Base, with every badge you earned.'
+              : 'Finish every session and pass each quiz to unlock it. Then mint it on Base with all your badges.'}
+          </p>
+          {!unlocked && <p className="mt-1 text-[12px] tabular-nums text-[#8e8ea6]">{passed} of {total} quizzes passed</p>}
         </div>
       </div>
-      <div className="w-full sm:w-auto flex justify-end">
-        {unlocked ? (
-          <ButtonLink href="/certificate" size="md">View certificate</ButtonLink>
-        ) : (
-          <span className="rounded-full border border-[#e2e4ef] bg-transparent px-4 py-1.5 text-[11.5px] text-[#9698b4] shrink-0">Unlocks after Week 1 quiz</span>
-        )}
-      </div>
+      {unlocked
+        ? <ButtonLink href="/certificate" size="md" className="shrink-0 max-sm:w-full">View certificate</ButtonLink>
+        : <ButtonLink href="/certificate" size="md" disabled showIcon={false} className="shrink-0 max-sm:w-full"><span className="inline-flex items-center gap-2">{lockIcon}<span>View certificate</span></span></ButtonLink>}
     </div>
   );
 }
@@ -407,7 +412,7 @@ export default function DashboardPage() {
           {unlocked ? (
             <><h2 className={sectionTitle}>Your learning path</h2><span className="text-[12.5px] font-medium text-[#16a34a]">● Certificate unlocked</span></>
           ) : (
-            <><h2 className={sectionTitle}>Your learning path</h2><span className="text-[12.5px] text-[#8e8ea6]">{status.part1Done ? 'Pass the quiz to unlock your certificate' : 'Opens once Part 1 is done'}</span></>
+            <><h2 className={sectionTitle}>Your learning path</h2><span className="text-[12.5px] text-[#8e8ea6]">{status.part1Done ? 'Finish every session to unlock your certificate' : 'Opens once Part 1 is done'}</span></>
           )}
         </div>
         <div className="space-y-4">
@@ -438,7 +443,7 @@ export default function DashboardPage() {
               </div>
             )}
           </div>
-          <CertificateRow unlocked={unlocked} />
+          <CertificateRow unlocked={unlocked} passed={modules.filter((m) => m.quiz.isPassed).length} total={modules.length} />
           {unlocked && cert?.status !== 'minted' && <ReadyToMint />}
         </div>
       </section>

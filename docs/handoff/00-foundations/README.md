@@ -76,3 +76,18 @@ Two components from Figma (section "Button components", `1027:759`):
 | Settings | Edit profile · Connect wallet | Primary md |
 
 Secondary and outline actions stay as they were, since no secondary component exists yet: Add to calendar (outline), Open, Visit partner site, Share on LinkedIn, Download image, Copy verification link, View public page, View on BaseScan, Back, Save & exit, Disconnect.
+
+## Sidebar item
+Figma: component set **Sidebar item** `1040:37` (Post-UX-Fixes, next to the Button components), icons `Icon / Home` `1042:4`, `Icon / Certificate` `1042:9`, `Icon / Settings` `1042:13`, full example `Sidebar nav · example` `1042:29`. Code: `src/components/ui/NavItem.tsx`, CSS "Sidebar item" in `globals.css`. Screenshot: `after-sidebar-item.jpg`.
+
+| State | Look |
+|---|---|
+| Default | no fill, `#5F5F7A` icon + label |
+| Hover | `#F3E8FC` at 60%, ink `#4A1D82` (pointer devices only) |
+| Selected | Primary button fill `#7733B4` with its inner glow, white icon + label |
+| Focus | the button's focus ring (2px white + 4px `#B98BE8`) |
+| Locked | Disabled-button ink `#A894C8`, lock on the right, not clickable |
+
+- 40px tall, radius 12, 12px side padding, 11px gap, Geist Medium 13.5, 18px icons.
+- Properties: **Label** (text), **Icon** (swap: Home / Certificate / Settings), **Show lock** (boolean, on by default in Locked).
+- The Dashboard icon is now the Figma `home-09` house (was a 4-square grid).

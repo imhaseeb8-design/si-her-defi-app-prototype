@@ -71,3 +71,10 @@ Screenshot: `after-sidebar-base.jpg` (wallet connected / not connected).
 - The "Powered by BASE" pill under the logo is gone (desktop sidebar and mobile menu).
 - The wallet chip at the bottom now has two lines: **Powered by ● BASE** on top, then a thin divider and your address (links to BaseScan) with a green **● Connected**, or "No wallet connected" with **Connect**.
 - Still hides with the rest of the chip when the sidebar is collapsed.
+
+## Certificate card: locked until everything is done
+Screenshot: `after-certificate-card.jpg` (locked, unlocked, mobile).
+- **Rule change:** the certificate unlocks once **every session's quiz is passed**, not after Week 1. The sidebar's Certificate item stays Locked until then. (Prototype: `allPassed()` in `src/lib/mock/server.ts`; the "Week 1 badge earned" and "4 badges earned" presets are now locked, "All 12 badges earned" and "Certificate minted" are unlocked.)
+- **Locked:** white-violet card, lock tile, "Your certificate" with a **Locked** tag, "Finish every session and pass each quiz to unlock it. Then mint it on Base with all your badges.", progress "4 of 7 quizzes passed", and a Disabled "View certificate" button with a lock.
+- **Unlocked:** award tile, "Minted on Base, with every badge you earned.", Primary "View certificate →".
+- The note next to "Your learning path" now says "Finish every session to unlock your certificate".

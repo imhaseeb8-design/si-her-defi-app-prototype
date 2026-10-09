@@ -133,7 +133,7 @@ export function applyPreset(p: Preset) {
   if (at === 4) s.progress = { status: 'draft', videoWatched: true, followedSocialIds: ['onboarding-social-x'], answers: {}, completedAt: null };
   if (at >= 5) s.progress = { status: 'completed', videoWatched: true, followedSocialIds: ['onboarding-social-x', 'onboarding-social-linkedin'], answers: {}, completedAt: '2026-10-08T18:00:00.000Z' };
   if (at >= 6) s.quizzes['si-her-collective-capital'] = { ...emptyQuiz(), attemptsUsed: 1, passed: true };
-  if (at >= 7) s.minted = true;
+  if (at >= 7) { s.minted = true; fixtureModules.forEach((m) => { s.quizzes[m.slug] = { ...emptyQuiz(), attemptsUsed: 1, passed: true }; }); }
   if (extra) {
     fixtureModules.slice(0, extra).forEach((m) => { s.quizzes[m.slug] = { ...emptyQuiz(), attemptsUsed: 1, passed: true }; });
     if (extra === Infinity) s.allBadges = true;
@@ -374,7 +374,7 @@ function quiz(s: DemoState, method: string, slug: string, action: string | undef
       a.result = q.lastResult = {
         passed, score, totalQuestions: base.totalQuestions, passingScore: base.passingScore,
         attemptsUsed: q.attemptsUsed, attemptsRemaining: base.maxAttempts - q.attemptsUsed, retryAvailableAt: q.retryAvailableAt,
-        badgeEarned: passed ? base.badge : null, certificateUnlocked: passed && m.isPrerequisiteForCertificate,
+        badgeEarned: passed ? base.badge : null, certificateUnlocked: passed && allPassed(s),
         review: q.answers.filter((x) => !x.isCorrect).map((x) => ({ questionNumber: x.questionNumber, questionText: base.questions[x.questionNumber - 1].questionText, hint: x.hint })),
       };
       q.answers = [];
@@ -384,10 +384,13 @@ function quiz(s: DemoState, method: string, slug: string, action: string | undef
   return fail(404, 'Not found');
 }
 
+/** The certificate unlocks once every session's quiz is passed. */
+const allPassed = (s: DemoState) => fixtureModules.every((m) => quizState(s, m.slug).passed);
+
 function certificate(s: DemoState): Certificate {
   const c = clone((certificateFx as { data: Certificate }).data);
   const badges = earnedBadges(s);
-  const unlocked = quizState(s, 'si-her-collective-capital').passed;
+  const unlocked = allPassed(s);
   c.recipientName = s.profile.name;
   c.walletAddress = s.user.walletAddress;
   c.badges = badges;

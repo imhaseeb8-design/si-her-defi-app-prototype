@@ -3,6 +3,7 @@
 // Markup mirrors the live app (captures D01, D05, M07, M08).
 import Image from 'next/image';
 import Link from 'next/link';
+import { NavItem } from '@/components/ui/NavItem';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { assetPath, authApi } from '@/lib/api';
@@ -14,9 +15,10 @@ export const DEFAULT_AVATAR = '/ada-portrait.jpg'; // live app's fallback avatar
 const GearPath = 'M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z';
 
 const Icon = {
-  dashboard: (<svg viewBox="0 0 20 20" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="6" height="6" rx="1" /><rect x="11" y="3" width="6" height="6" rx="1" /><rect x="3" y="11" width="6" height="6" rx="1" /><rect x="11" y="11" width="6" height="6" rx="1" /></svg>),
-  certificate: (<svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="5" /><path d="M20 21a8 8 0 0 0-16 0" /><polyline points="15 13 18 22 12 19 6 22 9 13" /></svg>),
-  settings: (cls = 'size-4') => (<svg viewBox="0 0 24 24" aria-hidden="true" className={cls} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={GearPath} /><circle cx="12" cy="12" r="3" /></svg>),
+  // home-09, from the Figma "Sidebar item" component
+  dashboard: (<svg viewBox="0 0 18 18" aria-hidden="true" className="size-[18px]" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"><path d="M9.75 10.1274H8.25C7.6287 10.1274 7.125 10.6311 7.125 11.2524V15.3759C7.125 15.7904 6.78835 16.1274 6.3739 16.1233C4.63003 16.1058 3.661 16 3.01885 15.3578C2.25 14.589 2.25 13.3516 2.25 10.8767V8.99386C2.25 7.73296 2.25 7.10251 2.51693 6.55675C2.78384 6.01099 3.2815 5.62392 4.27681 4.84979L5.77682 3.68312C7.32517 2.47885 8.09933 1.87671 9 1.87671C9.90067 1.87671 10.6748 2.47885 12.2232 3.68312L13.7232 4.84978C14.7185 5.62392 15.2162 6.01099 15.4831 6.55675C15.75 7.10251 15.75 7.73296 15.75 8.99386V10.8767C15.75 13.3516 15.75 14.589 14.9812 15.3578C14.339 16 13.37 16.1058 11.6261 16.1233C11.2117 16.1274 10.875 15.7904 10.875 15.3759V11.2524C10.875 10.6311 10.3713 10.1274 9.75 10.1274Z" /></svg>),
+  certificate: (<svg viewBox="0 0 24 24" aria-hidden="true" className="size-[18px]" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="5" /><path d="M20 21a8 8 0 0 0-16 0" /><polyline points="15 13 18 22 12 19 6 22 9 13" /></svg>),
+  settings: (cls = 'size-[18px]') => (<svg viewBox="0 0 24 24" aria-hidden="true" className={cls} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={GearPath} /><circle cx="12" cy="12" r="3" /></svg>),
   lock: (<svg viewBox="0 0 20 20" aria-hidden="true" className="ml-auto size-3.5" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="9" width="10" height="8" rx="1.5" /><path d="M7 9V6a3 3 0 0 1 6 0v3" /></svg>),
   collapse: (<svg viewBox="0 0 20 20" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="14" height="14" rx="2" /><line x1="8" y1="3" x2="8" y2="17" /></svg>),
 };
@@ -53,25 +55,16 @@ export function Avatar({ src, name, className }: { src?: string | null; name?: s
 function Nav({ collapsed = false, onNavigate }: { collapsed?: boolean; onNavigate?: () => void }) {
   const path = usePathname();
   const { certificateUnlocked } = useSession();
-  const item = (active: boolean) => `flex items-center gap-3 overflow-hidden whitespace-nowrap rounded-xl px-3 [&>svg]:shrink-0 py-2.5 text-[13.5px] transition-colors ${active ? 'bg-[#f3ebff] text-[#7c2ae8] font-medium' : 'text-[#5f5f7a] hover:bg-gray-50 hover:text-[#171730]'}`;
-  const label = (text: string) => <span className={fade(collapsed)}>{text}</span>;
+  const fadeCls = fade(collapsed);
   return (
     <>
-      <Link className={item(path.startsWith('/dashboard') || path.startsWith('/module') || path.startsWith('/onboard'))} href="/dashboard" onClick={onNavigate} title="Dashboard">
-        {Icon.dashboard}{label('Dashboard')}
-      </Link>
-      {certificateUnlocked ? (
-        <Link className={item(path.startsWith('/certificate'))} href="/certificate" onClick={onNavigate} title="Certificate">
-          {Icon.certificate}{label('Certificate')}
-        </Link>
-      ) : (
-        <span aria-disabled="true" title="Unlocks once you complete Collective Capital for Creators" className="flex cursor-not-allowed items-center gap-3 overflow-hidden whitespace-nowrap rounded-xl px-3 [&>svg]:shrink-0 py-2.5 text-[13.5px] text-[#b4b4c4]">
-          {Icon.certificate}{label('Certificate')}<span className={`ml-auto flex ${fade(collapsed)}`}>{Icon.lock}</span>
-        </span>
-      )}
-      <Link className={item(path.startsWith('/settings'))} href="/settings" onClick={onNavigate} title="Settings">
-        {Icon.settings()}{label('Settings')}
-      </Link>
+      <NavItem href="/dashboard" icon={Icon.dashboard} label="Dashboard" labelClassName={fadeCls} onNavigate={onNavigate}
+        selected={path.startsWith('/dashboard') || path.startsWith('/module') || path.startsWith('/onboard')} />
+      <NavItem href="/certificate" icon={Icon.certificate} label="Certificate" labelClassName={fadeCls} onNavigate={onNavigate}
+        selected={path.startsWith('/certificate')} locked={!certificateUnlocked} lockIcon={Icon.lock}
+        lockedHint="Unlocks once you finish every session and quiz" />
+      <NavItem href="/settings" icon={Icon.settings()} label="Settings" labelClassName={fadeCls} onNavigate={onNavigate}
+        selected={path.startsWith('/settings')} />
     </>
   );
 }
