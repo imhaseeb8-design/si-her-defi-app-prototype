@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { ApiErrorResponse, errorMessage, quizApi } from '@/lib/api';
-import { dayTime, timeUntil } from '@/lib/format';
+import { dayTime } from '@/lib/format';
 import type { Module, Quiz, QuizAnswer, QuizHint, QuizResult } from '@/lib/types';
 import { Arrow } from '@/components/ui/Arrow';
 
@@ -114,9 +114,7 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
           You need {result.passingScore} to earn the badge.{' '}
           {result.attemptsRemaining > 0
             ? `You have ${result.attemptsRemaining} attempt${result.attemptsRemaining === 1 ? '' : 's'} left — rewatch these parts first:`
-            : result.retryAvailableAt
-              ? `That was your last attempt for now. Rewatch these parts — you can try again ${timeUntil(result.retryAvailableAt) ?? 'shortly'} (${dayTime(result.retryAvailableAt)}).`
-              : 'You’ve used all your attempts. Please reach out to the Si Her team.'}
+            : `That was your last attempt. Rewatch these parts, then you can start over or skip this quiz (without the week ${m.week} badge) from the module page.`}
         </p>
         <div className="mt-4 space-y-2">
           {result.review.map((r) => (

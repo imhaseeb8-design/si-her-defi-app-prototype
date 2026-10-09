@@ -12,14 +12,43 @@ import { VideoPlayer, toSeconds, type PlayerHandle } from '@/components/module/V
 import { Spinner } from '@/components/onboarding/OnboardingShell';
 import { modulesApi, onboardApi, quizApi } from '@/lib/api';
 import { dayTime, timeUntil } from '@/lib/format';
-import { now } from '@/lib/mock/server';
 import type { Module, Quiz, QuizHint } from '@/lib/types';
 import { Arrow } from '@/components/ui/Arrow';
 
 const card = 'rounded-2xl border border-[#ececf2] bg-white p-5 sm:p-6 shadow-2xs space-y-4';
 const share = (text: string) => `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(text)}`;
 
-function QuizCard({ m, quiz, part1Done, onStart }: { m: Module; quiz: Quiz; part1Done: boolean; onStart: () => void }) {
+/** All attempts used without passing: start over, or skip this week's quiz (no badge). */
+function OutOfAttempts({ m, quiz, last, onRestart, onSkip }: { m: Module; quiz: Quiz; last: Quiz['lastResult']; onRestart: () => void; onSkip: () => void }) {
+  const [confirming, setConfirming] = useState(false);
+  return (
+    <div className="rounded-2xl border border-[#ececf2] bg-white p-5 sm:p-6 space-y-4">
+      <span className="text-[11.5px] font-medium text-[#7c2ae8]">Out of attempts</span>
+      <div>
+        <h4 className="text-[16.5px] font-medium text-[#171730]">Not quite this time</h4>
+        <p className="mt-1.5 text-[12.5px] leading-5 text-[#5f5f7a]">
+          You’ve used all {quiz.maxAttempts} attempts{last ? ` (last: ${last.score} of ${last.totalQuestions})` : ''}. That’s okay. Rewatch the session and start over, or skip this quiz and keep going.
+        </p>
+      </div>
+      {confirming ? (
+        <div className="space-y-3 rounded-xl border border-[#fde68a] bg-[#fffbeb] p-3.5">
+          <p className="text-[12.5px] leading-5 text-[#92400e]">If you skip, you won’t earn the week {m.week} badge. It still counts as done for your certificate, and you can take the quiz again later.</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button size="md" showIcon={false} onClick={onSkip}>Skip without the badge</Button>
+            <button type="button" onClick={() => setConfirming(false)} className="link-cta text-[12.5px] font-medium text-[#7c2ae8]">Keep trying</button>
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-2.5">
+          <Button onClick={onRestart}>Start over</Button>
+          <div className="text-center"><button type="button" onClick={() => setConfirming(true)} className="link-cta text-[12.5px] font-medium text-[#5f5f7a]">Skip this quiz</button></div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function QuizCard({ m, quiz, part1Done, onStart, onChanged }: { m: Module; quiz: Quiz; part1Done: boolean; onStart: () => void; onChanged: () => Promise<void> }) {
   const last = quiz.lastResult;
   if (quiz.isPassed) {
     return (
@@ -37,23 +66,20 @@ function QuizCard({ m, quiz, part1Done, onStart }: { m: Module; quiz: Quiz; part
       </div>
     );
   }
-  const locked = quiz.attemptsRemaining <= 0 && !!quiz.retryAvailableAt && new Date(quiz.retryAvailableAt) > now();
-  if (locked) {
+  if (quiz.isSkipped) {
     return (
       <div className={card}>
-        <span className="text-[11.5px] font-medium text-[#7c2ae8]">Try again soon</span>
-        <div className="space-y-3">
-          <div>
-            <h4 className="text-[16.5px] font-medium text-[#171730]">Earn your week {m.week} badge</h4>
-            <p className="mt-1.5 text-[12px] leading-relaxed text-[#5f5f7a]">You’ve used all {quiz.maxAttempts} attempts{last ? ` (last: ${last.score} of ${last.totalQuestions})` : ''}. Take some time to rewatch the session — a fresh set of attempts opens soon.</p>
-          </div>
-          <div className="rounded-xl border border-[#ddd6fe] bg-[#f5f3ff] p-3 text-[12px] text-[#5b21b6]">
-            <p className="font-medium">You can try again {timeUntil(quiz.retryAvailableAt!) ?? 'soon'}</p>
-            <p className="mt-0.5 text-[11px] text-[#7c3aed]">{dayTime(quiz.retryAvailableAt!)}</p>
-          </div>
+        <span className="text-[11.5px] font-medium text-[#8e8ea6]">Skipped</span>
+        <div>
+          <h4 className="text-[16.5px] font-medium text-[#171730]">No week {m.week} badge</h4>
+          <p className="mt-1.5 text-[12.5px] leading-5 text-[#5f5f7a]">You skipped this quiz, so it counts as done for your certificate but without the badge. Want the badge after all? You can take it again any time.</p>
         </div>
+        <Button onClick={() => quizApi.restart(m.slug).then(onChanged).then(onStart)}>Take the quiz again</Button>
       </div>
     );
+  }
+  if (quiz.attemptsRemaining <= 0) {
+    return <OutOfAttempts m={m} quiz={quiz} last={last} onRestart={() => quizApi.restart(m.slug).then(onChanged).then(onStart)} onSkip={() => quizApi.skip(m.slug).then(onChanged)} />;
   }
   const retry = !!last && !last.passed;
   return (
@@ -112,7 +138,6 @@ export default function ModulePage() {
   if (!m || !quiz) return <div className="grid min-h-[60vh] place-items-center text-[#7c2ae8]"><Spinner className="size-6" /></div>;
 
   const upcoming = m.sessionState === 'upcoming';
-  const next = all.find((x) => x.week > m.week);
   const rewatch = (h: QuizHint) => player.current?.seek(toSeconds(h.timestamp));
   const review = !quiz.isPassed ? quiz.lastResult?.review.filter((r) => r.hint) ?? [] : [];
   const shareText = quiz.isPassed
@@ -184,16 +209,10 @@ export default function ModulePage() {
             </div>
           )}
 
-          {next && (
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-[12px]">
-              <span className="text-[#5f5f7a]">Next up: <Link className="font-medium text-[#171730] hover:text-[#7c2ae8]" href={`/module/${next.slug}`}>{next.title}</Link> — {dayTime(next.scheduledDate)}</span>
-              <button type="button" onClick={() => setScheduling(next)} className="font-medium text-[#7c2ae8] link-cta cursor-pointer">Add to calendar <Arrow dir="up-right" /></button>
-            </div>
-          )}
         </div>
 
         <div className="space-y-5 lg:col-span-4">
-          <QuizCard m={m} quiz={quiz} part1Done={part1Done} onStart={() => setQuizOpen(true)} />
+          <QuizCard m={m} quiz={quiz} part1Done={part1Done} onStart={() => setQuizOpen(true)} onChanged={async () => { await load(); session.refresh(); }} />
           {m.speakers.length > 0 && (
             <div className="space-y-3">
               <h3 className="px-1 text-[11px] font-medium text-[#8e8ea6]">Speakers ({m.speakers.length})</h3>

@@ -25,6 +25,7 @@ export interface QuizState {
   answers: QuizAnswer[];
   lastResult: QuizResult | null;
   retryAvailableAt: string | null;
+  skipped?: boolean;
 }
 
 export interface DemoState {
@@ -179,7 +180,7 @@ function moduleView(s: DemoState, m: Module): Module {
     isCompleted: q.passed,
     isScheduled: !!s.scheduled[m.slug],
     scheduledProvider: s.scheduled[m.slug] ?? null,
-    quiz: { ...m.quiz, isOpen: state !== 'upcoming', attemptsUsed: q.attemptsUsed, isPassed: q.passed },
+    quiz: { ...m.quiz, isOpen: state !== 'upcoming', attemptsUsed: q.attemptsUsed, isPassed: q.passed, isSkipped: !!q.skipped },
     badge: { ...m.badge, image: badgeArt(m.week) },
   };
 }
@@ -346,10 +347,17 @@ function quiz(s: DemoState, method: string, slug: string, action: string | undef
   if (method === 'GET') {
     return ok({
       ...base, isOpen, sessionState: m.sessionState, attemptsUsed: q.attemptsUsed,
-      attemptsRemaining: base.maxAttempts - q.attemptsUsed, isPassed: q.passed, retryAvailableAt: q.retryAvailableAt,
+      attemptsRemaining: base.maxAttempts - q.attemptsUsed, isPassed: q.passed, isSkipped: !!q.skipped, retryAvailableAt: null,
       currentAttempt: q.answers.length ? { attemptNumber: q.attemptsUsed + 1, answers: q.answers } : null,
       lastResult: q.lastResult,
     } satisfies Quiz);
+  }
+  // out of attempts: start over with a fresh set, or skip (no badge)
+  if (method === 'POST' && (action === 'restart' || action === 'skip')) {
+    if (q.passed || q.attemptsUsed < base.maxAttempts && !q.skipped) return fail(409, 'You still have attempts left.');
+    if (action === 'restart') { q.attemptsUsed = 0; q.answers = []; q.skipped = false; }
+    else q.skipped = true;
+    return ok({ ok: true });
   }
   if (method === 'POST' && action === 'answer') {
     if (!isOpen) return fail(409, 'This quiz opens after the live session.');
@@ -370,7 +378,7 @@ function quiz(s: DemoState, method: string, slug: string, action: string | undef
       const passed = score >= base.passingScore;
       q.attemptsUsed += 1;
       q.passed = passed;
-      q.retryAvailableAt = !passed && q.attemptsUsed >= base.maxAttempts ? new Date(now().getTime() + base.retryAfterHours * 3600e3).toISOString() : null;
+      q.retryAvailableAt = null;
       a.result = q.lastResult = {
         passed, score, totalQuestions: base.totalQuestions, passingScore: base.passingScore,
         attemptsUsed: q.attemptsUsed, attemptsRemaining: base.maxAttempts - q.attemptsUsed, retryAvailableAt: q.retryAvailableAt,
@@ -384,8 +392,8 @@ function quiz(s: DemoState, method: string, slug: string, action: string | undef
   return fail(404, 'Not found');
 }
 
-/** The certificate unlocks once every session's quiz is passed. */
-const allPassed = (s: DemoState) => fixtureModules.every((m) => quizState(s, m.slug).passed);
+/** The certificate unlocks once every session's quiz is done: passed, or skipped after all attempts. */
+const allPassed = (s: DemoState) => fixtureModules.every((m) => quizState(s, m.slug).passed || !!quizState(s, m.slug).skipped);
 
 function certificate(s: DemoState): Certificate {
   const c = clone((certificateFx as { data: Certificate }).data);

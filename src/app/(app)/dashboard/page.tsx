@@ -231,6 +231,7 @@ function SessionCard({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => 
         <div className="flex shrink-0 items-center justify-between gap-3 sm:justify-end">
           {m.quiz.isPassed
             ? <span className="rounded-full border border-[#bbf7d0] bg-[#f0fdf4] px-3 py-1 text-[12px] text-[#16a34a]">Badge earned</span>
+            : m.quiz.isSkipped ? <span className="rounded-full border border-[#e4e4ed] bg-[#f6f6fa] px-3 py-1 text-[12px] text-[#7e7e96]">Skipped · no badge</span>
             : <span className="rounded-full border border-[#ddd6fe] bg-[#f5f3ff] px-3 py-1 text-[12px] text-[#6d25d6]">Quiz open</span>}
           <ButtonLink href={`/module/${m.slug}`} size="md">Open</ButtonLink>
         </div>
@@ -259,9 +260,9 @@ function CertificateRow({ unlocked, passed, total }: { unlocked: boolean; passed
           <p className="mt-1 text-[12.5px] leading-5 text-[#5f5f7a]">
             {unlocked
               ? 'Minted on Base, with every badge you earned.'
-              : 'Finish every session and pass each quiz to unlock it. Then mint it on Base with all your badges.'}
+              : 'Finish every session and its quiz to unlock it. Then mint it on Base with the badges you earned.'}
           </p>
-          {!unlocked && <p className="mt-1 text-[12px] tabular-nums text-[#8e8ea6]">{passed} of {total} quizzes passed</p>}
+          {!unlocked && <p className="mt-1 text-[12px] tabular-nums text-[#8e8ea6]">{passed} of {total} quizzes done</p>}
         </div>
       </div>
       {unlocked
@@ -344,7 +345,7 @@ export default function DashboardPage() {
     return <div className="grid min-h-[60vh] place-items-center text-[#7c2ae8]"><Spinner className="size-6" /></div>;
   }
 
-  const featured = modules.find((m) => !m.quiz.isPassed) ?? null;
+  const featured = modules.find((m) => !m.quiz.isPassed && !m.quiz.isSkipped) ?? null;
   const rest = modules.filter((m) => m !== featured);
   const earned = badges?.earnedCount ?? 0;
   const earnedWeeks = new Set(badges?.badges.map((b) => b.week));
@@ -480,7 +481,7 @@ export default function DashboardPage() {
               <StartHere status={status} />
             </div>
           )}
-          <CertificateRow unlocked={unlocked} passed={modules.filter((m) => m.quiz.isPassed).length} total={modules.length} />
+          <CertificateRow unlocked={unlocked} passed={modules.filter((m) => m.quiz.isPassed || m.quiz.isSkipped).length} total={modules.length} />
           {unlocked && cert?.status !== 'minted' && <ReadyToMint />}
         </div>
       </section>

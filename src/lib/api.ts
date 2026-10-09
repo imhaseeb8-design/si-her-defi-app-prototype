@@ -118,6 +118,10 @@ export const modulesApi = {
 export const quizApi = {
   getQuiz: (slug: string) => request<Quiz>(`/quiz/${slug}`),
   answer: (slug: string, questionNumber: number, selectedOption: string) => request<QuizAnswer>(`/quiz/${slug}/answer`, { method: 'POST', body: { questionNumber, selectedOption } }),
+  /** after every attempt is used: start a fresh set of attempts */
+  restart: (slug: string) => request<Quiz>(`/quiz/${slug}/restart`, { method: 'POST' }),
+  /** after every attempt is used: move on without the badge */
+  skip: (slug: string) => request<Quiz>(`/quiz/${slug}/skip`, { method: 'POST' }),
 };
 
 export const badgeApi = { getBadges: () => request<Badges>('/badges') };

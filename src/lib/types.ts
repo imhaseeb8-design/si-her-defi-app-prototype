@@ -130,6 +130,7 @@ export interface ModuleQuizSummary {
   maxAttempts: number;
   attemptsUsed: number;
   isPassed: boolean;
+  isSkipped?: boolean;
 }
 
 export interface Module {
@@ -211,6 +212,8 @@ export interface Quiz {
   retryAvailableAt: string | null;
   retryAfterHours: number;
   isPassed: boolean;
+  /** skipped after using every attempt: no badge, but counts as done for the certificate */
+  isSkipped?: boolean;
   badge: { name: string; image: string };
   questions: QuizQuestion[];
   currentAttempt: { attemptNumber: number; answers: QuizAnswer[] } | null;
