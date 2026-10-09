@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Avatar } from '@/components/app/AppShell';
 import { useSession } from '@/components/app/SessionProvider';
 import { ScheduleModal } from '@/components/dashboard/ScheduleModal';
-import { ButtonLink } from '@/components/ui/Button';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { Spinner } from '@/components/onboarding/OnboardingShell';
 import { assetPath, badgeApi, certificateApi, modulesApi, onboardApi, partnerApi } from '@/lib/api';
 import { firstName, sessionWhen, shortAddress, tagCase } from '@/lib/format';
@@ -179,10 +179,10 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
 function SessionCard({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => void }) {
   const when = sessionWhen(m.scheduledDate, m.endDate);
   return (
-    <div className="flex flex-col gap-4 rounded-2xl border border-[#ececf2] bg-white p-4 shadow-[0_2px_12px_rgba(23,23,48,0.03)] transition hover:border-[#dcd0f2] sm:flex-row sm:items-center sm:p-5">
+    <div className="flex flex-col gap-4 rounded-2xl border border-[#ececf2] bg-white p-4 transition hover:border-[#dcd0f2] sm:flex-row sm:items-center sm:p-5">
       <div className="flex min-w-0 flex-1 items-center gap-4">
         {/* a small calendar page: month on a brand strip, then the day */}
-        <div className="w-[60px] shrink-0 overflow-hidden rounded-xl border border-[#e6e0f2] bg-white text-center leading-none shadow-[0_1px_2px_rgba(23,23,48,0.06)]" aria-hidden="true">
+        <div className="w-[60px] shrink-0 overflow-hidden rounded-xl border border-[#e6e0f2] bg-white text-center leading-none" aria-hidden="true">
           <div className="bg-gradient-to-b from-[#8b3df0] to-[#7c2ae8] py-1 text-[10.5px] font-medium text-white">{when.month}</div>
           <div className="py-2.5 text-[22px] font-medium tabular-nums tracking-[-0.02em] text-[#151534]">{when.day}</div>
         </div>
@@ -193,15 +193,21 @@ function SessionCard({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => 
         </div>
       </div>
       {m.sessionState === 'upcoming' ? (
-        <button type="button" onClick={() => onSchedule(m)} className={`inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border px-4 py-2 text-[12.5px] font-medium transition ${m.isScheduled ? 'border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]' : 'border-[#d4c2f5] text-[#7c2ae8] hover:border-[#b794ef] hover:bg-[#f8f5fe]'}`}>
-          <CalendarIcon /><span>{m.isScheduled ? 'In your calendar' : 'Add to calendar'}</span>
-        </button>
+        m.isScheduled ? (
+          <button type="button" onClick={() => onSchedule(m)} className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#bbf7d0] bg-[#f0fdf4] px-4 text-[14px] font-medium text-[#16a34a] transition hover:bg-[#e6fbec]">
+            <CalendarIcon /><span>In your calendar</span>
+          </button>
+        ) : (
+          <Button size="md" showIcon={false} onClick={() => onSchedule(m)} className="shrink-0 max-sm:w-full">
+            <span className="inline-flex items-center gap-2"><CalendarIcon className="size-4" /><span>Add to calendar</span></span>
+          </Button>
+        )
       ) : (
         <div className="flex shrink-0 items-center justify-between gap-3 sm:justify-end">
           {m.quiz.isPassed
             ? <span className="rounded-full border border-[#bbf7d0] bg-[#f0fdf4] px-3 py-1 text-[12px] text-[#16a34a]">Badge earned</span>
             : <span className="rounded-full border border-[#ddd6fe] bg-[#f5f3ff] px-3 py-1 text-[12px] text-[#6d25d6]">Quiz open</span>}
-          <Link href={`/module/${m.slug}`} className="inline-flex items-center gap-2 rounded-full border border-[#d4c2f5] px-4 py-2 text-[12.5px] font-medium text-[#7c2ae8] transition hover:border-[#b794ef] hover:bg-[#f8f5fe]">Open <Arrow /></Link>
+          <ButtonLink href={`/module/${m.slug}`} size="md">Open</ButtonLink>
         </div>
       )}
     </div>

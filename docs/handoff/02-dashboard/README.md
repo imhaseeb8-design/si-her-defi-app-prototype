@@ -62,3 +62,4 @@ Screenshots: `after-session-cards.jpg` (all rows, desktop + mobile), `after-sess
 - **Formatting:** built from `scheduledDate`/`endDate` in US Eastern time with `sessionWhen()` (`src/lib/format.ts`), so every card reads the same whatever is typed in the CMS.
 - **Data issue found:** "From TradFi to DeFi" has `scheduledDate` 12:00 UTC (= 8:00 AM ET) but its label says 12:00–1:00 PM ET. Fix the start/end time in the CMS (should be 16:00–17:00 UTC).
 - **CMS fix:** Kara Howard's sessions should list her company as **SI<3>** (Week 1 had none, Week 2 said "Si Her DeFi"). The prototype's demo data now uses SI<3>.
+- **Update:** no drop shadow on the cards or the date tile (border only). "Add to calendar" is now **Button · Primary md** with the calendar icon in place of the arrow (full width on mobile); once added it's a green "In your calendar" button. "Open" on started sessions is Primary md too.
