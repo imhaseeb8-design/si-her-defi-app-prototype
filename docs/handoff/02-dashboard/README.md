@@ -65,3 +65,9 @@ Screenshots: `after-session-cards.jpg` (all rows, desktop + mobile), `after-sess
 - **Update:** no drop shadow on the cards or the date tile (border only). "Add to calendar" is now **Button · Primary md** with the calendar icon in place of the arrow (full width on mobile); once added it's a green "In your calendar" button. "Open" on started sessions is Primary md too.
 - **Fade:** while more sessions are hidden, the bottom of the 3rd card fades into the page background (`#f8f8fc`) and "Show more sessions (N)" sits on the fade (`after-sessions-fade.jpg`). No 4th card shows. The fade doesn't block clicks; once everything is showing it's gone.
 - **Featured module card:** the "SI" monogram box next to the presenter is removed; the line reads "Presented by Kara Howard · SI<3>".
+
+## Sidebar: "Powered by Base" moves into the wallet chip (trial)
+Screenshot: `after-sidebar-base.jpg` (wallet connected / not connected).
+- The "Powered by BASE" pill under the logo is gone (desktop sidebar and mobile menu).
+- The wallet chip at the bottom now has two lines: **Powered by ● BASE** on top, then a thin divider and your address (links to BaseScan) with a green **● Connected**, or "No wallet connected" with **Connect**.
+- Still hides with the rest of the chip when the sidebar is collapsed.

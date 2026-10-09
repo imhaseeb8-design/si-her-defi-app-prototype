@@ -21,14 +21,6 @@ const Icon = {
   collapse: (<svg viewBox="0 0 20 20" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="14" height="14" rx="2" /><line x1="8" y1="3" x2="8" y2="17" /></svg>),
 };
 
-const PoweredBy = ({ py = 'py-1' }: { py?: string }) => (
-  <span className={`inline-flex items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-[#f9fafc] px-2.5 ${py}`}>
-    <span className="text-[9px] font-medium text-[#8688ae]">Powered by</span>
-    <span className="size-2 rounded-full bg-[#0052ff]" />
-    <span className="text-[11px] font-medium text-[#0052ff]">BASE</span>
-  </span>
-);
-
 /** New Si Her DeFi wordmark (diamond + type), 22px tall in the sidebar and top bar. */
 const Logo = () => (
   // eslint-disable-next-line @next/next/no-img-element
@@ -84,21 +76,29 @@ function Nav({ collapsed = false, onNavigate }: { collapsed?: boolean; onNavigat
   );
 }
 
+/** Wallet + network in one chip: "Powered by ● BASE" on top, your address (or Connect) below. */
 function WalletChip({ wallet }: { wallet: string | null }) {
   const router = useRouter();
   return (
-    <div className="flex items-center justify-between rounded-xl border border-[#e4e4ed] bg-[#f9fafc] px-3 py-2 text-[11.5px]">
-      {wallet ? (
-        <>
-          <div className="flex items-center gap-2 font-medium text-[#171730]"><span className="size-2 rounded-full bg-[#0052ff]" /><span>Base</span></div>
-          <a href={`https://basescan.org/address/${wallet}`} target="_blank" rel="noopener noreferrer" className="tabular-nums text-[11px] text-[#8e8ea6] hover:text-[#0052ff] transition" title="View on BaseScan">{short(wallet)}</a>
-        </>
-      ) : (
-        <>
-          <div className="flex items-center gap-2 font-medium text-[#171730]"><span className="size-2 rounded-full bg-[#dcdce8]" /><span>Not connected</span></div>
-          <button type="button" onClick={() => router.push('/wallet')} className="text-[11px] font-medium text-[#7c2ae8] hover:underline cursor-pointer">Connect</button>
-        </>
-      )}
+    <div className="rounded-xl border border-[#e4e4ed] bg-[#f9fafc] px-3 py-2.5">
+      <div className="flex items-center gap-1.5 leading-none">
+        <span className="text-[10.5px] text-[#8688ae]">Powered by</span>
+        <span className="size-1.5 rounded-full bg-[#0052ff]" />
+        <span className="text-[11px] font-medium tracking-[0.02em] text-[#0052ff]">BASE</span>
+      </div>
+      <div className="mt-2 flex items-center justify-between gap-2 border-t border-[#ececf2] pt-2 text-[11.5px]">
+        {wallet ? (
+          <>
+            <a href={`https://basescan.org/address/${wallet}`} target="_blank" rel="noopener noreferrer" className="tabular-nums font-medium text-[#171730] transition hover:text-[#0052ff]" title="View on BaseScan">{short(wallet)}</a>
+            <span className="flex items-center gap-1.5 text-[11px] text-[#16a34a]"><span className="size-1.5 rounded-full bg-[#22c55e]" />Connected</span>
+          </>
+        ) : (
+          <>
+            <span className="text-[#8e8ea6]">No wallet connected</span>
+            <button type="button" onClick={() => router.push('/wallet')} className="cursor-pointer text-[11px] font-medium text-[#7c2ae8] hover:underline">Connect</button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
@@ -181,7 +181,6 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
               <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
             </button>
           </div>
-          <div className="mt-3.5"><PoweredBy py="py-0.5" /></div>
           <nav className="mt-6 space-y-1.5"><Nav onNavigate={onClose} /></nav>
         </div>
         <div className="space-y-3 pt-4 border-t border-[#ececf2]">
@@ -250,7 +249,6 @@ export function AppShell({ children }: { children: ReactNode }) {
               {Icon.collapse}
             </button>
           </div>
-          <Fold collapsed={collapsed} className={collapsed ? 'mt-0' : 'mt-4'}><PoweredBy /></Fold>
           <nav className="mt-8 space-y-1.5"><Nav collapsed={collapsed} /></nav>
         </div>
         <div className="border-t border-[#f0f0f5] px-4 py-4">
