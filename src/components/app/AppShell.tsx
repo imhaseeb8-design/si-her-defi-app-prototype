@@ -29,7 +29,25 @@ const PoweredBy = ({ py = 'py-1' }: { py?: string }) => (
   </span>
 );
 
-const Logo = () => <Image alt="Si Her DeFi Artwork" width={100} height={100} src={assetPath('/Logo · SI HER DeFi.png')} style={{ width: 'auto', height: 'auto' }} />;
+/** New Si Her DeFi wordmark (diamond + type), 22px tall in the sidebar and top bar. */
+const Logo = () => (
+  // eslint-disable-next-line @next/next/no-img-element
+  <img alt="Si Her DeFi" src={assetPath('/v2/logo-wordmark.png')} width={120} height={22} className="block h-[22px] w-[120px] max-w-none" />
+);
+
+/* Sidebar motion: width slides on an ease-out curve; labels fade (out at once on collapse, in after a
+   short delay on expand so text never spills while the panel is still narrow). Padding never changes,
+   so icons stay exactly where they are. */
+const EASE = 'duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none';
+const fade = (collapsed: boolean) => `transition-opacity ${collapsed ? 'opacity-0 duration-100' : 'opacity-100 duration-200 delay-100'} motion-reduce:transition-none`;
+/** Folds a block's height away when collapsed (grid-rows 1fr → 0fr) while fading it. */
+function Fold({ collapsed, children, className = '' }: { collapsed: boolean; children: ReactNode; className?: string }) {
+  return (
+    <div className={`grid transition-[grid-template-rows,opacity,margin] ${EASE} ${collapsed ? 'grid-rows-[0fr] opacity-0' : 'grid-rows-[1fr] opacity-100'} ${className}`} aria-hidden={collapsed}>
+      <div className="min-h-0 overflow-hidden">{children}</div>
+    </div>
+  );
+}
 
 export function Avatar({ src, name, className }: { src?: string | null; name?: string; className: string }) {
   return (
@@ -43,23 +61,24 @@ export function Avatar({ src, name, className }: { src?: string | null; name?: s
 function Nav({ collapsed = false, onNavigate }: { collapsed?: boolean; onNavigate?: () => void }) {
   const path = usePathname();
   const { certificateUnlocked } = useSession();
-  const item = (active: boolean) => `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[13.5px] transition-colors ${collapsed ? 'justify-center px-0' : ''} ${active ? 'bg-[#f3ebff] text-[#7c2ae8] font-semibold' : 'text-[#5f5f7a] hover:bg-gray-50 hover:text-[#171730]'}`;
+  const item = (active: boolean) => `flex items-center gap-3 overflow-hidden whitespace-nowrap rounded-xl px-3 [&>svg]:shrink-0 py-2.5 text-[13.5px] transition-colors ${active ? 'bg-[#f3ebff] text-[#7c2ae8] font-semibold' : 'text-[#5f5f7a] hover:bg-gray-50 hover:text-[#171730]'}`;
+  const label = (text: string) => <span className={fade(collapsed)}>{text}</span>;
   return (
     <>
       <Link className={item(path.startsWith('/dashboard') || path.startsWith('/module') || path.startsWith('/onboard'))} href="/dashboard" onClick={onNavigate} title="Dashboard">
-        {Icon.dashboard}{!collapsed && <span>Dashboard</span>}
+        {Icon.dashboard}{label('Dashboard')}
       </Link>
       {certificateUnlocked ? (
         <Link className={item(path.startsWith('/certificate'))} href="/certificate" onClick={onNavigate} title="Certificate">
-          {Icon.certificate}{!collapsed && <span>Certificate</span>}
+          {Icon.certificate}{label('Certificate')}
         </Link>
       ) : (
-        <span aria-disabled="true" title="Unlocks once you complete Collective Capital for Creators" className={`flex cursor-not-allowed items-center gap-3 rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#b4b4c4] ${collapsed ? 'justify-center px-0' : ''}`}>
-          {Icon.certificate}{!collapsed && <><span>Certificate</span>{Icon.lock}</>}
+        <span aria-disabled="true" title="Unlocks once you complete Collective Capital for Creators" className="flex cursor-not-allowed items-center gap-3 overflow-hidden whitespace-nowrap rounded-xl px-3 [&>svg]:shrink-0 py-2.5 text-[13.5px] text-[#b4b4c4]">
+          {Icon.certificate}{label('Certificate')}<span className={`ml-auto flex ${fade(collapsed)}`}>{Icon.lock}</span>
         </span>
       )}
       <Link className={item(path.startsWith('/settings'))} href="/settings" onClick={onNavigate} title="Settings">
-        {Icon.settings()}{!collapsed && <span>Settings</span>}
+        {Icon.settings()}{label('Settings')}
       </Link>
     </>
   );
@@ -104,17 +123,17 @@ function AccountMenu({ collapsed }: { collapsed: boolean }) {
   }, [open]);
   return (
     <div className="relative" ref={ref}>
-      <div className={`flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
-        {!collapsed && (
-          <div className="flex items-center gap-2.5 min-w-0">
+      <div className="flex items-center justify-between gap-2 overflow-hidden whitespace-nowrap">
+        <div className="flex min-w-0 items-center gap-2.5 pl-1">
+          <button type="button" onClick={() => setOpen((o) => !o)} className="shrink-0 cursor-pointer rounded-full" title={profile?.name ?? 'Account'} aria-label="Open account menu">
             <Avatar src={profile?.photoUrl} name={profile?.name} className="size-8" />
-            <div className="min-w-0">
-              <p className="truncate text-[12px] font-bold text-[#171730] leading-tight">{profile?.name}</p>
-              <p className="truncate text-[10.5px] text-[#8e8ea6] leading-tight mt-0.5">{profile?.role}</p>
-            </div>
+          </button>
+          <div className={`min-w-0 ${fade(collapsed)}`}>
+            <p className="truncate text-[12px] font-bold text-[#171730] leading-tight">{profile?.name}</p>
+            <p className="truncate text-[10.5px] text-[#8e8ea6] leading-tight mt-0.5">{profile?.role}</p>
           </div>
-        )}
-        <button type="button" onClick={() => setOpen((o) => !o)} className={`p-1.5 rounded-lg transition cursor-pointer ${open ? 'bg-gray-100 text-[#171730]' : 'text-[#8e8ea6] hover:text-[#171730] hover:bg-gray-100'}`} title="Account options" aria-label="Account options" aria-expanded={open}>
+        </div>
+        <button type="button" tabIndex={collapsed ? -1 : 0} onClick={() => setOpen((o) => !o)} className={`shrink-0 p-1.5 rounded-lg transition cursor-pointer ${fade(collapsed)} ${open ? 'bg-gray-100 text-[#171730]' : 'text-[#8e8ea6] hover:text-[#171730] hover:bg-gray-100'}`} title="Account options" aria-label="Account options" aria-expanded={open}>
           <svg viewBox="0 0 20 20" aria-hidden="true" className="size-4" fill="currentColor"><circle cx="5" cy="10" r="1.5" /><circle cx="10" cy="10" r="1.5" /><circle cx="15" cy="10" r="1.5" /></svg>
         </button>
       </div>
@@ -222,19 +241,20 @@ export function AppShell({ children }: { children: ReactNode }) {
       </header>
       {drawer && <MobileDrawer onClose={() => setDrawer(false)} />}
 
-      <aside className={`sticky top-3 my-3 ml-3 h-[calc(100vh-1.5rem)] hidden md:flex flex-col justify-between rounded-2xl border border-[#ececf2] bg-white shadow-[0_1px_3px_rgba(23,23,48,0.04),0_10px_28px_-18px_rgba(23,23,48,0.12)] transition-all duration-300 z-30 shrink-0 ${collapsed ? 'w-[76px]' : 'w-[240px]'}`}>
-        <div className={collapsed ? 'px-3 py-6' : 'px-5 py-6'}>
+      <aside className={`sticky top-3 my-3 ml-3 h-[calc(100vh-1.5rem)] hidden md:flex flex-col justify-between rounded-2xl border border-[#ececf2] bg-white shadow-[0_1px_3px_rgba(23,23,48,0.04),0_10px_28px_-18px_rgba(23,23,48,0.12)] transition-[width] ${EASE} z-30 shrink-0 ${collapsed ? 'w-[72px]' : 'w-[240px]'}`}>
+        <div className="px-4 py-6">
           <div className={`flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
-            {!collapsed && <Link className="flex items-center gap-2.5" href="/dashboard"><Logo /></Link>}
+            {/* the wordmark slides shut as the panel narrows; the toggle settles into the centre */}
+            <Link href="/dashboard" tabIndex={collapsed ? -1 : 0} className={`block overflow-hidden transition-[width,opacity] ${EASE} ${collapsed ? 'w-0 opacity-0' : 'w-[120px] opacity-100'}`}><Logo /></Link>
             <button type="button" onClick={() => setCollapsed((c) => !c)} className="rounded-lg p-1.5 text-[#8e8ea6] hover:bg-gray-100 hover:text-[#171730] transition-colors cursor-pointer" title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
               {Icon.collapse}
             </button>
           </div>
-          {!collapsed && <div className="mt-4"><PoweredBy /></div>}
+          <Fold collapsed={collapsed} className={collapsed ? 'mt-0' : 'mt-4'}><PoweredBy /></Fold>
           <nav className="mt-8 space-y-1.5"><Nav collapsed={collapsed} /></nav>
         </div>
-        <div className={`border-t border-[#f0f0f5] py-4 space-y-4 ${collapsed ? 'px-3' : 'px-5'}`}>
-          {!collapsed && <WalletChip wallet={wallet} />}
+        <div className="border-t border-[#f0f0f5] px-4 py-4">
+          <Fold collapsed={collapsed} className={collapsed ? 'mb-0' : 'mb-4'}><WalletChip wallet={wallet} /></Fold>
           <AccountMenu collapsed={collapsed} />
         </div>
       </aside>
