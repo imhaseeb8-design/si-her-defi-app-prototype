@@ -149,7 +149,7 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
               {upcoming && (
                 <button type="button" onClick={() => onSchedule(m)} className="rounded-full border border-white/30 bg-white/15 backdrop-blur-sm px-4 py-2 text-[12px] font-medium text-white hover:bg-white/25 active:scale-[0.99] transition cursor-pointer flex items-center gap-1.5">
                   <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5 text-current" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="12" height="11" rx="2" /><path d="M2 7h12M5 1.5v3M11 1.5v3" /></svg>
-                  <span>{m.isScheduled ? 'In your calendar ✓' : 'Add to calendar'}</span>
+                  <span>{m.isScheduled ? 'Added to calendar ✓' : 'Add to calendar'}</span>
                 </button>
               )}
             </>
@@ -194,7 +194,7 @@ function SessionCard({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => 
       {m.sessionState === 'upcoming' ? (
         m.isScheduled ? (
           <button type="button" onClick={() => onSchedule(m)} className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#bbf7d0] bg-[#f0fdf4] px-4 text-[14px] font-medium text-[#16a34a] transition hover:bg-[#e6fbec]">
-            <CalendarIcon /><span>In your calendar</span>
+            <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3.5 8.5l3 3 6-6.5" /></svg><span>Added to calendar</span>
           </button>
         ) : (
           <Button size="md" showIcon={false} onClick={() => onSchedule(m)} className="shrink-0 max-sm:w-full">
