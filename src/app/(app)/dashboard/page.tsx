@@ -85,21 +85,47 @@ function ProfileCard({ profile }: { profile: Profile }) {
   );
 }
 
+// Onboarding Part 2 copy (prototype: the CMS has no Part 2 content yet).
+const PART2_TITLE = 'Onboarding Part 2';
+const PART2_LOCKED = 'Opens later in the cohort. We’ll let you know when it’s ready.';
+
 function StartHere({ status }: { status: OnboardStatus }) {
   const card = status.part1Card;
   if (status.part1Done) {
+    const lock = <svg viewBox="0 0 20 20" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="9" width="10" height="8" rx="1.5" /><path d="M7 9V6a3 3 0 0 1 6 0v3" /></svg>;
+    const done = status.part2Done ? 2 : 1;
     return (
-      <div className="flex items-center justify-between gap-3 rounded-2xl border border-[#bbf7d0] bg-white p-4.5 shadow-xs">
-        <div className="flex items-center gap-3.5">
-          <span className="grid size-6 shrink-0 place-items-center rounded-full bg-[#dcfce7] text-[#16a34a]">
-            <svg viewBox="0 0 12 12" aria-hidden="true" className="size-3" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="2.5 6 5 8.5 9.5 3.5" /></svg>
-          </span>
-          <div>
-            <h3 className="text-[13.5px] font-medium text-[#171730]">{card.title} — done</h3>
-            <p className="text-[11.5px] text-[#6b7280] mt-0.5">{card.doneMessage}</p>
+      <div className="rounded-2xl border border-[#ececf2] bg-white">
+        {/* header: how far through onboarding you are */}
+        <div className="flex items-center justify-between gap-3 px-4 pt-4 sm:px-5">
+          <div className="flex items-center gap-1" aria-hidden="true">
+            <span className="h-1.5 w-8 rounded-full bg-[#16a34a]" />
+            <span className={`h-1.5 w-8 rounded-full ${status.part2Done ? 'bg-[#16a34a]' : 'bg-[#ecebf3]'}`} />
           </div>
+          <span className="text-[12px] tabular-nums text-[#8e8ea6]">{done} of 2 complete</span>
         </div>
-        <span className="shrink-0 rounded-full bg-[#f0fdf4] border border-[#bbf7d0] px-2.5 py-0.5 text-[11px] font-medium text-[#16a34a]">1 of 2</span>
+        <ol className="divide-y divide-[#f0f0f5]">
+          <li className="flex items-center gap-4 p-4 sm:px-5">
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#ecfdf3] text-[#16a34a]">
+              <svg viewBox="0 0 12 12" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="2.5 6 5 8.5 9.5 3.5" /></svg>
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-[12px] text-[#16a34a]">Part 1 · Done</p>
+              <h3 className="mt-0.5 text-[15px] font-medium text-[#151534]">{card.title}</h3>
+              <p className="mt-0.5 text-[12.5px] leading-5 text-[#5f5f7a]">{card.doneMessage}</p>
+            </div>
+            <Link href="/onboard" className="shrink-0 rounded-lg px-2.5 py-1.5 text-[12.5px] font-medium text-[#7c2ae8] transition hover:bg-[#f8f5fe]">Review</Link>
+          </li>
+          <li className="flex items-center gap-4 p-4 sm:px-5" aria-disabled={!status.part2Unlocked}>
+            <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-[#ece8f4] bg-[#fbfaff] text-[#a894c8]">{lock}</span>
+            <div className="min-w-0 flex-1">
+              <p className="text-[12px] text-[#a894c8]">Part 2</p>
+              <h3 className="mt-0.5 text-[15px] font-medium text-[#8e8ea6]">{PART2_TITLE}</h3>
+              <p className="mt-0.5 text-[12.5px] leading-5 text-[#8e8ea6]">{PART2_LOCKED}</p>
+            </div>
+            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#f1ecf8] px-2.5 py-1 text-[11.5px] font-medium text-[#8a6fb8]">{lock}Locked</span>
+          </li>
+        </ol>
       </div>
     );
   }

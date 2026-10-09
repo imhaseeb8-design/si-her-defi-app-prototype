@@ -88,3 +88,9 @@ One line under "Welcome, {name}", by state:
 - Onboarding done, no badges: "You're in. Watch the Week 01 session and pass its quiz to earn your first badge."
 - Some badges: "You've earned 4 of 12 badges. Each session and quiz brings you closer to your certificate."
 - Everything done: "You did it. Every session and quiz is done, and your certificate is ready to mint on Base."
+
+## "Your onboarding" card (after Part 1)
+Screenshot: `after-onboarding-card.jpg`.
+- One card with both parts. Top: a 2-step bar and "1 of 2 complete".
+- **Part 1** row: green check tile, "Part 1 · Done", the title, the CMS done message, and **Review** (back to the Part 1 page).
+- **Part 2** row: lock tile, "Part 2", "Onboarding Part 2", "Opens later in the cohort. We'll let you know when it's ready.", and a **Locked** tag. Uses `part2Unlocked` / `part2Done` from the status API; the title and copy are placeholders until Part 2 has CMS content.
