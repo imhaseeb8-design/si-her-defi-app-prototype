@@ -11,7 +11,7 @@ import { ButtonLink } from '@/components/ui/Button';
 import { Spinner } from '@/components/onboarding/OnboardingShell';
 import { assetPath, badgeApi, certificateApi, modulesApi, onboardApi, partnerApi } from '@/lib/api';
 import { dayTime, firstName, shortAddress, shortDate, tagCase } from '@/lib/format';
-import type { Badges, Certificate, Module, OnboardStatus, Partner } from '@/lib/types';
+import type { Badges, Certificate, Module, OnboardStatus, Partner, Profile } from '@/lib/types';
 import { Arrow } from '@/components/ui/Arrow';
 
 const TOTAL_BADGES = 12;
@@ -43,6 +43,45 @@ function BadgeSlots({ modules, badges }: { modules: Module[]; badges: Badges | n
         );
       })}
     </ol>
+  );
+}
+
+/** Who you are in the cohort: identity on top, bio, then a footer row that mirrors the badges card. */
+function ProfileCard({ profile }: { profile: Profile }) {
+  const link = profile.socialLink?.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+  const meta = [profile.role, profile.organization].filter(Boolean).join(' · ');
+  return (
+    <section className="relative flex flex-col justify-between overflow-hidden rounded-2xl border border-[#ececf2] bg-white p-6 shadow-[0_2px_12px_rgba(23,23,48,0.03)]">
+      <div aria-hidden="true" className="pointer-events-none absolute -left-16 -top-20 size-56 rounded-full bg-[radial-gradient(closest-side,rgba(155,77,255,0.14),transparent)]" />
+      <div className="relative">
+        <div className="flex items-center gap-4">
+          <span className="shrink-0 rounded-full bg-gradient-to-br from-[#9b4dff] via-[#c77dff] to-[#f0abfc] p-[2px]">
+            <Avatar src={profile.photoUrl} name={profile.name} className="size-14 border-2 border-white" />
+          </span>
+          <div className="min-w-0">
+            <h2 className="truncate text-[17px] font-semibold leading-tight text-[#151534]">{profile.name}</h2>
+            {meta && <p className="mt-1 truncate text-[13px] text-[#7e7e96]">{meta}</p>}
+          </div>
+        </div>
+        {profile.bio ? (
+          <p className="mt-4 line-clamp-2 text-[12.5px] leading-5 text-[#5f5f7a]">{profile.bio}</p>
+        ) : (
+          <Link href="/profile?from=dashboard" className="mt-4 block text-[12.5px] leading-5 text-[#9a9cbd] hover:text-[#7c2ae8]">Add a short bio. Partners see it on your profile.</Link>
+        )}
+      </div>
+      <div className="relative mt-4 flex items-center justify-between gap-3 border-t border-[#f0f0f6] pt-4 text-[12.5px]">
+        {link ? (
+          <a href={profile.socialLink} target="_blank" rel="noreferrer" className="flex min-w-0 items-center gap-2 text-[#7e7e96] transition-colors hover:text-[#151534]">
+            <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4 shrink-0 text-[#9b4dff]" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M6.5 9.5l3-3M7 4.5l1-1a2.83 2.83 0 0 1 4 4l-1 1M9 11.5l-1 1a2.83 2.83 0 0 1-4-4l1-1" /></svg>
+            <span className="truncate">{link}</span>
+          </a>
+        ) : <span className="text-[#9a9cbd]">No social link yet</span>}
+        <Link href="/profile?from=dashboard" className="inline-flex shrink-0 items-center gap-1.5 font-medium text-[#7c2ae8] transition-colors hover:text-[#5e3295]">
+          <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M11.5 2.5a1.414 1.414 0 0 1 2 2L5 13H2v-3l8.5-8.5z" /></svg>
+          Edit profile
+        </Link>
+      </div>
+    </section>
   );
 }
 
@@ -321,22 +360,7 @@ export default function DashboardPage() {
       </header>
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-        <section className="flex flex-col justify-between rounded-2xl border border-[#ececf2] bg-white p-6 shadow-[0_2px_12px_rgba(23,23,48,0.03)]">
-          <div>
-            <div className="flex items-start justify-between">
-              <Avatar src={profile.photoUrl} name={profile.name} className="size-14 shadow-xs" />
-              <Link className="inline-flex items-center gap-1.5 rounded-full border border-[#e2e2ec] px-3 py-1 text-[11.5px] font-semibold text-[#5f5f7a] transition hover:bg-gray-50 hover:text-[#171730]" href="/profile?from=dashboard">
-                <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3 text-[#7c2ae8]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M11.5 2.5a1.414 1.414 0 0 1 2 2L5 13H2v-3l8.5-8.5z" /></svg>
-                <span>Edit profile</span>
-              </Link>
-            </div>
-            <div className="mt-4">
-              <h2 className="text-[15px] font-bold text-[#171730]">{profile.name}</h2>
-              <p className="text-[11.5px] font-medium text-[#8e8ea6] mt-0.5">{profile.role}</p>
-              {profile.bio && <p className="mt-3 text-[12px] leading-relaxed text-[#5f5f7a]">{profile.bio}</p>}
-            </div>
-          </div>
-        </section>
+        <ProfileCard profile={profile} />
         <section className="flex flex-col justify-between rounded-2xl border border-[#ececf2] bg-white p-6 shadow-[0_2px_12px_rgba(23,23,48,0.03)]">
           <div>
             <div className="flex items-baseline justify-between">

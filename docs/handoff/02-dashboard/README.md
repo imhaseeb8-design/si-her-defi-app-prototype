@@ -15,3 +15,9 @@ Screenshot: `after-badges.jpg` (0 badges, 1 badge, mobile).
 - Header: "Badges earned" (15px semibold) with the count on the right as "0 / 12".
 - One line of help text under the bar, then a **"Next badge: Week 01 · {module title}"** row at the bottom. That row also fills the height the card gets from sitting next to the profile card on desktop.
 - Handles 13 badges: the segment count follows the number of modules.
+
+## Profile card (trial)
+Screenshot: `after-profile-card.jpg`. Built to sit beside the badges card at the same height, with matching footers.
+- Avatar on the left with a brand-gradient ring; name (17px semibold) and "Role · Organization" beside it. A faint purple glow sits in the top-left corner.
+- Bio below, clamped to 2 lines. With no bio, a muted "Add a short bio" link takes its place.
+- Footer row (divider, like the badges card's "Next badge" row): social link on the left, opening in a new tab; "Edit profile" on the right as a purple text link instead of the outlined pill.
