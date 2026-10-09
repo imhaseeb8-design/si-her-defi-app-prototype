@@ -419,8 +419,15 @@ export default function DashboardPage() {
               <span className="text-[11.5px] text-[#9a9cbd]">Add them to your calendar now</span>
             </div>
             <div className="space-y-3">{rest.slice(0, shown).map((m) => <SessionCard key={m.slug} m={m} onSchedule={setScheduling} />)}</div>
+            {shown < rest.length && (
+              // a peek of the next card, fading into the page, so it's clear the list continues
+              <div aria-hidden="true" className="pointer-events-none relative -mb-12 h-16 overflow-hidden select-none" inert>
+                <SessionCard m={rest[shown]} onSchedule={() => {}} />
+                <div className="absolute inset-0 bg-gradient-to-b from-[#f8f8fc]/55 via-[#f8f8fc]/90 to-[#f8f8fc]" />
+              </div>
+            )}
             {rest.length > SESSIONS_STEP && (
-              <div className="flex justify-center pt-1">
+              <div className="relative flex justify-center pt-1">
                 {shown < rest.length ? (
                   <button type="button" onClick={() => setShown((n) => n + SESSIONS_STEP)} className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#e2e2ec] bg-white px-4 py-2 text-[12.5px] font-medium text-[#45465f] transition hover:border-[#d4c2f5] hover:text-[#7c2ae8]">
                     Show more sessions <span className="text-[#9a9cbd]">({rest.length - shown})</span>
