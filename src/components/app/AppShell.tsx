@@ -208,8 +208,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         <Link className="flex items-center gap-2" href="/dashboard"><Logo /></Link>
         <div className="flex items-center gap-2">
           {wallet ? (
-            <button type="button" className="inline-flex items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-[#f9fafc] px-2.5 py-1 text-[11px] tabular-nums text-[#5f5f7a] shadow-2xs">
-              <span className="size-1.5 rounded-full bg-[#0052ff]" /><span>{short(wallet)}</span>
+            <button type="button" className="inline-flex items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-white px-2.5 py-1 text-[11px] shadow-2xs" title={short(wallet)}>
+              <span className="size-1.5 rounded-full bg-[#0052ff]" /><span className="font-semibold text-[#151534]">Base</span>
+              <span className="h-2.5 w-px bg-[#e7e7f1]" /><span className="size-1.5 rounded-full bg-[#16a34a]" /><span className="font-medium text-[#15803d]">Active</span>
             </button>
           ) : (
             <Link href="/wallet" className="inline-flex items-center rounded-full border border-[#e4d7fb] bg-[#f6f0ff] px-2.5 py-1 text-[11px] font-semibold text-[#7c2ae8]">Connect</Link>

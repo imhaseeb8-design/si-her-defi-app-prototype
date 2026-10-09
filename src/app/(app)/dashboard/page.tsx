@@ -290,24 +290,39 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center gap-2 rounded-xl bg-[#f0e9fc] px-3.5 py-1.5 text-[14px] font-bold text-[#7c2ae8]">
-            <span>Welcome, {firstName(profile.name)}</span><span className="text-base">👋</span>
-          </div>
-          <h1 className="mt-2 text-[15px] font-normal text-[#5f5f7a]">{subtitle}</h1>
+      {/* Header: a real headline for the greeting (not a tag) and the
+          network status as a chip pinned top-right. */}
+      <header className="flex items-start justify-between gap-4">
+        <div className="min-w-0 space-y-2">
+          <h1 className="text-[26px] font-semibold leading-[1.15] tracking-[-0.02em] text-[#151534] sm:text-[30px]">
+            Welcome, {firstName(profile.name)} <span aria-hidden="true">👋</span>
+          </h1>
+          <p className="max-w-[560px] text-[15px] leading-6 text-[#4c4d77]">{subtitle}</p>
         </div>
-        {wallet && (
-          <div className="flex items-center gap-3">
-            <a href={`https://basescan.org/address/${wallet}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-[#e4e4ed] bg-white px-3 py-1.5 shadow-xs hover:shadow-md transition" title={wallet}>
-              <span className="size-2 rounded-full bg-[#0052ff]" />
-              <span className="text-[11px] font-semibold text-[#171730]">Base</span>
-              <span className="tabular-nums text-[11px] text-[#8e8ea6]">{shortAddress(wallet)}</span>
-              <span className="text-[10px] text-[#9ca3af]"> <Arrow dir="up-right" /></span>
-            </a>
-          </div>
+        {wallet ? (
+          <a
+            href={`https://basescan.org/address/${wallet}`} target="_blank" rel="noopener noreferrer"
+            title={`Wallet ${shortAddress(wallet)} on Base — view on BaseScan`}
+            className="mt-1 hidden shrink-0 items-center gap-2 rounded-full md:inline-flex border border-[#e7e7f1] bg-white py-1.5 pl-3 pr-3.5 text-[12.5px] shadow-[0_1px_2px_rgba(23,23,48,0.04)] transition hover:border-[#d6d6e4] hover:shadow-[0_2px_8px_rgba(23,23,48,0.06)]"
+          >
+            <span className="size-2 rounded-full bg-[#0052ff]" />
+            <span className="font-semibold text-[#151534]">Base</span>
+            <span className="h-3 w-px bg-[#e7e7f1]" />
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#16a34a] opacity-40 motion-reduce:hidden" />
+              <span className="relative inline-flex size-2 rounded-full bg-[#16a34a]" />
+            </span>
+            <span className="font-medium text-[#15803d]">Active</span>
+          </a>
+        ) : (
+          <Link href="/wallet" className="mt-1 hidden shrink-0 items-center gap-2 rounded-full md:inline-flex border border-[#e7e7f1] bg-white py-1.5 pl-3 pr-3.5 text-[12.5px] transition hover:border-[#d6d6e4]">
+            <span className="size-2 rounded-full bg-[#c4c4d4]" />
+            <span className="font-semibold text-[#151534]">Base</span>
+            <span className="h-3 w-px bg-[#e7e7f1]" />
+            <span className="font-medium text-[#7b2fbe]">Connect wallet</span>
+          </Link>
         )}
-      </div>
+      </header>
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <section className="flex flex-col justify-between rounded-2xl border border-[#ececf2] bg-white p-6 shadow-[0_2px_12px_rgba(23,23,48,0.03)]">
