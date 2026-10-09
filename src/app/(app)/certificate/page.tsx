@@ -1,0 +1,149 @@
+'use client';
+// "Your certificate" (captures G01–G03, M14): locked preview → earned (share kit) → minted on Base.
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
+import { CertificateArt } from '@/components/certificate/CertificateArt';
+import { Spinner } from '@/components/onboarding/OnboardingShell';
+import { assetPath, certificateApi, modulesApi } from '@/lib/api';
+import { shortAddress } from '@/lib/format';
+import type { Certificate } from '@/lib/types';
+
+const card = 'rounded-2xl border border-[#ececf2] bg-white p-5 sm:p-6 shadow-2xs space-y-3.5';
+const primary = 'w-full rounded-xl bg-gradient-to-r from-[#5b1ea6] via-[#7526dd] to-[#8a33ea] py-2.5 text-center text-[12.5px] font-semibold text-white shadow-md shadow-purple-950/20 transition hover:brightness-105 active:scale-[0.99] cursor-pointer block';
+const secondary = 'w-full rounded-xl border border-[#e2e2ec] py-2.5 text-center text-[12.5px] font-semibold text-[#171730] transition hover:bg-gray-50 active:scale-[0.99] cursor-pointer block disabled:opacity-50 disabled:cursor-wait';
+
+export default function CertificatePage() {
+  const [cert, setCert] = useState<Certificate | null>(null);
+  const [titles, setTitles] = useState<Record<number, string>>({});
+  const [error, setError] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const art = useRef<HTMLDivElement>(null);
+
+  const load = () => {
+    setError(false);
+    Promise.all([certificateApi.getCertificate(), modulesApi.getAll()])
+      .then(([c, ms]) => { setCert(c); setTitles(Object.fromEntries(ms.map((m) => [m.week, m.title]))); })
+      .catch(() => setError(true));
+  };
+  useEffect(load, []);
+
+  if (error) {
+    return (
+      <div className="mx-auto max-w-[1060px] rounded-2xl border border-[#ececf2] bg-white p-8 text-center">
+        <p className="text-[14px] font-semibold text-[#171730]">We couldn’t load your certificate.</p>
+        <button type="button" onClick={load} className="mt-3 rounded-full bg-[#171730] px-4 py-2 text-[12px] font-semibold text-white hover:bg-black cursor-pointer">Try again</button>
+      </div>
+    );
+  }
+  if (!cert) {
+    return <div className="grid min-h-[60vh] place-items-center text-[#7c2ae8]"><Spinner className="size-6" /></div>;
+  }
+
+  const c = cert.content;
+  const locked = cert.status === 'locked';
+  const minted = cert.status === 'minted';
+  const verifyUrl = cert.verifyUrl ?? '';
+  const issued = cert.issuedAt ? new Date(cert.issuedAt) : null;
+  const addToProfile = `https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&name=${encodeURIComponent(c.credentialName).replace(/%20/g, '+')}&organizationName=${encodeURIComponent(c.linkedinOrganizationName)}${issued ? `&issueYear=${issued.getUTCFullYear()}&issueMonth=${issued.getUTCMonth() + 1}` : ''}&certUrl=${encodeURIComponent(verifyUrl)}&certId=${cert.verificationCode}`;
+
+  const download = async () => {
+    if (!art.current) return;
+    setDownloading(true);
+    try {
+      const { toPng } = await import('html-to-image');
+      const url = await toPng(art.current, { pixelRatio: 2, backgroundColor: '#ffffff', cacheBust: true });
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `si-her-defi-certificate-${cert.verificationCode}.png`;
+      a.click();
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  return (
+    <div className="mx-auto max-w-[1060px] space-y-6">
+      <Link className="inline-flex items-center gap-1.5 text-[11px] font-bold tracking-wider text-[#8e8ea6] uppercase hover:text-[#7c2ae8] transition-colors" href="/dashboard">← Back to dashboard</Link>
+      <div>
+        <h1 className="text-[26px] sm:text-[28px] font-bold tracking-tight text-[#171730]">Your certificate</h1>
+        <p className="mt-1 text-[13px] text-[#5f5f7a]">{c.cohortLabel} · {c.cohortDates} · {c.programName}</p>
+      </div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 items-start">
+        <div className="space-y-3 lg:col-span-8">
+          <div className="flex items-center gap-2">
+            {locked ? (
+              <><span className="rounded bg-[#f4effe] px-2.5 py-0.5 text-[9.5px] font-bold tracking-wider text-[#7c2ae8] uppercase">Preview</span><span className="text-[11.5px] text-[#8e8ea6]">Unlocks once you pass the quiz below</span></>
+            ) : (
+              <><span className="rounded bg-[#f0fdf4] border border-[#bbf7d0] px-2.5 py-0.5 text-[9.5px] font-bold tracking-wider text-[#16a34a] uppercase">{minted ? 'Minted on Base' : 'Earned'}</span><span className="text-[11.5px] text-[#8e8ea6]">Updates as you pass more modules</span></>
+            )}
+          </div>
+          <CertificateArt ref={art} cert={cert} preview={locked} weekTitles={titles} />
+        </div>
+
+        <div className="space-y-5 lg:col-span-4">
+          {locked && cert.unlockModule ? (
+            <div className={card}>
+              <span className="text-[10px] font-bold tracking-wider text-[#7c2ae8] uppercase">Locked</span>
+              <h3 className="text-[16px] font-bold text-[#171730]">Unlock your certificate</h3>
+              <p className="text-[12px] leading-relaxed text-[#5f5f7a]">Pass the Week {cert.unlockModule.week} quiz — {cert.unlockModule.title} — to unlock it.</p>
+              <Link className={primary} href={`/module/${cert.unlockModule.slug}`}>Go to Week {cert.unlockModule.week} →</Link>
+            </div>
+          ) : (
+            <div className={card}>
+              <span className="text-[10px] font-bold tracking-wider text-[#7c2ae8] uppercase">{minted ? 'Minted' : 'Ready to share'}</span>
+              <h3 className="text-[16px] font-bold text-[#171730]">{cert.badges.length} of {cert.totalBadges} badges earned</h3>
+              <div className="space-y-2 pt-1">
+                <a href={addToProfile} target="_blank" rel="noopener noreferrer" className={primary}>Add to LinkedIn profile ↗</a>
+                <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(verifyUrl)}`} target="_blank" rel="noopener noreferrer" className="w-full rounded-xl bg-[#f4effe] py-2.5 text-center text-[12.5px] font-semibold text-[#7c2ae8] transition hover:bg-[#ede5fc] active:scale-[0.99] cursor-pointer block">Share on LinkedIn ↗</a>
+                <button type="button" disabled={downloading} onClick={download} className={secondary}>{downloading ? 'Preparing image…' : 'Download image'}</button>
+                <button type="button" onClick={async () => { await navigator.clipboard?.writeText(verifyUrl).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 1600); }} className={secondary}>{copied ? 'Link copied ✓' : 'Copy verification link'}</button>
+                <a href={assetPath(`/verify/${cert.verificationCode}`)} target="_blank" rel="noopener noreferrer" className={secondary}>View public page ↗</a>
+              </div>
+              <p className="text-[10.5px] text-[#8e8ea6] leading-relaxed">“Add to profile” puts it under Licenses & certifications; sharing posts it to your feed.</p>
+            </div>
+          )}
+
+          <div className={card}>
+            <span className="text-[10px] font-bold tracking-wider text-[#7c2ae8] uppercase">On Base</span>
+            {minted ? (
+              <>
+                <h3 className="text-[15px] font-bold text-[#171730]">Your certificate is on-chain</h3>
+                <div className="rounded-xl border border-[#ececf2] bg-[#f9fafc] p-3 text-[11px] space-y-1.5">
+                  <div className="flex items-center justify-between"><span className="text-[#8e8ea6] font-semibold uppercase text-[9px] tracking-wider">Token</span><span className="font-mono font-bold text-[#171730]">#{cert.onChain.tokenId}</span></div>
+                  <div className="flex items-center justify-between border-t border-[#ececf2]/70 pt-1.5"><span className="text-[#8e8ea6] font-semibold uppercase text-[9px] tracking-wider">Transaction</span><span className="font-mono text-[#171730]">{shortAddress(cert.onChain.txHash ?? '')}</span></div>
+                </div>
+                <a href={cert.onChain.explorerUrl ?? '#'} target="_blank" rel="noopener noreferrer" className={secondary}>View on BaseScan ↗</a>
+              </>
+            ) : (
+              <>
+                <h3 className="text-[15px] font-bold text-[#171730]">Minting opens soon</h3>
+                <p className="text-[12px] leading-relaxed text-[#5f5f7a]">Your certificate will be written to Base as a soulbound token in your wallet — permanent, and gas is covered by Si Her DAO. We’ll let you know when minting opens.</p>
+                <div className="flex items-center justify-between rounded-xl border border-[#ececf2] bg-[#f9fafc] px-3 py-2 text-[11px]">
+                  <span className="text-[#8e8ea6] font-semibold uppercase text-[9px] tracking-wider">Mints to</span>
+                  {cert.walletAddress ? <span className="font-mono text-[#171730]">{shortAddress(cert.walletAddress)}</span> : <Link href="/wallet" className="font-semibold text-[#7c2ae8] hover:underline">Connect a wallet</Link>}
+                </div>
+                <button type="button" disabled className={`${secondary} disabled:cursor-not-allowed`}>Mint on Base — coming soon</button>
+              </>
+            )}
+          </div>
+
+          {cert.stillOpen.length > 0 && (
+            <div className="rounded-2xl border border-[#ececf2] bg-white p-5 shadow-2xs space-y-3.5">
+              <h3 className="text-[10.5px] font-bold tracking-wider text-[#8e8ea6] uppercase">Still open</h3>
+              <div className="space-y-3 divide-y divide-[#f0f0f5]">
+                {cert.stillOpen.map((s) => (
+                  <div key={s.slug} className="pt-3 first:pt-0 space-y-1">
+                    <p className="text-[9.5px] font-bold tracking-wider text-[#8e8ea6] uppercase">Week {String(s.week).padStart(2, '0')}</p>
+                    <h4 className="text-[13px] font-bold text-[#171730]">{s.title}</h4>
+                    <Link className="inline-flex items-center gap-1 text-[11.5px] font-semibold text-[#7c2ae8] hover:underline" href={`/module/${s.slug}`}>Take the quiz →</Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

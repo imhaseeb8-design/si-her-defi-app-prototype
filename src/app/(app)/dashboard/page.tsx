@@ -1,0 +1,385 @@
+'use client';
+// Dashboard (captures D01–D07, M07, M11). Every block switches on real data: onboarding status,
+// module dates vs. "today", quiz results, certificate unlock.
+import Image from 'next/image';
+import Link from 'next/link';
+import { useCallback, useEffect, useState } from 'react';
+import { Avatar } from '@/components/app/AppShell';
+import { useSession } from '@/components/app/SessionProvider';
+import { ScheduleModal } from '@/components/dashboard/ScheduleModal';
+import { Spinner } from '@/components/onboarding/OnboardingShell';
+import { assetPath, badgeApi, certificateApi, modulesApi, onboardApi, partnerApi } from '@/lib/api';
+import { dayTime, firstName, shortAddress, shortDate } from '@/lib/format';
+import type { Badges, Certificate, Module, OnboardStatus, Partner } from '@/lib/types';
+
+const TOTAL_BADGES = 12;
+const sectionTitle = 'text-[11.5px] font-bold tracking-wider text-[#8e8ea6] uppercase';
+
+const CalendarIcon = ({ className = 'size-3.5 text-[#7954ad]', strokeWidth = '1.7', rx = '2' }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx={rx} /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+  </svg>
+);
+
+function BadgeSlots({ modules, badges }: { modules: Module[]; badges: Badges | null }) {
+  const earned = new Set(badges?.badges.map((b) => b.week));
+  return (
+    <div className="mt-4 flex flex-wrap gap-2.5 items-center">
+      {Array.from({ length: TOTAL_BADGES }, (_, i) => i + 1).map((week) => {
+        const m = modules.find((x) => x.week === week);
+        const got = earned.has(week);
+        return (
+          <div key={week} className="relative size-[34px] shrink-0 flex items-center justify-center transition-transform hover:scale-105" title={`Week ${week}: ${m?.title ?? `Week ${week} Module`} (${got ? 'Earned ✓' : 'Locked — Pass quiz to earn'})`}>
+            <svg viewBox="0 0 36 40" className="size-full">
+              {got ? (
+                <>
+                  <polygon points="18,1 35,10 35,30 18,39 1,30 1,10" className="fill-[#7c2ae8] stroke-[#6a1fc9] stroke-1" />
+                  <g transform="translate(10.5, 12)">
+                    <circle cx="7.5" cy="8" r="6" className="fill-[#10b981]" />
+                    <path d="M4.5 8l2 2 4-4" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  </g>
+                </>
+              ) : (
+                <polygon points="18,1 35,10 35,30 18,39 1,30 1,10" fill="#f8f8fc" stroke="#dcdce8" strokeWidth="1.5" strokeDasharray="2 2" />
+              )}
+            </svg>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function StartHere({ status }: { status: OnboardStatus }) {
+  const card = status.part1Card;
+  if (status.part1Done) {
+    return (
+      <div className="flex items-center justify-between gap-3 rounded-2xl border border-[#bbf7d0] bg-white p-4.5 shadow-xs">
+        <div className="flex items-center gap-3.5">
+          <span className="grid size-6 shrink-0 place-items-center rounded-full bg-[#dcfce7] text-[#16a34a]">
+            <svg viewBox="0 0 12 12" aria-hidden="true" className="size-3" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="2.5 6 5 8.5 9.5 3.5" /></svg>
+          </span>
+          <div>
+            <h3 className="text-[13.5px] font-bold text-[#171730]">{card.title} — done</h3>
+            <p className="text-[11.5px] text-[#6b7280] mt-0.5">{card.doneMessage}</p>
+          </div>
+        </div>
+        <span className="shrink-0 rounded-full bg-[#f0fdf4] border border-[#bbf7d0] px-2.5 py-0.5 text-[11px] font-bold text-[#16a34a]">1 of 2</span>
+      </div>
+    );
+  }
+  return (
+    <div className="relative min-h-[190px] overflow-hidden rounded-2xl bg-[#0f0c1b] p-6 sm:p-7 text-white shadow-md">
+      <Image alt="" fill sizes="(min-width: 1024px) 960px, 100vw" className="object-cover object-center opacity-85" src={card.imageUrl} />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/75 pointer-events-none" />
+      <div className="relative z-10 flex h-full flex-col justify-between gap-6">
+        <div>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[9.5px] font-bold tracking-wider text-white uppercase">● {card.stepLabel}</span>
+          <h3 className="mt-2 text-[20px] sm:text-[22px] font-bold tracking-tight text-white">{card.title}</h3>
+          <p className="mt-1.5 max-w-xl text-[12.5px] leading-relaxed text-white/80">{card.description}</p>
+        </div>
+        <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
+          <div className="flex items-center gap-3">
+            <Link className="rounded-full bg-white px-4 py-2 text-[12.5px] font-bold text-[#171730] shadow-sm transition hover:bg-gray-100 cursor-pointer" href="/onboard">
+              {status.part1Status === 'draft' ? 'Continue →' : 'Start here →'}
+            </Link>
+            <span className="text-[10.5px] font-medium tracking-wider text-white/75 uppercase">{card.questionCount} QUESTIONS · ABOUT {card.questionsMinutes} MINUTES</span>
+          </div>
+          <p className="text-[11px] text-white/65 italic">Required before Si Her DeFi modules unlock*</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: boolean; onSchedule: (m: Module) => void }) {
+  const upcoming = m.sessionState === 'upcoming';
+  return (
+    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#17142b] via-[#331c4b] to-[#121124] p-6 text-white shadow-md">
+      {m.thumbnailUrl && <Image alt="" fill sizes="(min-width: 1024px) 960px, 100vw" className="object-cover object-center opacity-30 mix-blend-screen" src={m.thumbnailUrl} />}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#131124]/95 via-[#1a142e]/70 to-transparent pointer-events-none" />
+      <div className="relative z-10">
+        <div className="text-[10.5px] font-bold tracking-widest text-white/60 uppercase mb-2">LIVE SESSION · {m.companyTag}</div>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[9.5px] font-bold tracking-wider text-white uppercase">● {m.dateLabel}</span>
+        <h3 className="mt-2 text-[20px] font-bold tracking-tight text-white">{m.title}</h3>
+        <p className="mt-1.5 max-w-xl text-[12px] leading-relaxed text-white/80 line-clamp-2">{m.description}</p>
+        <div className="mt-3 flex items-center gap-2">
+          <span className="grid size-5 place-items-center rounded bg-black/60 font-mono text-[11px] font-bold text-white/90">{m.companyTag.slice(0, 3)}</span>
+          <span className="text-[11px] text-white/75">Presented by {m.presenter}{m.partnerName ? ` (${m.partnerName})` : ''}</span>
+        </div>
+      </div>
+      <div className="relative z-10 mt-5 flex flex-wrap items-center justify-between gap-4 pt-2">
+        <div className="flex flex-wrap items-center gap-3">
+          {part1Done ? (
+            <>
+              <Link className="rounded-full bg-gradient-to-r from-[#501c9c] to-[#983cf4] px-4 py-2 text-[12.5px] font-semibold text-white shadow-sm transition hover:brightness-105 cursor-pointer" href={`/module/${m.slug}`}>Start session →</Link>
+              {upcoming && (
+                <button type="button" onClick={() => onSchedule(m)} className="rounded-full border border-white/30 bg-white/15 backdrop-blur-sm px-4 py-2 text-[12px] font-semibold text-white hover:bg-white/25 active:scale-[0.99] transition cursor-pointer flex items-center gap-1.5">
+                  <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5 text-current" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="12" height="11" rx="2" /><path d="M2 7h12M5 1.5v3M11 1.5v3" /></svg>
+                  <span>{m.isScheduled ? 'In your calendar ✓' : 'Add to calendar'}</span>
+                </button>
+              )}
+            </>
+          ) : (
+            <Link title="Modules open once Si Her Onboard – Part 1 is done" className="flex items-center gap-1.5 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-[12.5px] font-semibold text-white/80 transition hover:bg-white/20" href="/onboard">
+              <span aria-hidden="true">🔒</span>Finish Part 1 to unlock
+            </Link>
+          )}
+          <span className="text-[10px] font-medium tracking-wider text-white/75 uppercase">{!upcoming && m.videoUrl ? '1 VIDEO · ' : ''}{m.quiz.questionCount} QUESTIONS · 1 BADGE</span>
+        </div>
+        <div className="flex items-center gap-2">
+          {upcoming ? (
+            <><span className="inline-block size-2 rounded-full bg-white/50" /><span className="text-[11px] text-white/75">Live {dayTime(m.scheduledDate)}</span></>
+          ) : m.sessionState === 'live' ? (
+            <><span className="inline-block size-2 rounded-full bg-red-400 animate-pulse" /><span className="text-[11px] text-white/75">Live now</span></>
+          ) : (
+            <><span className="inline-block size-2 rounded-full bg-emerald-400 animate-pulse" /><span className="text-[11px] text-white/75">Quiz open</span></>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SessionRow({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => void }) {
+  const passed = m.quiz.isPassed;
+  const open = m.sessionState !== 'upcoming';
+  return (
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-dashed border-[#d8d8e2] bg-white/60 px-5 sm:px-6 py-4.5 sm:py-5 shadow-xs transition hover:border-[#b8b8ca] hover:bg-white">
+      <div className="flex items-center gap-4">
+        <span className="shrink-0 text-[#9a9cbd]"><CalendarIcon className="size-5 text-[#8688AE]" strokeWidth="1.6" rx="2.5" /></span>
+        <div>
+          <span className="text-[10.5px] font-normal tracking-wider text-[#8688AE] uppercase">{m.dateLabel}</span>
+          <h3 className="text-[13.5px] font-medium text-[#4C4D77] mt-0.5">{m.title}</h3>
+          <div className="mt-1 flex items-center gap-1.5">
+            <span className="grid size-4 place-items-center rounded bg-[#eef0f6] text-[8.5px] font-bold text-[#8e90a8]">{m.companyTag.slice(0, 3)}</span>
+            <span className="text-[11.5px] text-[#8688AE]">{m.presenter}{m.partnerName ? ` · ${m.partnerName}` : ''}</span>
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+        {passed ? (
+          <>
+            <span className="rounded-full border px-3.5 py-1 text-[12px] whitespace-nowrap border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]">Badge earned ✓</span>
+            <Link className="inline-flex items-center gap-2 rounded-full border border-[#baa8d8] px-4 py-1.5 text-[12px] font-medium text-[#7954ad] hover:bg-[#f6f2fc] hover:border-[#967ec4] transition shrink-0" href={`/module/${m.slug}`}>Open →</Link>
+          </>
+        ) : open ? (
+          <>
+            <span className="rounded-full border px-3.5 py-1 text-[12px] whitespace-nowrap border-[#ddd6fe] bg-[#f5f3ff] text-[#6d25d6]">Quiz open</span>
+            <Link className="inline-flex items-center gap-2 rounded-full border border-[#baa8d8] px-4 py-1.5 text-[12px] font-medium text-[#7954ad] hover:bg-[#f6f2fc] hover:border-[#967ec4] transition shrink-0" href={`/module/${m.slug}`}>Open →</Link>
+          </>
+        ) : (
+          <>
+            <span className="rounded-full border border-[#E7E7F1] bg-[#F5F5FC] px-3.5 py-1 text-[12px] text-[#8688AE] whitespace-nowrap">Opens {shortDate(m.scheduledDate)}</span>
+            <button type="button" onClick={() => onSchedule(m)} className="inline-flex items-center gap-2 rounded-full border border-[#baa8d8] bg-transparent px-4 py-1.5 text-[12px] font-medium text-[#7954ad] hover:bg-[#f6f2fc] hover:border-[#967ec4] transition cursor-pointer shrink-0">
+              <CalendarIcon /><span>{m.isScheduled ? 'In your calendar ✓' : 'Add to calendar'}</span>
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CertificateRow({ unlocked }: { unlocked: boolean }) {
+  return (
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-dashed border-[#eaddf8] bg-transparent px-5 sm:px-6 py-4.5 sm:py-5 shadow-none transition-all">
+      <div className="flex items-center gap-4">
+        <div className="relative size-7 shrink-0 flex items-center justify-center">
+          <svg className="size-7 text-[#e0d0fa]" viewBox="0 0 28 32" fill="none" stroke="currentColor" strokeWidth="1.2"><path d="M14 2 L25 8.2 L25 23.8 L14 30 L3 23.8 L3 8.2 Z" stroke="currentColor" strokeLinejoin="round" /></svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <svg className="size-3.5 text-[#9a70d8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="9" r="4.5" /><path d="M9.5 13.5L8.5 20.5l3.5-2 3.5 2-1-7" /></svg>
+          </div>
+        </div>
+        <div>
+          <h3 className="text-[13.5px] font-semibold text-[#1e1e38]">Your certificate</h3>
+          <p className="text-[11.5px] text-[#8e90a8] mt-0.5">Minted on Base at the end of the cohort, showing the badges you earned.</p>
+        </div>
+      </div>
+      <div className="w-full sm:w-auto flex justify-end">
+        {unlocked ? (
+          <Link className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#501c9c] via-[#6d25d6] to-[#983cf4] px-4 py-2 text-[12px] font-semibold text-white shadow-xs hover:brightness-105 transition cursor-pointer shrink-0" href="/certificate">
+            <span>View Certificate</span><span>→</span>
+          </Link>
+        ) : (
+          <span className="rounded-full border border-[#e2e4ef] bg-transparent px-4 py-1.5 text-[11.5px] text-[#9698b4] shrink-0">Unlocks after Week 1 quiz</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ReadyToMint() {
+  return (
+    <div className="relative overflow-hidden rounded-3xl p-7 sm:p-8 text-white shadow-xl border border-purple-500/20 min-h-[260px] flex items-center">
+      <Image alt="Your certificate is ready" fill sizes="(min-width: 1024px) 960px, 100vw" className="object-cover object-right" src={assetPath('/Your certificate is ready.png')} />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-transparent pointer-events-none" />
+      <div className="relative z-10 max-w-md space-y-3">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 px-3 py-1 text-[10px] font-bold tracking-wider text-purple-200 uppercase backdrop-blur-sm">● READY TO MINT</span>
+        <h2 className="text-[24px] sm:text-[28px] font-bold tracking-tight text-white leading-tight">Your certificate is ready</h2>
+        <p className="text-[12.5px] leading-relaxed text-white/80">Twelve modules, thirteen badges, one verifiable record on Base. Minting writes it to your wallet — it’s yours, not ours.</p>
+        <div className="pt-2 flex flex-wrap items-center gap-4">
+          <Link className="rounded-full bg-white px-5 py-2.5 text-[13px] font-bold text-[#171730] shadow-lg transition hover:bg-gray-100 cursor-pointer" href="/certificate">Mint on Base →</Link>
+          <div className="flex items-center gap-2">
+            <div className="flex -space-x-1.5">
+              <span className="size-5 rounded-full bg-purple-400 border border-white" />
+              <span className="size-5 rounded-full bg-blue-400 border border-white" />
+              <span className="size-5 rounded-full bg-emerald-400 border border-white" />
+            </div>
+            <span className="text-[11.5px] text-white/75">96 learners have minted theirs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PartnerCard({ p }: { p: Partner }) {
+  return (
+    <div className="flex flex-col justify-between overflow-hidden rounded-2xl border border-[#ececf2] bg-white shadow-xs transition hover:shadow-md">
+      <div className="relative h-28 bg-[#1e1538] flex items-center justify-center overflow-hidden">
+        {p.imageUrl ? <Image alt="" fill sizes="240px" className="object-cover" src={p.imageUrl} /> : (
+          <span className="grid size-11 place-items-center rounded-full bg-[#2a1f4d] text-white/90 border border-white/10 font-bold text-sm">{p.title.charAt(0)}</span>
+        )}
+      </div>
+      <div className="flex flex-1 flex-col justify-between p-4.5">
+        <div>
+          <div className="flex items-start justify-between gap-2">
+            <span className="text-[11.5px] font-bold text-[#171730]">{p.title}</span>
+            <span className="shrink-0 rounded-full bg-[#f4f4fa] px-2 py-0.5 text-[8.5px] font-bold tracking-wider text-[#7e7e96] uppercase">{p.tag}</span>
+          </div>
+          <p className="mt-2 text-[11.5px] leading-relaxed text-[#5f5f7a] line-clamp-2">{p.description}</p>
+        </div>
+        <div className="mt-4 pt-3 border-t border-[#f0f0f5]">
+          <a href={p.actionUrl} target="_blank" rel="noopener noreferrer" className="block text-center w-full rounded-xl border border-[#e2e2ec] py-2 text-[12px] font-semibold text-[#171730] transition hover:bg-gray-50 cursor-pointer">{p.actionText}</a>
+          <p className="mt-2 text-center text-[10px] text-[#9ca3af]">{p.footerText}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  const { profile, wallet, refresh } = useSession();
+  const [status, setStatus] = useState<OnboardStatus | null>(null);
+  const [modules, setModules] = useState<Module[]>([]);
+  const [badges, setBadges] = useState<Badges | null>(null);
+  const [cert, setCert] = useState<Certificate | null>(null);
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [scheduling, setScheduling] = useState<Module | null>(null);
+
+  const load = useCallback(async () => {
+    const [s, m, b, c, p] = await Promise.all([
+      onboardApi.getStatus(), modulesApi.getAll(), badgeApi.getBadges(), certificateApi.getCertificate(), partnerApi.getPartners(),
+    ]);
+    setStatus(s); setModules([...m].sort((a, z) => a.week - z.week)); setBadges(b); setCert(c); setPartners(p);
+  }, []);
+  useEffect(() => { load().catch(() => {}); }, [load]);
+
+  if (!status || !profile) {
+    return <div className="grid min-h-[60vh] place-items-center text-[#7c2ae8]"><Spinner className="size-6" /></div>;
+  }
+
+  const featured = modules.find((m) => !m.quiz.isPassed) ?? null;
+  const rest = modules.filter((m) => m !== featured);
+  const earned = badges?.earnedCount ?? 0;
+  const unlocked = !!cert && cert.status !== 'locked';
+  const subtitle = !status.part1Done
+    ? "Let's get you set up for Si Her DeFi. Start with onboarding below."
+    : earned === 0
+      ? `You're all set. Complete the Week ${featured?.week ?? 1} module to earn your first badge.`
+      : `You've earned ${earned} of ${TOTAL_BADGES} badges. Complete more weekly sessions to build your credential.`;
+
+  return (
+    <div className="mx-auto max-w-5xl space-y-8">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div className="inline-flex items-center gap-2 rounded-xl bg-[#f0e9fc] px-3.5 py-1.5 text-[14px] font-bold text-[#7c2ae8]">
+            <span>Welcome, {firstName(profile.name)}</span><span className="text-base">👋</span>
+          </div>
+          <h1 className="mt-2 text-[15px] font-normal text-[#5f5f7a]">{subtitle}</h1>
+        </div>
+        {wallet && (
+          <div className="flex items-center gap-3">
+            <a href={`https://basescan.org/address/${wallet}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-[#e4e4ed] bg-white px-3 py-1.5 shadow-xs hover:shadow-md transition" title={wallet}>
+              <span className="size-2 rounded-full bg-[#0052ff]" />
+              <span className="text-[11px] font-semibold text-[#171730]">Base</span>
+              <span className="font-mono text-[11px] text-[#8e8ea6]">{shortAddress(wallet)}</span>
+              <span className="text-[10px] text-[#9ca3af]">↗</span>
+            </a>
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <section className="flex flex-col justify-between rounded-2xl border border-[#ececf2] bg-white p-6 shadow-[0_2px_12px_rgba(23,23,48,0.03)]">
+          <div>
+            <div className="flex items-start justify-between">
+              <Avatar src={profile.photoUrl} name={profile.name} className="size-14 shadow-xs" />
+              <Link className="inline-flex items-center gap-1.5 rounded-full border border-[#e2e2ec] px-3 py-1 text-[11.5px] font-semibold text-[#5f5f7a] transition hover:bg-gray-50 hover:text-[#171730]" href="/profile?from=dashboard">
+                <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3 text-[#7c2ae8]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M11.5 2.5a1.414 1.414 0 0 1 2 2L5 13H2v-3l8.5-8.5z" /></svg>
+                <span>Edit profile</span>
+              </Link>
+            </div>
+            <div className="mt-4">
+              <h2 className="text-[15px] font-bold text-[#171730]">{profile.name}</h2>
+              <p className="text-[11.5px] font-medium text-[#8e8ea6] mt-0.5">{profile.role}</p>
+              {profile.bio && <p className="mt-3 text-[12px] leading-relaxed text-[#5f5f7a]">{profile.bio}</p>}
+            </div>
+          </div>
+        </section>
+        <section className="flex flex-col justify-between rounded-2xl border border-[#ececf2] bg-white p-6 shadow-[0_2px_12px_rgba(23,23,48,0.03)]">
+          <div>
+            <div className="flex items-center justify-between">
+              <h3 className="text-[11px] font-bold tracking-wider text-[#8e8ea6] uppercase">Badges earned</h3>
+              <span className="text-[11px] font-semibold text-[#7c2ae8] tabular-nums">{earned} of {TOTAL_BADGES}</span>
+            </div>
+            <BadgeSlots modules={modules} badges={badges} />
+          </div>
+          <p className="mt-5 text-[11px] leading-relaxed text-[#9ca3af]">{earned > 0 ? 'Every badge is a passed quiz. Your certificate lists the ones you earn.' : 'Complete weekly module quizzes to earn partner badges for your certificate.'}</p>
+        </section>
+      </div>
+
+      <section className="space-y-3">
+        <h2 className={sectionTitle}>START HERE</h2>
+        <StartHere status={status} />
+      </section>
+
+      <section className="space-y-5">
+        <div className="flex items-center justify-between">
+          {unlocked ? (
+            <><h2 className={sectionTitle}>MODULES & CREDENTIALS</h2><span className="text-[11px] font-semibold text-[#16a34a]">● Certificate unlocked</span></>
+          ) : (
+            <><h2 className={sectionTitle}>THIS WEEK</h2><span className="text-[11px] text-[#9ca3af]">{status.part1Done ? 'Pass the quiz to unlock your certificate' : 'Opens once Part 1 is done'}</span></>
+          )}
+        </div>
+        <div className="space-y-4">
+          {featured && <FeaturedModule m={featured} part1Done={status.part1Done} onSchedule={setScheduling} />}
+          <div className="space-y-3 pt-3">
+            <div className="flex items-center justify-between">
+              <h2 className="text-[11.5px] font-semibold tracking-wider text-[#9a9cbd] uppercase">UPCOMING SESSIONS ({rest.length})</h2>
+              <span className="text-[11.5px] text-[#9a9cbd]">Add them to your calendar now</span>
+            </div>
+            <div className="space-y-3">{rest.map((m) => <SessionRow key={m.slug} m={m} onSchedule={setScheduling} />)}</div>
+          </div>
+          <CertificateRow unlocked={unlocked} />
+          {unlocked && cert?.status !== 'minted' && <ReadyToMint />}
+        </div>
+      </section>
+
+      {partners.length > 0 && (
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className={sectionTitle}>FROM OUR PARTNERS ({partners.length})</h2>
+            <span className="text-[11px] text-[#9ca3af]">Verified ecosystem partners · opens in new tab</span>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">{partners.map((p) => <PartnerCard key={p.id} p={p} />)}</div>
+        </section>
+      )}
+
+      <footer className="py-6 text-center text-[11px] text-[#9ca3af]">© 2026 · SI HER DEFI</footer>
+
+      {scheduling && <ScheduleModal module={scheduling} onClose={() => setScheduling(null)} onScheduled={() => { load(); refresh(); }} />}
+    </div>
+  );
+}

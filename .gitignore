@@ -7,3 +7,6 @@ node_modules/
 capture/_private/
 tools/capture/fixtures-raw/
 capture/api/
+.next-build/
+**/node_modules/
+*.tsbuildinfo
