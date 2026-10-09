@@ -55,7 +55,8 @@ export function Button({ children, loading = false, loadingLabel, showIcon = tru
 export function ButtonLink({ href, children, showIcon = true, variant = 'primary', size = 'lg', external = false, disabled = false, className = '', title }: {
   href: string; children: ReactNode; showIcon?: boolean; variant?: Variant; size?: Size; external?: boolean; disabled?: boolean; className?: string; title?: string;
 }) {
-  const inner = (<><span>{children}</span>{showIcon && <span aria-hidden="true" className="btn-primary__icon" />}</>);
+  // links that open another site point up-right, like the inline Arrow
+  const inner = (<><span>{children}</span>{showIcon && <span aria-hidden="true" className={`btn-primary__icon${external ? ' btn-primary__icon--out' : ''}`} />}</>);
   if (disabled) return <span aria-disabled="true" className={`${cls(variant, size, className)} btn-disabled`}>{inner}</span>;
   if (external) return <a href={href} target="_blank" rel="noopener noreferrer" title={title} className={cls(variant, size, className)}>{inner}</a>;
   return <Link href={href} title={title} className={cls(variant, size, className)}>{inner}</Link>;

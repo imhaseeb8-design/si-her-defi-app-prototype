@@ -319,9 +319,7 @@ function PartnerCard({ p }: { p: Partner }) {
       </div>
       <h3 className="mt-4 text-[15px] font-medium text-[#151534]">{p.title}</h3>
       <p className="mt-1 flex-1 text-[12.5px] leading-5 text-[#5f5f7a]">{p.description}</p>
-      <a href={p.actionUrl} target="_blank" rel="noopener noreferrer" className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-[#d4c2f5] text-[13.5px] font-medium text-[#7c2ae8] transition hover:border-[#b794ef] hover:bg-[#f8f5fe]">
-        {p.actionText.replace(/\s*↗\s*$/, '')} <Arrow dir="up-right" />
-      </a>
+      <ButtonLink href={p.actionUrl} external className="mt-5">{p.actionText.replace(/\s*↗\s*$/, '')}</ButtonLink>
       <div className="mt-3 flex items-center justify-between gap-2 text-[11.5px] text-[#9a9cbd]">
         <span className="truncate">{domain(p.actionUrl)}</span>
         {referral ? <span className="shrink-0" title={p.footerText}>Referral link</span> : <span className="inline-flex shrink-0 items-center gap-1 text-[#16a34a]"><Check className="size-3.5" />Verified</span>}

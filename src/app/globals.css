@@ -477,3 +477,6 @@ a.btn-primary { text-decoration: none; }
 .link-cta:active { background: #ead9fd; }
 .link-cta:focus-visible { outline: none; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #b98be8; }
 .link-cta:disabled { background: transparent; }
+
+/* external ButtonLink: the arrow points up-right (individual `rotate` so hover transforms still apply) */
+.btn-primary__icon--out { rotate: -45deg; }

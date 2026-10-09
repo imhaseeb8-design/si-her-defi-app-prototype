@@ -102,3 +102,4 @@ Screenshot: `after-partners.jpg` (desktop 3-up, mobile stacked).
 - Card: logo tile + action tag (lilac pill, sentence case) on top, partner name, one-line description, a full-width outline CTA ("Donate on their site ↗", "Shop on their site ↗", "Sign up on their site ↗"), then the site domain and either "✓ Verified" or "Referral link". No more dark placeholder block, no all-caps or mono tags.
 - One line under the grid explains referral links: "Si Her DAO may earn a referral fee from links marked 'Referral link'."
 - 3 columns on desktop, 2 on tablet, 1 on mobile. Logos are text wordmarks in the prototype; add a logo image field to the CMS for production.
+- **CTA update:** each partner action is now **Button · Primary** (full width, `ButtonLink external`). External button links show the arrow pointing up-right (`.btn-primary__icon--out`), everywhere they're used (`after-partners-cta.png`).
