@@ -10,7 +10,7 @@ import { ScheduleModal } from '@/components/dashboard/ScheduleModal';
 import { ButtonLink } from '@/components/ui/Button';
 import { Spinner } from '@/components/onboarding/OnboardingShell';
 import { assetPath, badgeApi, certificateApi, modulesApi, onboardApi, partnerApi } from '@/lib/api';
-import { firstName, sessionWhen, shortAddress, shortDate, tagCase } from '@/lib/format';
+import { firstName, sessionWhen, shortAddress, tagCase } from '@/lib/format';
 import type { Badges, Certificate, Module, OnboardStatus, Partner, Profile } from '@/lib/types';
 import { Arrow } from '@/components/ui/Arrow';
 
@@ -175,7 +175,7 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
   );
 }
 
-/** Proposed upcoming-session card (trial on the first row only): date tile, title, day + time, speaker, Add to calendar. */
+/** Session card: date tile, title, day + time, speaker · company, then Add to calendar (upcoming) or Open (quiz open / badge earned). */
 function SessionCard({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => void }) {
   const when = sessionWhen(m.scheduledDate, m.endDate);
   return (
@@ -192,52 +192,22 @@ function SessionCard({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => 
           <p className="mt-1 truncate text-[12.5px] text-[#7e7e96]"><span className="text-[#45465f]">{m.presenter}</span>{m.partnerName ? ` · ${m.partnerName}` : ''}</p>
         </div>
       </div>
-      <button type="button" onClick={() => onSchedule(m)} className={`inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border px-4 py-2 text-[12.5px] font-medium transition ${m.isScheduled ? 'border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]' : 'border-[#d4c2f5] text-[#7c2ae8] hover:border-[#b794ef] hover:bg-[#f8f5fe]'}`}>
-        <CalendarIcon /><span>{m.isScheduled ? 'In your calendar' : 'Add to calendar'}</span>
-      </button>
+      {m.sessionState === 'upcoming' ? (
+        <button type="button" onClick={() => onSchedule(m)} className={`inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border px-4 py-2 text-[12.5px] font-medium transition ${m.isScheduled ? 'border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]' : 'border-[#d4c2f5] text-[#7c2ae8] hover:border-[#b794ef] hover:bg-[#f8f5fe]'}`}>
+          <CalendarIcon /><span>{m.isScheduled ? 'In your calendar' : 'Add to calendar'}</span>
+        </button>
+      ) : (
+        <div className="flex shrink-0 items-center justify-between gap-3 sm:justify-end">
+          {m.quiz.isPassed
+            ? <span className="rounded-full border border-[#bbf7d0] bg-[#f0fdf4] px-3 py-1 text-[12px] text-[#16a34a]">Badge earned</span>
+            : <span className="rounded-full border border-[#ddd6fe] bg-[#f5f3ff] px-3 py-1 text-[12px] text-[#6d25d6]">Quiz open</span>}
+          <Link href={`/module/${m.slug}`} className="inline-flex items-center gap-2 rounded-full border border-[#d4c2f5] px-4 py-2 text-[12.5px] font-medium text-[#7c2ae8] transition hover:border-[#b794ef] hover:bg-[#f8f5fe]">Open <Arrow /></Link>
+        </div>
+      )}
     </div>
   );
 }
 
-function SessionRow({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => void }) {
-  const passed = m.quiz.isPassed;
-  const open = m.sessionState !== 'upcoming';
-  return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-dashed border-[#d8d8e2] bg-white/60 px-5 sm:px-6 py-4.5 sm:py-5 shadow-xs transition hover:border-[#b8b8ca] hover:bg-white">
-      <div className="flex items-center gap-4">
-        <span className="shrink-0 text-[#9a9cbd]"><CalendarIcon className="size-5 text-[#8688AE]" strokeWidth="1.6" rx="2.5" /></span>
-        <div>
-          <span className="text-[11.5px] font-normal text-[#8688AE]">{m.dateLabel}</span>
-          <h3 className="text-[13.5px] font-medium text-[#4C4D77] mt-0.5">{m.title}</h3>
-          <div className="mt-1 flex items-center gap-1.5">
-            <span className="grid size-4 place-items-center rounded bg-[#eef0f6] text-[8.5px] font-medium text-[#8e90a8]">{m.companyTag.slice(0, 3)}</span>
-            <span className="text-[11.5px] text-[#8688AE]">{m.presenter}{m.partnerName ? ` · ${m.partnerName}` : ''}</span>
-          </div>
-        </div>
-      </div>
-      <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
-        {passed ? (
-          <>
-            <span className="rounded-full border px-3.5 py-1 text-[12px] whitespace-nowrap border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]">Badge earned ✓</span>
-            <Link className="inline-flex items-center gap-2 rounded-full border border-[#baa8d8] px-4 py-1.5 text-[12px] font-medium text-[#7954ad] hover:bg-[#f6f2fc] hover:border-[#967ec4] transition shrink-0" href={`/module/${m.slug}`}>Open <Arrow /></Link>
-          </>
-        ) : open ? (
-          <>
-            <span className="rounded-full border px-3.5 py-1 text-[12px] whitespace-nowrap border-[#ddd6fe] bg-[#f5f3ff] text-[#6d25d6]">Quiz open</span>
-            <Link className="inline-flex items-center gap-2 rounded-full border border-[#baa8d8] px-4 py-1.5 text-[12px] font-medium text-[#7954ad] hover:bg-[#f6f2fc] hover:border-[#967ec4] transition shrink-0" href={`/module/${m.slug}`}>Open <Arrow /></Link>
-          </>
-        ) : (
-          <>
-            <span className="rounded-full border border-[#E7E7F1] bg-[#F5F5FC] px-3.5 py-1 text-[12px] text-[#8688AE] whitespace-nowrap">Opens {shortDate(m.scheduledDate)}</span>
-            <button type="button" onClick={() => onSchedule(m)} className="inline-flex items-center gap-2 rounded-full border border-[#baa8d8] bg-transparent px-4 py-1.5 text-[12px] font-medium text-[#7954ad] hover:bg-[#f6f2fc] hover:border-[#967ec4] transition cursor-pointer shrink-0">
-              <CalendarIcon /><span>{m.isScheduled ? 'In your calendar ✓' : 'Add to calendar'}</span>
-            </button>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
 
 function CertificateRow({ unlocked }: { unlocked: boolean }) {
   return (
@@ -442,7 +412,7 @@ export default function DashboardPage() {
               <h2 className="text-[11.5px] font-medium text-[#9a9cbd]">Upcoming sessions ({rest.length})</h2>
               <span className="text-[11.5px] text-[#9a9cbd]">Add them to your calendar now</span>
             </div>
-            <div className="space-y-3">{rest.slice(0, shown).map((m, i) => (i === 0 && m.sessionState === 'upcoming' && !m.quiz.isPassed ? <SessionCard key={m.slug} m={m} onSchedule={setScheduling} /> : <SessionRow key={m.slug} m={m} onSchedule={setScheduling} />))}</div>
+            <div className="space-y-3">{rest.slice(0, shown).map((m) => <SessionCard key={m.slug} m={m} onSchedule={setScheduling} />)}</div>
             {rest.length > SESSIONS_STEP && (
               <div className="flex justify-center pt-1">
                 {shown < rest.length ? (

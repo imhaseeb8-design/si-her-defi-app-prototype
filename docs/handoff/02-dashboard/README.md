@@ -55,10 +55,10 @@ Screenshot: `after-sessions-more.jpg`.
 - The heading still counts them all ("Upcoming sessions (6)"), so any number of sessions can come from the CMS without stretching the page.
 - With 3 or fewer sessions, no button shows.
 
-## Upcoming session card (trial, first row only)
-Screenshot: `after-session-card-trial.jpg`. Pending approval before it's applied to every row.
+## Upcoming session card
+Screenshots: `after-session-cards.jpg` (all rows, desktop + mobile), `after-session-card-trial.jpg`. Approved and used on every row.
 - **Why:** the old rows printed the CMS's free-text `dateLabel`, so formats differed ("Thursday, October 15, 2026 · 12:00–1:00 PM ET" vs "Oct 22 · 12–1 PM ET"), and the "Opens Oct 15" pill repeated the date.
-- **New card:** date tile on the left, styled as a small calendar page: purple strip with the month, the day large (`after-session-date-tile.png`), then title (15px), "Thursday, Oct 15 · 12:00–1:00 PM ET", then speaker · company (no monogram box). "Add to calendar" on the right (full width under the content on mobile); once added it turns green, "In your calendar". Solid border, white card; the "Opens" pill is gone.
+- **New card:** date tile on the left, styled as a small calendar page: purple strip with the month, the day large (`after-session-date-tile.png`), then title (15px), "Thursday, Oct 15 · 12:00–1:00 PM ET", then speaker · company (no monogram box). "Add to calendar" on the right (full width under the content on mobile); once added it turns green, "In your calendar". Sessions that have already opened show "Quiz open" or "Badge earned" with an **Open →** button instead. Solid border, white card; the "Opens" pill is gone.
 - **Formatting:** built from `scheduledDate`/`endDate` in US Eastern time with `sessionWhen()` (`src/lib/format.ts`), so every card reads the same whatever is typed in the CMS.
 - **Data issue found:** "From TradFi to DeFi" has `scheduledDate` 12:00 UTC (= 8:00 AM ET) but its label says 12:00–1:00 PM ET. Fix the start/end time in the CMS (should be 16:00–17:00 UTC).
 - **CMS fix:** Kara Howard's sessions should list her company as **SI<3>** (Week 1 had none, Week 2 said "Si Her DeFi"). The prototype's demo data now uses SI<3>.
