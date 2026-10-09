@@ -430,10 +430,13 @@ export default function DashboardPage() {
         </section>
       </div>
 
-      <section className="space-y-3">
-        <h2 className={sectionTitle}>{status.part1Done ? 'Your onboarding' : 'Begin your journey'}</h2>
-        <StartHere status={status} />
-      </section>
+      {/* before Part 1 it leads the page; once done it moves down next to the certificate */}
+      {!status.part1Done && (
+        <section className="space-y-3">
+          <h2 className={sectionTitle}>Begin your journey</h2>
+          <StartHere status={status} />
+        </section>
+      )}
 
       <section className="space-y-5">
         <div className="flex items-center justify-between">
@@ -471,6 +474,12 @@ export default function DashboardPage() {
               </div>
             )}
           </div>
+          {status.part1Done && (
+            <div className="space-y-3 pt-3">
+              <h2 className="text-[11.5px] font-medium text-[#9a9cbd]">Your onboarding</h2>
+              <StartHere status={status} />
+            </div>
+          )}
           <CertificateRow unlocked={unlocked} passed={modules.filter((m) => m.quiz.isPassed).length} total={modules.length} />
           {unlocked && cert?.status !== 'minted' && <ReadyToMint />}
         </div>

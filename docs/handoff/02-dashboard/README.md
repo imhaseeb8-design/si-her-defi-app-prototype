@@ -94,3 +94,4 @@ Screenshot: `after-onboarding-card.jpg`.
 - One card with both parts. Top: a 2-step bar and "1 of 2 complete".
 - **Part 1** row: green check tile, "Part 1 · Done", the title, the CMS done message, and **Review** (back to the Part 1 page).
 - **Part 2** row: lock tile, "Part 2", "Onboarding Part 2", "Opens later in the cohort. We'll let you know when it's ready.", and a **Locked** tag. Uses `part2Unlocked` / `part2Done` from the status API; the title and copy are placeholders until Part 2 has CMS content.
+- **Placement:** before Part 1 is done, the onboarding card leads the page under "Begin your journey". Once Part 1 is done it moves down into "Your learning path", after the sessions and right before "Your certificate", under a small "Your onboarding" label (`after-onboarding-moved.jpg`).
