@@ -8,6 +8,7 @@ import { useSession } from '@/components/app/SessionProvider';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { settingsApi, walletApi } from '@/lib/api';
 import type { Settings } from '@/lib/types';
+import { Arrow } from '@/components/ui/Arrow';
 
 const section = 'rounded-2xl border border-[#ececf2] bg-white p-6 shadow-[0_2px_12px_rgba(23,23,48,0.03)]';
 
@@ -91,7 +92,7 @@ export default function SettingsPage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <a href={`https://basescan.org/address/${wallet}`} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-[#e2e2ec] bg-white px-3 py-1.5 text-[11.5px] font-semibold text-[#5f5f7a] hover:bg-gray-50 transition">View on BaseScan ↗</a>
+              <a href={`https://basescan.org/address/${wallet}`} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-[#e2e2ec] bg-white px-3 py-1.5 text-[11.5px] font-semibold text-[#5f5f7a] hover:bg-gray-50 transition">View on BaseScan <Arrow dir="up-right" /></a>
               <button type="button" disabled={busy} onClick={disconnect} className="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-[11.5px] font-semibold text-red-600 hover:bg-red-100 transition cursor-pointer disabled:opacity-50">{busy ? 'Disconnecting…' : 'Disconnect'}</button>
             </div>
           </div>

@@ -411,3 +411,18 @@ body {
 
 /* links styled as buttons don't get underlines */
 a.btn-primary { text-decoration: none; }
+
+/* ══ Inline arrow ═════════════════════════════════════════
+   The Figma arrow used in buttons, for links: replaces the thin
+   ← → ↗ text characters everywhere. */
+.inline-arrow {
+  display: inline-block;
+  width: 1.15em;
+  height: 1.15em;
+  flex-shrink: 0;
+  vertical-align: -0.22em;
+  background: currentColor;
+  -webkit-mask: url('/siherdefi/v2/arrow-right.svg') center / contain no-repeat;
+  mask: url('/siherdefi/v2/arrow-right.svg') center / contain no-repeat;}
+.inline-arrow[data-dir="left"] { transform: rotate(180deg); }
+.inline-arrow[data-dir="up-right"] { transform: rotate(-45deg); }

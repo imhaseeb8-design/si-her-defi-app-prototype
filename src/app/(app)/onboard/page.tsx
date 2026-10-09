@@ -10,6 +10,7 @@ import { LabelInput } from '@/components/ui/LabelInput';
 import { onboardApi } from '@/lib/api';
 import { tagCase } from '@/lib/format';
 import type { Part1, Part1Progress } from '@/lib/types';
+import { Arrow } from '@/components/ui/Arrow';
 
 const embed = (url: string) => {
   const id = url.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/)?.[1];
@@ -82,7 +83,7 @@ export default function OnboardPage() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
-      <Link className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#7c2ae8] transition-colors hover:underline" href="/dashboard">← Back to dashboard</Link>
+      <Link className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#7c2ae8] transition-colors hover:underline" href="/dashboard"><Arrow dir="left" /> Back to dashboard</Link>
       <div>
         <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f0eafb] px-3 py-1 text-[11px] font-bold text-[#7c2ae8]">● {tagCase(c.stepLabel)}</span>
         <h1 className="mt-2 text-[24px] sm:text-[26px] font-bold tracking-tight text-[#171730]">{c.page.title}</h1>
@@ -126,7 +127,7 @@ export default function OnboardPage() {
                       onClick={() => { if (!followed) save({ followedSocialIds: [...progress.followedSocialIds, s.id] }); }}
                       className={`shrink-0 rounded-full border px-3.5 py-1 text-[11.5px] font-semibold transition cursor-pointer ${followed ? 'border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]' : 'border-[#e2e2ec] text-[#171730] hover:bg-gray-50 hover:border-[#7c2ae8]'}`}
                     >
-                      {followed ? 'Followed ✓' : 'Follow ↗'}
+                      {followed ? 'Followed ✓' : <>Follow <Arrow dir="up-right" /></>}
                     </a>
                   </div>
                 );
@@ -188,7 +189,7 @@ export default function OnboardPage() {
               </div>
             </div>
             <div className="mt-6 flex items-center justify-between pt-3 border-t border-[#f0f0f5]">
-              <button type="button" disabled={questionIndex === 0 || busy} onClick={() => setQuestionIndex(questionIndex - 1)} className="text-[12.5px] font-semibold text-[#7c2ae8] hover:underline cursor-pointer disabled:opacity-50">← Back</button>
+              <button type="button" disabled={questionIndex === 0 || busy} onClick={() => setQuestionIndex(questionIndex - 1)} className="text-[12.5px] font-semibold text-[#7c2ae8] hover:underline cursor-pointer disabled:opacity-50"><Arrow dir="left" /> Back</button>
               <button type="button" disabled={busy} onClick={async () => { await save({}); setQuestionIndex(null); }} className="text-[12px] text-[#8e8ea6] hover:text-[#171730] cursor-pointer disabled:opacity-50">Save & exit</button>
               <Button
                 size="md" showIcon={!isLast} disabled={q.required && !answer.trim()} loading={busy} loadingLabel={isLast ? 'Submitting…' : 'Saving…'}

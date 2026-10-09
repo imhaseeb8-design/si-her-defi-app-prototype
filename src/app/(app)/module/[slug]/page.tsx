@@ -14,6 +14,7 @@ import { modulesApi, onboardApi, quizApi } from '@/lib/api';
 import { dayTime, timeUntil } from '@/lib/format';
 import { now } from '@/lib/mock/server';
 import type { Module, Quiz, QuizHint } from '@/lib/types';
+import { Arrow } from '@/components/ui/Arrow';
 
 const card = 'rounded-2xl border border-[#ececf2] bg-white p-5 sm:p-6 shadow-2xs space-y-4';
 const share = (text: string) => `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(text)}`;
@@ -103,7 +104,7 @@ export default function ModulePage() {
       <div className="mx-auto grid min-h-[60vh] max-w-md place-items-center text-center">
         <div>
           <p className="text-[18px] font-bold text-[#171730]">We couldn’t find that module</p>
-          <Link href="/dashboard" className="mt-3 inline-block text-[12.5px] font-semibold text-[#7c2ae8] hover:underline">← Back to dashboard</Link>
+          <Link href="/dashboard" className="mt-3 inline-block text-[12.5px] font-semibold text-[#7c2ae8] hover:underline"><Arrow dir="left" /> Back to dashboard</Link>
         </div>
       </div>
     );
@@ -121,7 +122,7 @@ export default function ModulePage() {
   return (
     <div className="mx-auto max-w-[1040px] space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Link className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-[#7c2ae8] transition-colors hover:underline" href="/dashboard">← Back to dashboard</Link>
+        <Link className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-[#7c2ae8] transition-colors hover:underline" href="/dashboard"><Arrow dir="left" /> Back to dashboard</Link>
         <span className="text-[11px] font-semibold text-[#8e8ea6]">{m.dateLabel}</span>
       </div>
       <div>
@@ -186,7 +187,7 @@ export default function ModulePage() {
           {next && (
             <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-[12px]">
               <span className="text-[#5f5f7a]">Next up: <Link className="font-semibold text-[#171730] hover:text-[#7c2ae8]" href={`/module/${next.slug}`}>{next.title}</Link> — {dayTime(next.scheduledDate)}</span>
-              <button type="button" onClick={() => setScheduling(next)} className="font-semibold text-[#7c2ae8] hover:underline cursor-pointer">Add to calendar ↗</button>
+              <button type="button" onClick={() => setScheduling(next)} className="font-semibold text-[#7c2ae8] hover:underline cursor-pointer">Add to calendar <Arrow dir="up-right" /></button>
             </div>
           )}
         </div>
@@ -215,7 +216,7 @@ export default function ModulePage() {
                     {typeof s.telegramHandle === 'string' && s.telegramHandle && (
                       <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
                         <a href={`https://t.me/${s.telegramHandle}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-full border border-[#e2e2ec] bg-white px-2.5 py-1 text-[11px] font-medium text-[#5f5f7a] hover:bg-gray-50 hover:text-[#171730] transition-colors">
-                          <span>Telegram</span><span className="text-[10px]">↗</span>
+                          <span>Telegram</span><span className="text-[10px]"> <Arrow dir="up-right" /></span>
                         </a>
                       </div>
                     )}
@@ -227,7 +228,7 @@ export default function ModulePage() {
           <div className="rounded-2xl border border-[#ececf2] bg-white p-5 shadow-2xs space-y-3">
             <h4 className="text-[13px] font-bold text-[#171730]">Share your progress</h4>
             <p className="text-[11.5px] leading-relaxed text-[#8e8ea6]">It doesn’t affect your badge or certificate.</p>
-            <a href={share(shareText)} target="_blank" rel="noopener noreferrer" className="block w-full rounded-xl border border-[#e2e2ec] py-2 text-center text-[12px] font-semibold text-[#171730] transition hover:bg-gray-50">Share on LinkedIn ↗</a>
+            <a href={share(shareText)} target="_blank" rel="noopener noreferrer" className="block w-full rounded-xl border border-[#e2e2ec] py-2 text-center text-[12px] font-semibold text-[#171730] transition hover:bg-gray-50">Share on LinkedIn <Arrow dir="up-right" /></a>
           </div>
         </div>
       </div>

@@ -12,6 +12,7 @@ import { Spinner } from '@/components/onboarding/OnboardingShell';
 import { assetPath, badgeApi, certificateApi, modulesApi, onboardApi, partnerApi } from '@/lib/api';
 import { dayTime, firstName, shortAddress, shortDate, tagCase } from '@/lib/format';
 import type { Badges, Certificate, Module, OnboardStatus, Partner } from '@/lib/types';
+import { Arrow } from '@/components/ui/Arrow';
 
 const TOTAL_BADGES = 12;
 const sectionTitle = 'text-[11.5px] font-bold text-[#8e8ea6]';
@@ -160,12 +161,12 @@ function SessionRow({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => v
         {passed ? (
           <>
             <span className="rounded-full border px-3.5 py-1 text-[12px] whitespace-nowrap border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]">Badge earned ✓</span>
-            <Link className="inline-flex items-center gap-2 rounded-full border border-[#baa8d8] px-4 py-1.5 text-[12px] font-medium text-[#7954ad] hover:bg-[#f6f2fc] hover:border-[#967ec4] transition shrink-0" href={`/module/${m.slug}`}>Open →</Link>
+            <Link className="inline-flex items-center gap-2 rounded-full border border-[#baa8d8] px-4 py-1.5 text-[12px] font-medium text-[#7954ad] hover:bg-[#f6f2fc] hover:border-[#967ec4] transition shrink-0" href={`/module/${m.slug}`}>Open <Arrow /></Link>
           </>
         ) : open ? (
           <>
             <span className="rounded-full border px-3.5 py-1 text-[12px] whitespace-nowrap border-[#ddd6fe] bg-[#f5f3ff] text-[#6d25d6]">Quiz open</span>
-            <Link className="inline-flex items-center gap-2 rounded-full border border-[#baa8d8] px-4 py-1.5 text-[12px] font-medium text-[#7954ad] hover:bg-[#f6f2fc] hover:border-[#967ec4] transition shrink-0" href={`/module/${m.slug}`}>Open →</Link>
+            <Link className="inline-flex items-center gap-2 rounded-full border border-[#baa8d8] px-4 py-1.5 text-[12px] font-medium text-[#7954ad] hover:bg-[#f6f2fc] hover:border-[#967ec4] transition shrink-0" href={`/module/${m.slug}`}>Open <Arrow /></Link>
           </>
         ) : (
           <>
@@ -248,7 +249,7 @@ function PartnerCard({ p }: { p: Partner }) {
           <p className="mt-2 text-[11.5px] leading-relaxed text-[#5f5f7a] line-clamp-2">{p.description}</p>
         </div>
         <div className="mt-4 pt-3 border-t border-[#f0f0f5]">
-          <a href={p.actionUrl} target="_blank" rel="noopener noreferrer" className="block text-center w-full rounded-xl border border-[#e2e2ec] py-2 text-[12px] font-semibold text-[#171730] transition hover:bg-gray-50 cursor-pointer">{p.actionText}</a>
+          <a href={p.actionUrl} target="_blank" rel="noopener noreferrer" className="block text-center w-full rounded-xl border border-[#e2e2ec] py-2 text-[12px] font-semibold text-[#171730] transition hover:bg-gray-50 cursor-pointer">{p.actionText.replace(/\s*↗\s*$/, '')} <Arrow dir="up-right" /></a>
           <p className="mt-2 text-center text-[10px] text-[#9ca3af]">{p.footerText}</p>
         </div>
       </div>
@@ -302,7 +303,7 @@ export default function DashboardPage() {
               <span className="size-2 rounded-full bg-[#0052ff]" />
               <span className="text-[11px] font-semibold text-[#171730]">Base</span>
               <span className="tabular-nums text-[11px] text-[#8e8ea6]">{shortAddress(wallet)}</span>
-              <span className="text-[10px] text-[#9ca3af]">↗</span>
+              <span className="text-[10px] text-[#9ca3af]"> <Arrow dir="up-right" /></span>
             </a>
           </div>
         )}

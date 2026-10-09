@@ -2,6 +2,7 @@
 import { forwardRef } from 'react';
 import { assetPath } from '@/lib/api';
 import type { Certificate } from '@/lib/types';
+import { Arrow } from '@/components/ui/Arrow';
 
 const TOTAL = 12;
 
@@ -63,7 +64,7 @@ export const CertificateArt = forwardRef<HTMLDivElement, { cert: Certificate; pr
             <p className="font-semibold text-[#8e8ea6] text-[11px]">{minted ? 'On-chain' : 'Network'}</p>
             {minted ? (
               <a href={cert.onChain.explorerUrl!} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-1 font-semibold text-[#7c2ae8] hover:underline">
-                <span className="size-1.5 rounded-full bg-[#0052ff]" />Token #{cert.onChain.tokenId} ↗
+                <span className="size-1.5 rounded-full bg-[#0052ff]" />Token #{cert.onChain.tokenId} <Arrow dir="up-right" />
               </a>
             ) : (
               <p className="inline-flex items-center justify-center gap-1 font-semibold text-[#171730]"><span className="size-1.5 rounded-full bg-[#0052ff]" />{cert.onChain.network}</p>

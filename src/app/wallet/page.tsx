@@ -6,12 +6,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { OnboardingShell, Spinner } from '@/components/onboarding/OnboardingShell';
 import { ConnectWalletModal, QrModal, SwitchNetworkModal } from '@/components/wallet/ReownModal';
-import { CoinbaseIcon, MetaMaskIcon, OneInchIcon, QrGlyph, RainbowIcon, WalletConnectIcon } from '@/components/wallet/WalletIcons';
+import { CoinbaseIcon, MetaMaskIcon, OneInchIcon, QrGlyph, WalletConnectIcon } from '@/components/wallet/WalletIcons';
 import { errorMessage, profileApi, walletApi } from '@/lib/api';
 import { useDemo } from '@/lib/hooks/useDemo';
 import { useRequireAuth } from '@/lib/hooks/useAuth';
 import { DEMO_ADDRESS } from '@/lib/mock/server';
 import { ButtonLink } from '@/components/ui/Button';
+import { Arrow } from '@/components/ui/Arrow';
 
 type Phase = { status: 'idle' } | { status: 'connecting' } | { status: 'signing'; address: string } | { status: 'connected'; address: string } | { status: 'disconnecting'; address: string } | { status: 'error'; message: string };
 type Modal = null | 'switch' | 'reown' | { qr: string };
@@ -32,7 +33,7 @@ const NotInstalled = ({ href, name, icon }: { href: string; name: string; icon: 
     {icon}
     <div className="min-w-0 flex-1">
       <p className="text-[13.5px] font-semibold text-[#5f5f7a] group-hover:text-[#171730] transition">{name}</p>
-      <p className="text-[11px] text-[#9ca3af]">Not installed — click to get it ↗</p>
+      <p className="text-[11px] text-[#9ca3af]">Not installed — click to get it <Arrow dir="up-right" /></p>
     </div>
   </a>
 );
@@ -93,7 +94,7 @@ export default function WalletPage() {
     <OnboardingShell right={{ kind: 'account', email: user?.email ?? '' }} step={2} aside="wallet">
       <div className="w-full">
         <div className="w-full space-y-4">
-          <Link className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#7c2ae8] transition-colors hover:underline" href="/profile">← Back to profile</Link>
+          <Link className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#7c2ae8] transition-colors hover:underline" href="/profile"><Arrow dir="left" /> Back to profile</Link>
           <div>
             <h1 className="text-[24px] font-bold tracking-tight text-[#171730]">Connect your wallet</h1>
             <p className="mt-1.5 text-[13px] leading-relaxed text-[#5f5f7a]">This is where your certificate mints at the end of the cohort. We only read your address — no funds needed.</p>
@@ -132,7 +133,7 @@ export default function WalletPage() {
                 <span className="tabular-nums text-[11.5px] text-[#171730] break-all text-right">{address}</span>
               </div>
               <a href={`https://basescan.org/address/${address}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 rounded-xl border border-[#e2e2ec] px-4 py-2.5 text-[12.5px] font-semibold text-[#5f5f7a] transition hover:bg-gray-50 hover:text-[#171730]">
-                <span className="size-2 rounded-full bg-[#0052ff]" />View on BaseScan ↗
+                <span className="size-2 rounded-full bg-[#0052ff]" />View on BaseScan <Arrow dir="up-right" />
               </a>
               <ButtonLink href="/dashboard" disabled={phase.status !== 'connected'}>Go to my dashboard</ButtonLink>
               <button type="button" onClick={disconnect} disabled={phase.status !== 'connected'} className="w-full text-center text-[11.5px] text-[#8e8ea6] hover:text-[#5f5f7a] transition cursor-pointer disabled:opacity-50">
@@ -163,7 +164,6 @@ export default function WalletPage() {
                   <NotInstalled href="https://metamask.io/download/" name="MetaMask" icon={<MetaMaskIcon />} />
                 )}
                 <NotInstalled href="https://www.coinbase.com/wallet/downloads" name="Coinbase Wallet" icon={<CoinbaseIcon />} />
-                <NotInstalled href="https://rainbow.me/download" name="Rainbow" icon={<RainbowIcon />} />
                 <div className="w-full rounded-xl border border-[#e4e4ed] bg-white px-4 py-3 hover:border-[#6d25d6] hover:bg-[#fbfaff] transition shadow-xs group">
                   <div className="flex items-center justify-between gap-3.5">
                     <button type="button" onClick={() => setModal({ qr: '1inch Wallet' })} className="flex items-center gap-3.5 min-w-0 flex-1 text-left cursor-pointer">
@@ -177,7 +177,7 @@ export default function WalletPage() {
                       <button type="button" onClick={() => setModal({ qr: '1inch Wallet' })} className="rounded-full bg-[#ede9fe] text-[#6d25d6] hover:bg-[#ddd6fe] border border-[#ddd6fe] px-2.5 py-1 text-[10px] font-bold transition cursor-pointer flex items-center gap-1 shadow-2xs">
                         <QrGlyph /><span>QR code</span>
                       </button>
-                      <a href="https://1inch.io/wallet/" target="_blank" rel="noopener noreferrer" title="Visit official website" className="p-1 rounded-lg text-[#9ca3af] hover:text-[#171730] hover:bg-gray-100 transition text-[11px]">↗</a>
+                      <a href="https://1inch.io/wallet/" target="_blank" rel="noopener noreferrer" title="Visit official website" className="p-1 rounded-lg text-[#9ca3af] hover:text-[#171730] hover:bg-gray-100 transition text-[11px]"> <Arrow dir="up-right" /></a>
                     </div>
                   </div>
                 </div>

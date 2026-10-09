@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { ApiErrorResponse, errorMessage, quizApi } from '@/lib/api';
 import { dayTime, timeUntil } from '@/lib/format';
 import type { Module, Quiz, QuizAnswer, QuizHint, QuizResult } from '@/lib/types';
+import { Arrow } from '@/components/ui/Arrow';
 
 export function HintButton({ hint, onRewatch }: { hint: QuizHint; onRewatch?: (h: QuizHint) => void }) {
   const inner = (
@@ -100,7 +101,7 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
             <Button onClick={() => router.push('/certificate')}>View your certificate</Button>
             <div className="grid grid-cols-2 gap-2">
               <button type="button" onClick={onClose} className="rounded-xl border border-[#e2e2ec] py-2.5 text-[12px] font-semibold text-[#5f5f7a] hover:bg-gray-50 transition cursor-pointer">Back to module</button>
-              <a href={shareUrl(`I just earned the "${badgeName}" badge in the Si Her DeFi cohort 🎉`)} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-[#f4effe] py-2.5 text-center text-[12px] font-semibold text-[#7c2ae8] transition hover:bg-[#ede5fc]">Share on LinkedIn ↗</a>
+              <a href={shareUrl(`I just earned the "${badgeName}" badge in the Si Her DeFi cohort 🎉`)} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-[#f4effe] py-2.5 text-center text-[12px] font-semibold text-[#7c2ae8] transition hover:bg-[#ede5fc]">Share on LinkedIn <Arrow dir="up-right" /></a>
             </div>
           </div>
         </div>
@@ -126,7 +127,7 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
           ))}
         </div>
         <div className="mt-5 flex items-center justify-between border-t border-[#f0f0f5] pt-3.5">
-          <button type="button" onClick={onClose} className="text-[12px] font-medium text-[#5f5f7a] hover:text-[#171730] cursor-pointer">← Back to module</button>
+          <button type="button" onClick={onClose} className="text-[12px] font-medium text-[#5f5f7a] hover:text-[#171730] cursor-pointer"><Arrow dir="left" /> Back to module</button>
           {result.attemptsRemaining > 0 && (
             <Button size="md" onClick={() => { setResult(null); setAnswers({}); setIndex(0); setAttempt((a) => a + 1); }}>Try again</Button>
           )}
@@ -190,7 +191,7 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
       )}
       {error && <p role="alert" className="mt-3 text-[12px] text-red-500">{error}</p>}
       <div className="mt-5 flex items-center justify-between border-t border-[#f0f0f5] pt-3.5">
-        <button type="button" onClick={onClose} disabled={!!picking} className="text-[11.5px] font-medium text-[#5f5f7a] hover:text-[#171730] cursor-pointer disabled:opacity-50">← Close</button>
+        <button type="button" onClick={onClose} disabled={!!picking} className="text-[11.5px] font-medium text-[#5f5f7a] hover:text-[#171730] cursor-pointer disabled:opacity-50"><Arrow dir="left" /> Close</button>
         <span className="text-[10.5px] text-[#8e8ea6]">{answered ? 'Answer locked' : 'Choose an answer — it locks once picked'}</span>
         <Button size="md" disabled={!answered} onClick={() => setIndex((i) => Math.min(i + 1, questions.length - 1))}>Next question</Button>
       </div>

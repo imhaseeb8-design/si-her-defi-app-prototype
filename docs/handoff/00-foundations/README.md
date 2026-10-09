@@ -31,6 +31,13 @@ Every text field is the floating-label field (Bencho "Label input", MIT): `src/c
 - **Desktop:** the code, profile and wallet steps fit the window exactly. The form column scrolls on its own and the artwork panel stays fixed, so there's never white space below either (`OnboardingShell`). Below 1024px it's one normal scrolling page.
 - **Sign in (new layout):** the steps and card sit in the middle of the space under the nav at every size, and the artwork rail stays in place while the page scrolls.
 
+## Arrows
+- No thin text arrows (← → ↗). Every inline arrow is the Figma arrow icon (the one in the buttons) via `<Arrow dir="left" | "right" | "up-right" />` (`src/components/ui/Arrow.tsx`, CSS `.inline-arrow`). Back links point left; links that open a new tab point up-right. It takes the text colour.
+- Partner link labels from the CMS ("Visit partner site ↗") have the character stripped and the icon added.
+
+## Wallets
+- Rainbow is removed from the wallet list. MetaMask, Coinbase Wallet, 1inch and WalletConnect remain.
+
 ## Buttons
 Two components from Figma (section "Button components", `1027:759`):
 

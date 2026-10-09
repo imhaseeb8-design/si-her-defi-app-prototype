@@ -8,6 +8,7 @@ import { Spinner } from '@/components/onboarding/OnboardingShell';
 import { assetPath, certificateApi, modulesApi } from '@/lib/api';
 import { shortAddress } from '@/lib/format';
 import type { Certificate } from '@/lib/types';
+import { Arrow } from '@/components/ui/Arrow';
 
 const card = 'rounded-2xl border border-[#ececf2] bg-white p-5 sm:p-6 shadow-2xs space-y-3.5';
 const secondary = 'w-full rounded-xl border border-[#e2e2ec] py-2.5 text-center text-[12.5px] font-semibold text-[#171730] transition hover:bg-gray-50 active:scale-[0.99] cursor-pointer block disabled:opacity-50 disabled:cursor-wait';
@@ -64,7 +65,7 @@ export default function CertificatePage() {
 
   return (
     <div className="mx-auto max-w-[1060px] space-y-6">
-      <Link className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#8e8ea6] hover:text-[#7c2ae8] transition-colors" href="/dashboard">← Back to dashboard</Link>
+      <Link className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#8e8ea6] hover:text-[#7c2ae8] transition-colors" href="/dashboard"><Arrow dir="left" /> Back to dashboard</Link>
       <div>
         <h1 className="text-[26px] sm:text-[28px] font-bold tracking-tight text-[#171730]">Your certificate</h1>
         <p className="mt-1 text-[13px] text-[#5f5f7a]">{c.cohortLabel} · {c.cohortDates} · {c.programName}</p>
@@ -94,11 +95,11 @@ export default function CertificatePage() {
               <span className="text-[11px] font-bold text-[#7c2ae8]">{minted ? 'Minted' : 'Ready to share'}</span>
               <h3 className="text-[16px] font-bold text-[#171730]">{cert.badges.length} of {cert.totalBadges} badges earned</h3>
               <div className="space-y-2 pt-1">
-                <ButtonLink href={addToProfile} external showIcon={false}>Add to LinkedIn profile ↗</ButtonLink>
-                <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(verifyUrl)}`} target="_blank" rel="noopener noreferrer" className="w-full rounded-xl bg-[#f4effe] py-2.5 text-center text-[12.5px] font-semibold text-[#7c2ae8] transition hover:bg-[#ede5fc] active:scale-[0.99] cursor-pointer block">Share on LinkedIn ↗</a>
+                <ButtonLink href={addToProfile} external showIcon={false}>Add to LinkedIn profile <Arrow dir="up-right" /></ButtonLink>
+                <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(verifyUrl)}`} target="_blank" rel="noopener noreferrer" className="w-full rounded-xl bg-[#f4effe] py-2.5 text-center text-[12.5px] font-semibold text-[#7c2ae8] transition hover:bg-[#ede5fc] active:scale-[0.99] cursor-pointer block">Share on LinkedIn <Arrow dir="up-right" /></a>
                 <button type="button" disabled={downloading} onClick={download} className={secondary}>{downloading ? 'Preparing image…' : 'Download image'}</button>
                 <button type="button" onClick={async () => { await navigator.clipboard?.writeText(verifyUrl).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 1600); }} className={secondary}>{copied ? 'Link copied ✓' : 'Copy verification link'}</button>
-                <a href={assetPath(`/verify/${cert.verificationCode}`)} target="_blank" rel="noopener noreferrer" className={secondary}>View public page ↗</a>
+                <a href={assetPath(`/verify/${cert.verificationCode}`)} target="_blank" rel="noopener noreferrer" className={secondary}>View public page <Arrow dir="up-right" /></a>
               </div>
               <p className="text-[10.5px] text-[#8e8ea6] leading-relaxed">“Add to profile” puts it under Licenses & certifications; sharing posts it to your feed.</p>
             </div>
@@ -113,7 +114,7 @@ export default function CertificatePage() {
                   <div className="flex items-center justify-between"><span className="text-[#8e8ea6] font-semibold text-[11px]">Token</span><span className="tabular-nums font-bold text-[#171730]">#{cert.onChain.tokenId}</span></div>
                   <div className="flex items-center justify-between border-t border-[#ececf2]/70 pt-1.5"><span className="text-[#8e8ea6] font-semibold text-[11px]">Transaction</span><span className="tabular-nums text-[#171730]">{shortAddress(cert.onChain.txHash ?? '')}</span></div>
                 </div>
-                <a href={cert.onChain.explorerUrl ?? '#'} target="_blank" rel="noopener noreferrer" className={secondary}>View on BaseScan ↗</a>
+                <a href={cert.onChain.explorerUrl ?? '#'} target="_blank" rel="noopener noreferrer" className={secondary}>View on BaseScan <Arrow dir="up-right" /></a>
               </>
             ) : (
               <>
@@ -136,7 +137,7 @@ export default function CertificatePage() {
                   <div key={s.slug} className="pt-3 first:pt-0 space-y-1">
                     <p className="text-[11px] font-bold text-[#8e8ea6]">Week {String(s.week).padStart(2, '0')}</p>
                     <h4 className="text-[13px] font-bold text-[#171730]">{s.title}</h4>
-                    <Link className="inline-flex items-center gap-1 text-[11.5px] font-semibold text-[#7c2ae8] hover:underline" href={`/module/${s.slug}`}>Take the quiz →</Link>
+                    <Link className="inline-flex items-center gap-1 text-[11.5px] font-semibold text-[#7c2ae8] hover:underline" href={`/module/${s.slug}`}>Take the quiz <Arrow /></Link>
                   </div>
                 ))}
               </div>
