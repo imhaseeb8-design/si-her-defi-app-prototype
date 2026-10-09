@@ -78,3 +78,6 @@ Screenshot: `after-certificate-card.jpg` (locked, unlocked, mobile).
 - **Locked:** white-violet card, lock tile, "Your certificate" with a **Locked** tag, "Finish every session and pass each quiz to unlock it. Then mint it on Base with all your badges.", progress "4 of 7 quizzes passed", and a Disabled "View certificate" button with a lock.
 - **Unlocked:** award tile, "Minted on Base, with every badge you earned.", Primary "View certificate →".
 - The note next to "Your learning path" now says "Finish every session to unlock your certificate".
+
+## Logo (app sidebar + mobile top bar)
+Screenshot: `after-logo-purple.jpg`. The wordmark is now brand purple **#6231A5** and 18px tall (was 22px navy). The prototype masks `public/v2/logo-wordmark.png` with the colour; in production export the purple wordmark as SVG.

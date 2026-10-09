@@ -24,10 +24,11 @@ const Icon = {
   collapse: (<svg viewBox="0 0 20 20" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="14" height="14" rx="2" /><line x1="8" y1="3" x2="8" y2="17" /></svg>),
 };
 
-/** New Si Her DeFi wordmark (diamond + type), 22px tall in the sidebar and top bar. */
+/** New Si Her DeFi wordmark (diamond + type), 18px tall in the sidebar and top bar, brand purple #6231A5. */
 const Logo = () => (
   // eslint-disable-next-line @next/next/no-img-element
-  <img alt="Si Her DeFi" src={assetPath('/v2/logo-wordmark.png')} width={120} height={22} className="block h-[22px] w-[120px] max-w-none" />
+  // the wordmark PNG used as a mask, so it takes the brand purple (#6231A5); 18px tall
+  <span role="img" aria-label="Si Her DeFi" className="block h-[18px] w-[98px] bg-[#6231a5]" style={{ WebkitMask: `url(${assetPath('/v2/logo-wordmark.png')}) center / contain no-repeat`, mask: `url(${assetPath('/v2/logo-wordmark.png')}) center / contain no-repeat` }} />
 );
 
 /* Sidebar motion: width slides on an ease-out curve; labels fade (out at once on collapse, in after a
@@ -238,7 +239,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="px-4 py-6">
           <div className={`flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
             {/* the wordmark slides shut as the panel narrows; the toggle settles into the centre */}
-            <Link href="/dashboard" tabIndex={collapsed ? -1 : 0} className={`block overflow-hidden transition-[width,opacity] ${EASE} ${collapsed ? 'w-0 opacity-0' : 'w-[120px] opacity-100'}`}><Logo /></Link>
+            <Link href="/dashboard" tabIndex={collapsed ? -1 : 0} className={`block overflow-hidden transition-[width,opacity] ${EASE} ${collapsed ? 'w-0 opacity-0' : 'w-[98px] opacity-100'}`}><Logo /></Link>
             <button type="button" onClick={() => setCollapsed((c) => !c)} className="rounded-lg p-1.5 text-[#8e8ea6] hover:bg-gray-100 hover:text-[#171730] transition-colors cursor-pointer" title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
               {Icon.collapse}
             </button>
