@@ -81,3 +81,10 @@ Screenshot: `after-certificate-card.jpg` (locked, unlocked, mobile).
 
 ## Logo (app sidebar + mobile top bar)
 Screenshot: `after-logo-purple.jpg`. The wordmark is now brand purple **#6231A5** and 18px tall (was 22px navy). The prototype masks `public/v2/logo-wordmark.png` with the colour; in production export the purple wordmark as SVG.
+
+## Welcome subtitle copy
+One line under "Welcome, {name}", by state:
+- Before onboarding: "Introduce yourself to unlock the weekly sessions."
+- Onboarding done, no badges: "You're in. Watch the Week 01 session and pass its quiz to earn your first badge."
+- Some badges: "You've earned 4 of 12 badges. Each session and quiz brings you closer to your certificate."
+- Everything done: "You did it. Every session and quiz is done, and your certificate is ready to mint on Base."

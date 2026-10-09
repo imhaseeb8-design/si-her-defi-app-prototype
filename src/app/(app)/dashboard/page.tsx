@@ -325,10 +325,12 @@ export default function DashboardPage() {
   const nextBadge = [...modules].sort((x, y) => x.week - y.week).find((m) => !earnedWeeks.has(m.week));
   const unlocked = !!cert && cert.status !== 'locked';
   const subtitle = !status.part1Done
-    ? "Let's get you set up for Si Her DeFi. Start with onboarding below."
-    : earned === 0
-      ? `You're all set. Complete the Week ${featured?.week ?? 1} module to earn your first badge.`
-      : `You've earned ${earned} of ${TOTAL_BADGES} badges. Complete more weekly sessions to build your credential.`;
+    ? 'Introduce yourself to unlock the weekly sessions.'
+    : unlocked
+      ? 'You did it. Every session and quiz is done, and your certificate is ready to mint on Base.'
+      : earned === 0
+        ? `You're in. Watch the Week ${String(featured?.week ?? 1).padStart(2, '0')} session and pass its quiz to earn your first badge.`
+        : `You've earned ${earned} of ${TOTAL_BADGES} badges. Each session and quiz brings you closer to your certificate.`;
 
   return (
     <div className="mx-auto max-w-5xl space-y-8">
