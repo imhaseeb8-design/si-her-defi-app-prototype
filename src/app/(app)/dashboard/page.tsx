@@ -181,9 +181,11 @@ function SessionCard({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => 
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-[#ececf2] bg-white p-4 shadow-[0_2px_12px_rgba(23,23,48,0.03)] transition hover:border-[#dcd0f2] sm:flex-row sm:items-center sm:p-5">
       <div className="flex min-w-0 flex-1 items-center gap-4">
-        <div className="flex w-14 shrink-0 flex-col items-center rounded-xl border border-[#ebe3fa] bg-[#f8f5fe] py-2 leading-none" aria-hidden="true">
-          <span className="text-[11.5px] font-medium text-[#7c2ae8]">{when.month}</span>
-          <span className="mt-1 text-[22px] font-medium tabular-nums text-[#151534]">{when.day}</span>
+        {/* a small calendar page: month on a brand strip, the day, then the weekday */}
+        <div className="w-[60px] shrink-0 overflow-hidden rounded-xl border border-[#e6e0f2] bg-white text-center leading-none shadow-[0_1px_2px_rgba(23,23,48,0.06)]" aria-hidden="true">
+          <div className="bg-gradient-to-b from-[#8b3df0] to-[#7c2ae8] py-1 text-[10.5px] font-medium text-white">{when.month}</div>
+          <div className="pt-1.5 text-[22px] font-medium tabular-nums tracking-[-0.02em] text-[#151534]">{when.day}</div>
+          <div className="pb-1.5 pt-1 text-[10.5px] text-[#8e8ea6]">{when.weekday.slice(0, 3)}</div>
         </div>
         <div className="min-w-0">
           <h3 className="truncate text-[15px] font-medium text-[#151534]">{m.title}</h3>
