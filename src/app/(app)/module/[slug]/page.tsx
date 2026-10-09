@@ -24,12 +24,12 @@ function QuizCard({ m, quiz, part1Done, onStart }: { m: Module; quiz: Quiz; part
   if (quiz.isPassed) {
     return (
       <div className={card}>
-        <span className="text-[11.5px] font-bold text-[#7c2ae8]">Completed</span>
+        <span className="text-[11.5px] font-medium text-[#7c2ae8]">Completed</span>
         <div className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt="" className="size-12 object-contain" src={quiz.badge.image} />
           <div>
-            <h4 className="text-[15px] font-bold text-[#171730]">Badge earned ✓</h4>
+            <h4 className="text-[15px] font-medium text-[#171730]">Badge earned ✓</h4>
             <p className="text-[12px] text-[#5f5f7a]">{quiz.badge.name}</p>
           </div>
         </div>
@@ -41,14 +41,14 @@ function QuizCard({ m, quiz, part1Done, onStart }: { m: Module; quiz: Quiz; part
   if (locked) {
     return (
       <div className={card}>
-        <span className="text-[11.5px] font-bold text-[#7c2ae8]">Try again soon</span>
+        <span className="text-[11.5px] font-medium text-[#7c2ae8]">Try again soon</span>
         <div className="space-y-3">
           <div>
-            <h4 className="text-[16.5px] font-bold text-[#171730]">Earn your week {m.week} badge</h4>
+            <h4 className="text-[16.5px] font-medium text-[#171730]">Earn your week {m.week} badge</h4>
             <p className="mt-1.5 text-[12px] leading-relaxed text-[#5f5f7a]">You’ve used all {quiz.maxAttempts} attempts{last ? ` (last: ${last.score} of ${last.totalQuestions})` : ''}. Take some time to rewatch the session — a fresh set of attempts opens soon.</p>
           </div>
           <div className="rounded-xl border border-[#ddd6fe] bg-[#f5f3ff] p-3 text-[12px] text-[#5b21b6]">
-            <p className="font-semibold">You can try again {timeUntil(quiz.retryAvailableAt!) ?? 'soon'}</p>
+            <p className="font-medium">You can try again {timeUntil(quiz.retryAvailableAt!) ?? 'soon'}</p>
             <p className="mt-0.5 text-[11px] text-[#7c3aed]">{dayTime(quiz.retryAvailableAt!)}</p>
           </div>
         </div>
@@ -58,9 +58,9 @@ function QuizCard({ m, quiz, part1Done, onStart }: { m: Module; quiz: Quiz; part
   const retry = !!last && !last.passed;
   return (
     <div className={card}>
-      <span className="text-[11.5px] font-bold text-[#7c2ae8]">Ready when you are</span>
+      <span className="text-[11.5px] font-medium text-[#7c2ae8]">Ready when you are</span>
       <div>
-        <h4 className="text-[16.5px] font-bold text-[#171730]">Earn your week {m.week} badge</h4>
+        <h4 className="text-[16.5px] font-medium text-[#171730]">Earn your week {m.week} badge</h4>
         <p className="mt-1.5 text-[12px] leading-relaxed text-[#5f5f7a]">Answer all {quiz.totalQuestions} correctly to earn the badge. {quiz.maxAttempts} attempts — if you don’t pass, rewatch and retry.</p>
       </div>
       <ul className="space-y-2.5 text-[12px] text-[#5f5f7a]">
@@ -103,8 +103,8 @@ export default function ModulePage() {
     return (
       <div className="mx-auto grid min-h-[60vh] max-w-md place-items-center text-center">
         <div>
-          <p className="text-[18px] font-bold text-[#171730]">We couldn’t find that module</p>
-          <Link href="/dashboard" className="mt-3 inline-block text-[12.5px] font-semibold text-[#7c2ae8] hover:underline"><Arrow dir="left" /> Back to dashboard</Link>
+          <p className="text-[18px] font-medium text-[#171730]">We couldn’t find that module</p>
+          <Link href="/dashboard" className="mt-3 inline-block text-[12.5px] font-medium text-[#7c2ae8] hover:underline"><Arrow dir="left" /> Back to dashboard</Link>
         </div>
       </div>
     );
@@ -123,10 +123,10 @@ export default function ModulePage() {
     <div className="mx-auto max-w-[1040px] space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-[#7c2ae8] transition-colors hover:underline" href="/dashboard"><Arrow dir="left" /> Back to dashboard</Link>
-        <span className="text-[11px] font-semibold text-[#8e8ea6]">{m.dateLabel}</span>
+        <span className="text-[11px] font-medium text-[#8e8ea6]">{m.dateLabel}</span>
       </div>
       <div>
-        <h1 className="text-[26px] sm:text-[28px] font-bold tracking-tight text-[#171730]">{m.title}</h1>
+        <h1 className="text-[26px] sm:text-[28px] font-medium tracking-tight text-[#171730]">{m.title}</h1>
         {m.partnerName && m.partnerName !== 'Si Her DeFi' && <p className="mt-1 text-[13px] text-[#5f5f7a]">With {m.partnerName}</p>}
       </div>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
@@ -139,13 +139,13 @@ export default function ModulePage() {
               {(m.bannerUrl || m.thumbnailUrl) && <img alt="" className="absolute inset-0 size-full object-cover" src={(m.bannerUrl || m.thumbnailUrl)!} />}
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/45" />
               <div className="absolute top-4 left-4 z-10">
-                <span className="inline-flex items-center gap-1.5 rounded-md bg-black/60 px-2.5 py-1 text-[11px] font-semibold text-white/90 backdrop-blur-sm">
+                <span className="inline-flex items-center gap-1.5 rounded-md bg-black/60 px-2.5 py-1 text-[11px] font-medium text-white/90 backdrop-blur-sm">
                   <span>{m.companyTag}</span><span className="text-white/40">·</span><span>{upcoming ? 'Upcoming session' : m.sessionState === 'live' ? 'Live now' : 'Recording coming soon'}</span>
                 </span>
               </div>
               <div className="absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-end justify-between gap-3 p-5">
                 <div className="space-y-1">
-                  <p className="text-[14px] font-bold text-white">Live {dayTime(m.scheduledDate)}</p>
+                  <p className="text-[14px] font-medium text-white">Live {dayTime(m.scheduledDate)}</p>
                   {upcoming && <p className="text-[12px] text-white/75">Starts {timeUntil(m.scheduledDate)}</p>}
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
@@ -158,14 +158,14 @@ export default function ModulePage() {
           )}
 
           <div className="rounded-2xl border border-[#ececf2] bg-white p-6 shadow-2xs space-y-3">
-            <h3 className="text-[11px] font-bold text-[#8e8ea6]">About this module</h3>
+            <h3 className="text-[11px] font-medium text-[#8e8ea6]">About this module</h3>
             <p className="text-[12.5px] leading-relaxed text-[#5f5f7a]">{m.description}</p>
             {m.aboutText.map((p, i) => <p key={i} className="text-[12.5px] leading-relaxed text-[#5f5f7a]">{p}</p>)}
           </div>
 
           {!upcoming && m.chapters.length > 0 && (
             <div className="rounded-2xl border border-[#ececf2] bg-white p-6 shadow-2xs space-y-3">
-              <h3 className="text-[11px] font-bold text-[#8e8ea6]">In this session</h3>
+              <h3 className="text-[11px] font-medium text-[#8e8ea6]">In this session</h3>
               <div className="divide-y divide-[#f0f0f5]">
                 {m.chapters.map((c) => (
                   <button key={c.time} type="button" onClick={() => player.current?.seek(toSeconds(c.time))} className="group flex w-full items-center justify-between py-3 text-left transition-colors cursor-pointer text-[#171730] hover:text-[#7c2ae8]">
@@ -179,15 +179,15 @@ export default function ModulePage() {
 
           {review.length > 0 && (
             <div className="rounded-2xl border border-[#fef3c7] bg-[#fffbeb] p-5 space-y-2">
-              <h3 className="text-[11px] font-bold text-[#b45309]">Worth a rewatch</h3>
+              <h3 className="text-[11px] font-medium text-[#b45309]">Worth a rewatch</h3>
               {review.map((r) => <HintButton key={r.questionNumber} hint={r.hint!} onRewatch={rewatch} />)}
             </div>
           )}
 
           {next && (
             <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-[12px]">
-              <span className="text-[#5f5f7a]">Next up: <Link className="font-semibold text-[#171730] hover:text-[#7c2ae8]" href={`/module/${next.slug}`}>{next.title}</Link> — {dayTime(next.scheduledDate)}</span>
-              <button type="button" onClick={() => setScheduling(next)} className="font-semibold text-[#7c2ae8] hover:underline cursor-pointer">Add to calendar <Arrow dir="up-right" /></button>
+              <span className="text-[#5f5f7a]">Next up: <Link className="font-medium text-[#171730] hover:text-[#7c2ae8]" href={`/module/${next.slug}`}>{next.title}</Link> — {dayTime(next.scheduledDate)}</span>
+              <button type="button" onClick={() => setScheduling(next)} className="font-medium text-[#7c2ae8] hover:underline cursor-pointer">Add to calendar <Arrow dir="up-right" /></button>
             </div>
           )}
         </div>
@@ -196,19 +196,19 @@ export default function ModulePage() {
           <QuizCard m={m} quiz={quiz} part1Done={part1Done} onStart={() => setQuizOpen(true)} />
           {m.speakers.length > 0 && (
             <div className="space-y-3">
-              <h3 className="px-1 text-[11px] font-bold text-[#8e8ea6]">Speakers ({m.speakers.length})</h3>
+              <h3 className="px-1 text-[11px] font-medium text-[#8e8ea6]">Speakers ({m.speakers.length})</h3>
               <div className="space-y-3">
                 {m.speakers.map((s) => (
                   <div key={s.name} className="rounded-2xl border border-[#ececf2] bg-white p-4 sm:p-5 shadow-2xs space-y-3.5 transition-all hover:border-[#dcdce8]">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="rounded bg-[#f0f0f5] px-2 py-0.5 text-[10px] font-bold text-[#5f5f7a]">{s.companyTag}</span>
-                      <span className="text-[12px] font-bold text-[#171730]">{s.companyName}</span>
+                      <span className="rounded bg-[#f0f0f5] px-2 py-0.5 text-[10px] font-medium text-[#5f5f7a]">{s.companyTag}</span>
+                      <span className="text-[12px] font-medium text-[#171730]">{s.companyName}</span>
                     </div>
                     <div className="flex items-start gap-3">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       {s.headshotUrl && <img alt={s.name} className="size-12 rounded-full object-cover border border-[#ececf2] shrink-0 shadow-2xs" src={s.headshotUrl} />}
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-[14.5px] font-bold text-[#171730] truncate">{s.name}</h4>
+                        <h4 className="text-[14.5px] font-medium text-[#171730] truncate">{s.name}</h4>
                         <p className="text-[11.5px] text-[#5f5f7a] mt-0.5 leading-snug line-clamp-2">{s.role}</p>
                       </div>
                     </div>
@@ -226,9 +226,9 @@ export default function ModulePage() {
             </div>
           )}
           <div className="rounded-2xl border border-[#ececf2] bg-white p-5 shadow-2xs space-y-3">
-            <h4 className="text-[13px] font-bold text-[#171730]">Share your progress</h4>
+            <h4 className="text-[13px] font-medium text-[#171730]">Share your progress</h4>
             <p className="text-[11.5px] leading-relaxed text-[#8e8ea6]">It doesn’t affect your badge or certificate.</p>
-            <a href={share(shareText)} target="_blank" rel="noopener noreferrer" className="block w-full rounded-xl border border-[#e2e2ec] py-2 text-center text-[12px] font-semibold text-[#171730] transition hover:bg-gray-50">Share on LinkedIn <Arrow dir="up-right" /></a>
+            <a href={share(shareText)} target="_blank" rel="noopener noreferrer" className="block w-full rounded-xl border border-[#e2e2ec] py-2 text-center text-[12px] font-medium text-[#171730] transition hover:bg-gray-50">Share on LinkedIn <Arrow dir="up-right" /></a>
           </div>
         </div>
       </div>

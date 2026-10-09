@@ -30,8 +30,8 @@ function Option({ id, selected, onSelect, icon, title, body, badge }: { id: Prov
         <div className="grid size-9 place-items-center rounded-lg bg-white border border-[#ececf2] shadow-2xs">{icon}</div>
         <div>
           <div className="flex items-center gap-1.5">
-            <p className="text-[13px] font-semibold text-[#171730]">{title}</p>
-            {badge && <span className="rounded-full bg-[#f2eafd] px-1.5 py-0.2 text-[9.5px] font-bold text-[#7c2ae8]">{badge}</span>}
+            <p className="text-[13px] font-medium text-[#171730]">{title}</p>
+            {badge && <span className="rounded-full bg-[#f2eafd] px-1.5 py-0.2 text-[9.5px] font-medium text-[#7c2ae8]">{badge}</span>}
           </div>
           <p className="text-[11px] text-[#8e8ea6]">{body}</p>
         </div>
@@ -85,9 +85,9 @@ export function ScheduleModal({ module: m, onClose, onScheduled }: { module: Mod
           <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
         <div className="pr-6">
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-[#f2eafd] px-2.5 py-0.5 text-[10.5px] font-bold text-[#7c2ae8] mb-2"><span>📅</span><span>{m.dateLabel}</span></div>
-          <h2 id="schedule-modal-title" className="text-[17.5px] font-bold text-[#171730] leading-snug">{m.title}</h2>
-          <p className="mt-2 flex items-center gap-1.5 text-[12.5px] font-semibold text-[#171730]"><span aria-hidden="true">🕔</span>{sessionRange(m.scheduledDate, m.endDate)}</p>
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-[#f2eafd] px-2.5 py-0.5 text-[10.5px] font-medium text-[#7c2ae8] mb-2"><span>📅</span><span>{m.dateLabel}</span></div>
+          <h2 id="schedule-modal-title" className="text-[17.5px] font-medium text-[#171730] leading-snug">{m.title}</h2>
+          <p className="mt-2 flex items-center gap-1.5 text-[12.5px] font-medium text-[#171730]"><span aria-hidden="true">🕔</span>{sessionRange(m.scheduledDate, m.endDate)}</p>
           <p className="mt-0.5 text-[11px] text-[#8e8ea6]">Shown in your time zone ({tz()})</p>
           <p className="mt-2 text-[12px] leading-relaxed text-[#5f5f7a]">Add this live cohort session to your calendar. You’ll get a reminder 15 minutes before it starts.</p>
         </div>
@@ -103,17 +103,17 @@ export function ScheduleModal({ module: m, onClose, onScheduled }: { module: Mod
           <Option id="apple" selected={provider === 'apple'} onSelect={setProvider} title="Apple Calendar / iOS" body="Direct sync for Mac, iPhone, and iPad" icon={(
             <div className="flex flex-col items-center justify-center w-5.5 h-5.5 rounded overflow-hidden border border-[#d1d1db]">
               <div className="w-full bg-[#ef4444] h-1.5" />
-              <div className="w-full bg-white flex items-center justify-center text-[9px] font-bold text-[#171730] leading-none pt-0.5">15</div>
+              <div className="w-full bg-white flex items-center justify-center text-[9px] font-medium text-[#171730] leading-none pt-0.5">15</div>
             </div>
           )} />
-          <Option id="outlook" selected={provider === 'outlook'} onSelect={setProvider} title="Microsoft Outlook" body="Outlook.com, Live, and Microsoft 365 accounts" icon={<div className="grid size-5.5 place-items-center rounded bg-[#0078d4] text-[10px] font-black text-white leading-none shadow-2xs">O</div>} />
-          <Option id="proton" selected={provider === 'proton'} onSelect={setProvider} title="Proton Calendar" body="End-to-end encrypted calendar by Proton" icon={<div className="grid size-5.5 place-items-center rounded bg-gradient-to-br from-[#6d4aff] to-[#a995ff] text-[10px] font-black text-white leading-none shadow-2xs">P</div>} />
+          <Option id="outlook" selected={provider === 'outlook'} onSelect={setProvider} title="Microsoft Outlook" body="Outlook.com, Live, and Microsoft 365 accounts" icon={<div className="grid size-5.5 place-items-center rounded bg-[#0078d4] text-[10px] font-medium text-white leading-none shadow-2xs">O</div>} />
+          <Option id="proton" selected={provider === 'proton'} onSelect={setProvider} title="Proton Calendar" body="End-to-end encrypted calendar by Proton" icon={<div className="grid size-5.5 place-items-center rounded bg-gradient-to-br from-[#6d4aff] to-[#a995ff] text-[10px] font-medium text-white leading-none shadow-2xs">P</div>} />
           <Option id="ics" selected={provider === 'ics'} onSelect={setProvider} title="Universal .ics / Other" badge="RFC 5545" body="Standard .ics for Thunderbird, CalDAV, and desktop apps" icon={(
             <svg className="size-5 text-[#7c2ae8]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
           )} />
         </div>
         <div className="mt-3 flex items-center justify-between px-1">
-          <button type="button" onClick={async () => { await navigator.clipboard?.writeText(details).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 1600); }} className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold text-[#7c2ae8] hover:text-[#5e19b5] transition cursor-pointer">
+          <button type="button" onClick={async () => { await navigator.clipboard?.writeText(details).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 1600); }} className="inline-flex items-center gap-1.5 text-[11.5px] font-medium text-[#7c2ae8] hover:text-[#5e19b5] transition cursor-pointer">
             <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
             <span>{copied ? 'Copied ✓' : 'Copy event details to clipboard'}</span>
           </button>

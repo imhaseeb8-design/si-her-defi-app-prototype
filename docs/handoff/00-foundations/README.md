@@ -4,6 +4,7 @@ These apply to every screen, not just redesigned ones. Screenshots: `after-scree
 
 ## Type
 - **Geist only.** Geist Mono is removed. Numbers that should line up (codes, addresses, timestamps, counters) use Geist with `font-variant-numeric: tabular-nums`.
+- **No bold anywhere.** The heaviest weight is Medium (500). Everything that was Semibold (600), Bold (700), Extrabold or Black is now Medium, including headings, buttons (Figma components too), tags and the certificate artwork. Use size and colour for hierarchy, not weight.
 - **No ALL-CAPS tags.** Small tags, section labels and eyebrow text use sentence case with normal letter spacing. Tags that were 9–10.5px caps move up to 11–11.5px, so they keep their visual weight without capitals.
   - "START HERE" → "Start here"
   - "UPCOMING SESSIONS (6)" → "Upcoming sessions (6)"

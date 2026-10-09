@@ -25,7 +25,7 @@ const PoweredBy = ({ py = 'py-1' }: { py?: string }) => (
   <span className={`inline-flex items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-[#f9fafc] px-2.5 ${py}`}>
     <span className="text-[9px] font-medium text-[#8688ae]">Powered by</span>
     <span className="size-2 rounded-full bg-[#0052ff]" />
-    <span className="text-[11px] font-semibold text-[#0052ff]">BASE</span>
+    <span className="text-[11px] font-medium text-[#0052ff]">BASE</span>
   </span>
 );
 
@@ -61,7 +61,7 @@ export function Avatar({ src, name, className }: { src?: string | null; name?: s
 function Nav({ collapsed = false, onNavigate }: { collapsed?: boolean; onNavigate?: () => void }) {
   const path = usePathname();
   const { certificateUnlocked } = useSession();
-  const item = (active: boolean) => `flex items-center gap-3 overflow-hidden whitespace-nowrap rounded-xl px-3 [&>svg]:shrink-0 py-2.5 text-[13.5px] transition-colors ${active ? 'bg-[#f3ebff] text-[#7c2ae8] font-semibold' : 'text-[#5f5f7a] hover:bg-gray-50 hover:text-[#171730]'}`;
+  const item = (active: boolean) => `flex items-center gap-3 overflow-hidden whitespace-nowrap rounded-xl px-3 [&>svg]:shrink-0 py-2.5 text-[13.5px] transition-colors ${active ? 'bg-[#f3ebff] text-[#7c2ae8] font-medium' : 'text-[#5f5f7a] hover:bg-gray-50 hover:text-[#171730]'}`;
   const label = (text: string) => <span className={fade(collapsed)}>{text}</span>;
   return (
     <>
@@ -96,7 +96,7 @@ function WalletChip({ wallet }: { wallet: string | null }) {
       ) : (
         <>
           <div className="flex items-center gap-2 font-medium text-[#171730]"><span className="size-2 rounded-full bg-[#dcdce8]" /><span>Not connected</span></div>
-          <button type="button" onClick={() => router.push('/wallet')} className="text-[11px] font-semibold text-[#7c2ae8] hover:underline cursor-pointer">Connect</button>
+          <button type="button" onClick={() => router.push('/wallet')} className="text-[11px] font-medium text-[#7c2ae8] hover:underline cursor-pointer">Connect</button>
         </>
       )}
     </div>
@@ -129,7 +129,7 @@ function AccountMenu({ collapsed }: { collapsed: boolean }) {
             <Avatar src={profile?.photoUrl} name={profile?.name} className="size-8" />
           </button>
           <div className={`min-w-0 ${fade(collapsed)}`}>
-            <p className="truncate text-[12px] font-bold text-[#171730] leading-tight">{profile?.name}</p>
+            <p className="truncate text-[12px] font-medium text-[#171730] leading-tight">{profile?.name}</p>
             <p className="truncate text-[10.5px] text-[#8e8ea6] leading-tight mt-0.5">{profile?.role}</p>
           </div>
         </div>
@@ -142,7 +142,7 @@ function AccountMenu({ collapsed }: { collapsed: boolean }) {
           <div className="flex items-center gap-2.5 p-2 border-b border-[#f0f0f5]">
             <Avatar src={profile?.photoUrl} name={profile?.name} className="size-8" />
             <div className="min-w-0">
-              <p className="truncate text-[12px] font-bold text-[#171730]">{profile?.name}</p>
+              <p className="truncate text-[12px] font-medium text-[#171730]">{profile?.name}</p>
               <p className="truncate text-[10.5px] text-[#8e8ea6]">{profile?.role}</p>
             </div>
           </div>
@@ -156,7 +156,7 @@ function AccountMenu({ collapsed }: { collapsed: boolean }) {
             </Link>
           </div>
           <div className="pt-1 border-t border-[#f0f0f5]">
-            <button type="button" onClick={signOut} className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-[12px] font-semibold text-red-600 hover:bg-red-50 transition cursor-pointer">
+            <button type="button" onClick={signOut} className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-[12px] font-medium text-red-600 hover:bg-red-50 transition cursor-pointer">
               <svg viewBox="0 0 24 24" className="size-4 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
               <span>Log out</span>
             </button>
@@ -190,7 +190,7 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
             <div className="flex items-center gap-2.5">
               <Avatar src={profile?.photoUrl} name={profile?.name} className="size-9" />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[12.5px] font-bold text-[#171730]">{profile?.name}</p>
+                <p className="truncate text-[12.5px] font-medium text-[#171730]">{profile?.name}</p>
                 <p className="truncate text-[11px] text-[#8e8ea6]">{profile?.role}</p>
               </div>
             </div>
@@ -202,7 +202,7 @@ function MobileDrawer({ onClose }: { onClose: () => void }) {
               <Link onClick={onClose} className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-[12px] font-medium text-[#5f5f7a] hover:bg-gray-50 hover:text-[#171730] transition" href="/settings">
                 {Icon.settings('size-3.5')}<span>Settings</span>
               </Link>
-              <button type="button" onClick={signOut} className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-[12px] font-semibold text-red-600 hover:bg-red-50 transition cursor-pointer">
+              <button type="button" onClick={signOut} className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-[12px] font-medium text-red-600 hover:bg-red-50 transition cursor-pointer">
                 <svg viewBox="0 0 24 24" className="size-3.5 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
                 <span>Log out</span>
               </button>
@@ -228,11 +228,11 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="flex items-center gap-2">
           {wallet ? (
             <button type="button" className="inline-flex items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-white px-2.5 py-1 text-[11px] shadow-2xs" title={short(wallet)}>
-              <span className="size-1.5 rounded-full bg-[#0052ff]" /><span className="font-semibold text-[#151534]">Base</span>
+              <span className="size-1.5 rounded-full bg-[#0052ff]" /><span className="font-medium text-[#151534]">Base</span>
               <span className="h-2.5 w-px bg-[#e7e7f1]" /><span className="size-1.5 rounded-full bg-[#16a34a]" /><span className="font-medium text-[#15803d]">Active</span>
             </button>
           ) : (
-            <Link href="/wallet" className="inline-flex items-center rounded-full border border-[#e4d7fb] bg-[#f6f0ff] px-2.5 py-1 text-[11px] font-semibold text-[#7c2ae8]">Connect</Link>
+            <Link href="/wallet" className="inline-flex items-center rounded-full border border-[#e4d7fb] bg-[#f6f0ff] px-2.5 py-1 text-[11px] font-medium text-[#7c2ae8]">Connect</Link>
           )}
           <button type="button" onClick={() => setDrawer(true)} className="rounded-lg p-1.5 text-[#5f5f7a] hover:bg-gray-100 hover:text-[#171730] transition cursor-pointer" aria-label="Open mobile menu">
             <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="18" x2="20" y2="18" /></svg>

@@ -13,6 +13,7 @@ A faithful React replica of the live Si Her DeFi app (`certifications.si3.space/
 
 ## Design rules (from Haseeb, Phase 2)
 - **Geist only, no Geist Mono.** Small tags and labels use sentence case with normal letter spacing; no ALL-CAPS tracked tags. Brand wordmarks such as "BASE" keep their own casing. Applied platform-wide (see docs/handoff/00-foundations); keep it that way on every new screen.
+- **No bold.** Max weight is Medium (`font-medium`, 500). Never use `font-semibold`, `font-bold`, `font-extrabold`, `font-black`, `<strong>`/`<b>`, or CSS `font-weight` above 500. Build hierarchy with size and colour.
 - Every text field uses `LabelInput` from `src/components/ui/LabelInput.tsx` (floating label; `multiline` for textareas; optional fields say "(optional)" in the label). The 6-digit code boxes are the exception.
 - Every main CTA uses `Button` / `ButtonLink` from `src/components/ui/Button.tsx`: `variant="primary"` on light surfaces, `"white"` on dark or image backgrounds; `size="md"` in dialog footers and inline cards.
 

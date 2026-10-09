@@ -23,7 +23,7 @@ const Row = ({ icon, label, tag, onClick, muted }: { icon: ReactNode; label: str
   <button type="button" onClick={onClick} className={`flex w-full items-center gap-3 rounded-2xl bg-white/[0.04] px-3 py-2.5 text-left text-[14px] hover:bg-white/[0.08] ${muted ? 'text-[#9a9a9a]' : ''}`}>
     <span className="grid size-9 place-items-center overflow-hidden rounded-xl">{icon}</span>
     <span className="flex-1">{label}</span>
-    {tag && <span className="rounded-md bg-[#2b6eff]/15 px-1.5 py-0.5 text-[10px] font-semibold text-[#6c9bff]">{tag}</span>}
+    {tag && <span className="rounded-md bg-[#2b6eff]/15 px-1.5 py-0.5 text-[10px] font-medium text-[#6c9bff]">{tag}</span>}
     <span className="text-[#6b6b6b]">›</span>
   </button>
 );
@@ -32,7 +32,7 @@ export function SwitchNetworkModal({ onSwitch, onDisconnect, onClose }: { onSwit
   return (
     <Frame title="Switch Network" onClose={onClose}>
       <p className="px-4 pb-4 text-center text-[13px] leading-relaxed text-[#9a9a9a]">This app doesn’t support your current network. Switch to an available option to continue.</p>
-      <Row icon={<span className="grid size-9 place-items-center rounded-full bg-[#0052ff] text-[11px] font-bold text-white">B</span>} label="Base" onClick={onSwitch} />
+      <Row icon={<span className="grid size-9 place-items-center rounded-full bg-[#0052ff] text-[11px] font-medium text-white">B</span>} label="Base" onClick={onSwitch} />
       <p className="py-2 text-center text-[12px] text-[#6b6b6b]">or</p>
       <Row icon={<span className="text-[16px]">⏏</span>} label="Disconnect" onClick={onDisconnect} muted />
     </Frame>

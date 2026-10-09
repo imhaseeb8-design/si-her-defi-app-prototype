@@ -47,14 +47,14 @@ export default function SettingsPage() {
     <div className="mx-auto max-w-4xl space-y-8">
       {toast && <div className="fixed top-5 right-5 z-60 rounded-xl bg-[#171730] px-4 py-2.5 text-[12.5px] font-medium text-white shadow-xl">{toast}</div>}
       <div>
-        <h1 className="text-[24px] font-bold tracking-tight text-[#171730]">Settings</h1>
+        <h1 className="text-[24px] font-medium tracking-tight text-[#171730]">Settings</h1>
         <p className="mt-1 text-[13px] text-[#5f5f7a]">Manage your cohort profile, connected wallet, and platform preferences.</p>
       </div>
 
       <section className={`${section} space-y-5`}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-[16px] font-bold text-[#171730]">Profile information</h2>
+            <h2 className="text-[16px] font-medium text-[#171730]">Profile information</h2>
             <p className="text-[12px] text-[#8e8ea6]">This is how your credentials appear on your on-chain certificate.</p>
           </div>
           <ButtonLink href="/profile?from=dashboard" size="md" className="self-start sm:self-auto">Edit profile</ButtonLink>
@@ -62,7 +62,7 @@ export default function SettingsPage() {
         <div className="flex items-center gap-4 pt-2">
           <Avatar src={profile?.photoUrl} name={profile?.name} className="size-16 shadow-xs" />
           <div>
-            <h3 className="text-[16px] font-bold text-[#171730]">{profile?.name}</h3>
+            <h3 className="text-[16px] font-medium text-[#171730]">{profile?.name}</h3>
             {profile?.role && <p className="text-[12.5px] font-medium text-[#7c2ae8]">{profile.role}</p>}
             {profile?.organization && <p className="text-[12px] text-[#8e8ea6] mt-0.5">{profile.organization}</p>}
           </div>
@@ -80,26 +80,26 @@ export default function SettingsPage() {
       </section>
 
       <section className={`${section} space-y-4`}>
-        <h2 className="text-[16px] font-bold text-[#171730]">Connected wallet</h2>
+        <h2 className="text-[16px] font-medium text-[#171730]">Connected wallet</h2>
         <p className="text-[12px] text-[#8e8ea6]">Your on-chain certificate will be minted to this address on Base Mainnet.</p>
         {wallet ? (
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-[#f9f9fc] border border-[#e4e4ed]">
             <div className="flex items-center gap-3">
               <span className="size-3 shrink-0 rounded-full bg-[#0052ff]" />
               <div>
-                <p className="tabular-nums text-[13px] font-semibold text-[#171730] break-all sm:break-normal">{wallet}</p>
+                <p className="tabular-nums text-[13px] font-medium text-[#171730] break-all sm:break-normal">{wallet}</p>
                 <p className="text-[11px] text-[#8e8ea6]">Base Mainnet</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <a href={`https://basescan.org/address/${wallet}`} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-[#e2e2ec] bg-white px-3 py-1.5 text-[11.5px] font-semibold text-[#5f5f7a] hover:bg-gray-50 transition">View on BaseScan <Arrow dir="up-right" /></a>
-              <button type="button" disabled={busy} onClick={disconnect} className="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-[11.5px] font-semibold text-red-600 hover:bg-red-100 transition cursor-pointer disabled:opacity-50">{busy ? 'Disconnecting…' : 'Disconnect'}</button>
+              <a href={`https://basescan.org/address/${wallet}`} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-[#e2e2ec] bg-white px-3 py-1.5 text-[11.5px] font-medium text-[#5f5f7a] hover:bg-gray-50 transition">View on BaseScan <Arrow dir="up-right" /></a>
+              <button type="button" disabled={busy} onClick={disconnect} className="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-[11.5px] font-medium text-red-600 hover:bg-red-100 transition cursor-pointer disabled:opacity-50">{busy ? 'Disconnecting…' : 'Disconnect'}</button>
             </div>
           </div>
         ) : (
           <div className="flex items-center justify-between p-4 rounded-xl bg-[#f9f9fc] border border-[#e4e4ed]">
             <div>
-              <p className="text-[13px] font-semibold text-[#171730]">No wallet connected</p>
+              <p className="text-[13px] font-medium text-[#171730]">No wallet connected</p>
               <p className="text-[11px] text-[#8e8ea6]">Connect a wallet to receive your certificate.</p>
             </div>
             <Button size="md" onClick={() => router.push('/wallet')}>Connect wallet</Button>
@@ -108,18 +108,18 @@ export default function SettingsPage() {
       </section>
 
       <section className={`${section} space-y-4`}>
-        <h2 className="text-[16px] font-bold text-[#171730]">Account preferences</h2>
+        <h2 className="text-[16px] font-medium text-[#171730]">Account preferences</h2>
         <div className="divide-y divide-[#f0f0f5] text-[13px]">
           <div className="py-3.5 flex items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-[#171730]">Email notifications</p>
+              <p className="font-medium text-[#171730]">Email notifications</p>
               <p className="text-[11px] text-[#8e8ea6]">Get updates when new modules, live sessions, and materials are published.</p>
             </div>
             <Toggle on={!!settings?.emailNotifications} disabled={!settings || saving === 'emailNotifications'} onChange={(v) => update('emailNotifications', v)} />
           </div>
           <div className="py-3.5 flex items-center justify-between gap-4">
             <div>
-              <p className="font-semibold text-[#171730]">On-chain verification privacy</p>
+              <p className="font-medium text-[#171730]">On-chain verification privacy</p>
               <p className="text-[11px] text-[#8e8ea6]">Display your full name publicly on the Base certificate registry & verification page.</p>
             </div>
             <Toggle on={!!settings?.onChainVerificationPrivacy} disabled={!settings || saving === 'onChainVerificationPrivacy'} onChange={(v) => update('onChainVerificationPrivacy', v)} />

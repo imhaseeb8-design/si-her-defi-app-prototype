@@ -21,7 +21,7 @@ const FIELDS: { key: Exclude<Field, 'bio'>; id: string; label: string; placehold
 
 /** Shown inside a field while its value is still the one from the application. */
 const Tag = () => (
-  <span className="rounded-full bg-[#eeeef6] px-2 py-0.5 text-[11px] font-semibold text-[#7e7e96] whitespace-nowrap">From your application</span>
+  <span className="rounded-full bg-[#eeeef6] px-2 py-0.5 text-[11px] font-medium text-[#7e7e96] whitespace-nowrap">From your application</span>
 );
 
 async function toDataUrl(file: File, max = 512): Promise<string> {
@@ -89,7 +89,7 @@ function ProfileForm({ email }: { email: string }) {
         <form className="w-full" noValidate onSubmit={submit}>
           <input ref={file} accept="image/png,image/jpeg,image/webp" className="hidden" placeholder="Upload your profile picture" type="file" onChange={(e) => pick(e.target.files?.[0])} />
           <div>
-            <h1 className="text-[22px] sm:text-[24px] font-bold tracking-tight text-[#171730]">Set up your profile</h1>
+            <h1 className="text-[22px] sm:text-[24px] font-medium tracking-tight text-[#171730]">Set up your profile</h1>
             <p className="mt-1 text-[12.5px] sm:text-[13px] leading-relaxed text-[#5f5f7a]">This is how you’ll appear to partners and the rest of the cohort. You can change it any time.</p>
           </div>
           {banner && (
@@ -102,7 +102,7 @@ function ProfileForm({ email }: { email: string }) {
             </div>
           )}
           <div className="mt-4.5">
-            <label className="block text-[12.5px] font-semibold text-[#171730]">Profile photo</label>
+            <label className="block text-[12.5px] font-medium text-[#171730]">Profile photo</label>
             <div className="mt-2 flex items-center gap-3.5">
               {photo ? (
                 <>
@@ -111,7 +111,7 @@ function ProfileForm({ email }: { email: string }) {
                     <img alt="Profile avatar" className="size-full object-cover" src={photo} />
                   </div>
                   <div className="flex flex-col items-start gap-0.5">
-                    <button type="button" onClick={() => file.current?.click()} className="rounded-lg bg-[#f2e8ff] px-3 py-1 text-[12px] font-semibold text-[#7c2ae8] transition-colors hover:bg-[#ead5ff] cursor-pointer">Replace</button>
+                    <button type="button" onClick={() => file.current?.click()} className="rounded-lg bg-[#f2e8ff] px-3 py-1 text-[12px] font-medium text-[#7c2ae8] transition-colors hover:bg-[#ead5ff] cursor-pointer">Replace</button>
                     <button type="button" onClick={() => setPhoto('')} className="text-[11px] text-[#8e8ea6] transition-colors hover:text-[#5f5f7a] cursor-pointer">Remove photo</button>
                   </div>
                 </>
@@ -124,7 +124,7 @@ function ProfileForm({ email }: { email: string }) {
                     </svg>
                   </div>
                   <div>
-                    <button type="button" onClick={() => file.current?.click()} className="rounded-lg bg-[#f2e8ff] px-3.5 py-1 text-[12.5px] font-semibold text-[#7c2ae8] transition-colors hover:bg-[#ead5ff] cursor-pointer">Upload a photo</button>
+                    <button type="button" onClick={() => file.current?.click()} className="rounded-lg bg-[#f2e8ff] px-3.5 py-1 text-[12.5px] font-medium text-[#7c2ae8] transition-colors hover:bg-[#ead5ff] cursor-pointer">Upload a photo</button>
                     <p className="mt-1 text-[11px] text-[#8e8ea6]">JPG, PNG or WebP · up to 5 MB · shown on your certificate</p>
                   </div>
                 </>

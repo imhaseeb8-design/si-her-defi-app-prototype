@@ -13,10 +13,10 @@ export function HintButton({ hint, onRewatch }: { hint: QuizHint; onRewatch?: (h
   const inner = (
     <>
       <div className="flex items-center gap-2">
-        <span className="tabular-nums font-bold text-[#d97706]">{hint.timestamp}</span>
+        <span className="tabular-nums font-medium text-[#d97706]">{hint.timestamp}</span>
         <span className="text-[#171730]">{hint.title || 'Rewatch this part of the session'}</span>
       </div>
-      {onRewatch && <span className="text-[#d97706] font-bold">›</span>}
+      {onRewatch && <span className="text-[#d97706] font-medium">›</span>}
     </>
   );
   const cls = 'flex w-full items-center justify-between rounded-lg border border-[#fde68a] bg-white px-3 py-2 text-[11px] font-medium text-[#92400e] shadow-2xs';
@@ -77,7 +77,7 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
   if (!quiz.isOpen) {
     return frame('quiz-closed-title', (
       <div className="text-center">
-        <h3 id="quiz-closed-title" className="text-[18px] font-bold text-[#171730]">This quiz isn’t open yet</h3>
+        <h3 id="quiz-closed-title" className="text-[18px] font-medium text-[#171730]">This quiz isn’t open yet</h3>
         <p className="mt-2 text-[12.5px] leading-relaxed text-[#5f5f7a]">It opens after the live session on {dayTime(m.scheduledDate)}.</p>
         <div className="mt-5 flex justify-center"><Button size="md" showIcon={false} onClick={onClose}>Got it</Button></div>
       </div>
@@ -91,17 +91,17 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
         <div className="text-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt="" className="mx-auto my-2 size-[84px] object-contain drop-shadow-[0_10px_20px_rgba(124,42,232,0.35)]" src={result.badgeEarned?.image ?? quiz.badge.image} />
-          <h3 id="quiz-result-title" className="mt-4 text-[21px] font-bold text-[#171730]">Badge earned</h3>
+          <h3 id="quiz-result-title" className="mt-4 text-[21px] font-medium text-[#171730]">Badge earned</h3>
           <p className="mt-2 text-[12px] leading-relaxed text-[#5f5f7a] max-w-xs mx-auto">{badgeName} is yours. It’s on your dashboard now and counts toward the certificate you mint at the end of the cohort.</p>
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#bbf7d0] bg-[#f0fdf4] px-3 py-1 text-[11px] font-semibold text-[#16a34a]">✓ {result.score} of {result.totalQuestions} correct</span>
-            {result.certificateUnlocked && <span className="inline-flex items-center gap-1.5 rounded-full border border-[#eedffe] bg-[#f4effe] px-3 py-1 text-[11px] font-semibold text-[#7c2ae8]">Certificate unlocked</span>}
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#bbf7d0] bg-[#f0fdf4] px-3 py-1 text-[11px] font-medium text-[#16a34a]">✓ {result.score} of {result.totalQuestions} correct</span>
+            {result.certificateUnlocked && <span className="inline-flex items-center gap-1.5 rounded-full border border-[#eedffe] bg-[#f4effe] px-3 py-1 text-[11px] font-medium text-[#7c2ae8]">Certificate unlocked</span>}
           </div>
           <div className="mt-6 space-y-2.5">
             <Button onClick={() => router.push('/certificate')}>View your certificate</Button>
             <div className="grid grid-cols-2 gap-2">
-              <button type="button" onClick={onClose} className="rounded-xl border border-[#e2e2ec] py-2.5 text-[12px] font-semibold text-[#5f5f7a] hover:bg-gray-50 transition cursor-pointer">Back to module</button>
-              <a href={shareUrl(`I just earned the "${badgeName}" badge in the Si Her DeFi cohort 🎉`)} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-[#f4effe] py-2.5 text-center text-[12px] font-semibold text-[#7c2ae8] transition hover:bg-[#ede5fc]">Share on LinkedIn <Arrow dir="up-right" /></a>
+              <button type="button" onClick={onClose} className="rounded-xl border border-[#e2e2ec] py-2.5 text-[12px] font-medium text-[#5f5f7a] hover:bg-gray-50 transition cursor-pointer">Back to module</button>
+              <a href={shareUrl(`I just earned the "${badgeName}" badge in the Si Her DeFi cohort 🎉`)} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-[#f4effe] py-2.5 text-center text-[12px] font-medium text-[#7c2ae8] transition hover:bg-[#ede5fc]">Share on LinkedIn <Arrow dir="up-right" /></a>
             </div>
           </div>
         </div>
@@ -109,7 +109,7 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
     }
     return frame('quiz-result-title', (
       <div>
-        <h3 id="quiz-result-title" className="text-[19px] font-bold text-[#171730]">{result.score} of {result.totalQuestions} correct</h3>
+        <h3 id="quiz-result-title" className="text-[19px] font-medium text-[#171730]">{result.score} of {result.totalQuestions} correct</h3>
         <p className="mt-1.5 text-[12px] leading-relaxed text-[#5f5f7a]">
           You need {result.passingScore} to earn the badge.{' '}
           {result.attemptsRemaining > 0
@@ -140,8 +140,8 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
   return frame('quiz-question-title', (
     <>
       <div className="flex items-center justify-between gap-3">
-        <span className="truncate rounded-full bg-[#f4effe] px-2.5 py-0.5 text-[11px] font-bold text-[#7c2ae8]">Week {String(m.week).padStart(2, '0')} quiz{tag ? ` · ${tag}` : ''}</span>
-        <span className="shrink-0 text-[11px] font-bold text-[#8e8ea6]">Attempt {attempt} of {quiz.maxAttempts}</span>
+        <span className="truncate rounded-full bg-[#f4effe] px-2.5 py-0.5 text-[11px] font-medium text-[#7c2ae8]">Week {String(m.week).padStart(2, '0')} quiz{tag ? ` · ${tag}` : ''}</span>
+        <span className="shrink-0 text-[11px] font-medium text-[#8e8ea6]">Attempt {attempt} of {quiz.maxAttempts}</span>
       </div>
       <div className="mt-4 flex items-center justify-between gap-3">
         <div className="flex flex-1 items-center gap-1.5">
@@ -152,7 +152,7 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
         </div>
         <span className="text-[10px] font-medium text-[#8e8ea6] shrink-0 tabular-nums">Question {index + 1} of {questions.length}</span>
       </div>
-      <h3 id="quiz-question-title" className="mt-5 text-[15px] sm:text-[15.5px] font-bold text-[#171730] leading-snug">{q.questionText}</h3>
+      <h3 id="quiz-question-title" className="mt-5 text-[15px] sm:text-[15.5px] font-medium text-[#171730] leading-snug">{q.questionText}</h3>
       <div className="mt-4 space-y-2.5" role="radiogroup" aria-labelledby="quiz-question-title">
         {q.options.map((o) => {
           const selected = answered?.selectedOption === o.key || picking === o.key;
@@ -168,11 +168,11 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
           return (
             <button key={o.key} type="button" role="radio" aria-checked={selected} disabled={!!answered || !!picking} onClick={() => pick(o.key)} className={`w-full rounded-xl p-3 flex items-center justify-between gap-3 text-left transition-all cursor-pointer disabled:cursor-default ${box}`}>
               <div className="flex items-center gap-3">
-                <span className={`grid size-6 place-items-center rounded-full text-[11px] font-semibold shrink-0 ${dot}`}>{glyph}</span>
+                <span className={`grid size-6 place-items-center rounded-full text-[11px] font-medium shrink-0 ${dot}`}>{glyph}</span>
                 <span className="text-[12px] font-medium text-[#171730]">{o.text}</span>
               </div>
               {answered && selected && (
-                <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10.5px] font-semibold ${answered.isCorrect ? 'bg-[#dcfce7] text-[#15803d]' : 'bg-[#fee2e2] text-[#dc2626]'}`}>{answered.isCorrect ? 'Correct' : 'Not quite'}</span>
+                <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[10.5px] font-medium ${answered.isCorrect ? 'bg-[#dcfce7] text-[#15803d]' : 'bg-[#fee2e2] text-[#dc2626]'}`}>{answered.isCorrect ? 'Correct' : 'Not quite'}</span>
               )}
             </button>
           );
@@ -180,7 +180,7 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
       </div>
       {answered?.isCorrect && answered.explanation && (
         <div className="mt-4 rounded-xl border border-[#bbf7d0] bg-[#f0fdf4] p-3.5 text-[11.5px] leading-relaxed text-[#166534] flex items-start gap-2.5">
-          <span className="font-bold text-[13px] text-[#16a34a]">✓</span><span>{answered.explanation}</span>
+          <span className="font-medium text-[13px] text-[#16a34a]">✓</span><span>{answered.explanation}</span>
         </div>
       )}
       {answered && !answered.isCorrect && (

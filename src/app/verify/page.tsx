@@ -78,11 +78,11 @@ function VerifyForm() {
 
   return (
     <section className={cardClass}>
-      <h1 className="text-center text-xl font-semibold tracking-tight text-ink">Check your inbox</h1>
+      <h1 className="text-center text-xl font-medium tracking-tight text-ink">Check your inbox</h1>
       <p className="mt-2 text-center text-[13px] leading-relaxed text-muted">We sent a 6-digit code to</p>
       <p className="text-center text-[13px] leading-relaxed">
-        <span className="font-semibold text-ink">{email}</span> <span className="text-muted">·</span>{' '}
-        <Link className="font-semibold text-brand underline underline-offset-2" href="/login">change</Link>
+        <span className="font-medium text-ink">{email}</span> <span className="text-muted">·</span>{' '}
+        <Link className="font-medium text-brand underline underline-offset-2" href="/login">change</Link>
       </p>
       <form className="mt-6" noValidate onSubmit={submit}>
         <div className="flex justify-center gap-2">
@@ -93,7 +93,7 @@ function VerifyForm() {
               onChange={(e) => setFrom(i, e.target.value)} onKeyDown={(e) => onKey(i, e)}
               onPaste={(e) => { e.preventDefault(); setFrom(0, e.clipboardData.getData('text')); }}
               onFocus={(e) => e.target.select()}
-              className={`h-12 min-w-0 flex-1 rounded-lg border text-center text-base font-semibold text-ink transition outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 disabled:opacity-60 ${error ? 'border-red-400 bg-red-50/50' : 'border-line bg-white'}`}
+              className={`h-12 min-w-0 flex-1 rounded-lg border text-center text-base font-medium text-ink transition outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 disabled:opacity-60 ${error ? 'border-red-400 bg-red-50/50' : 'border-line bg-white'}`}
             />
           ))}
         </div>
@@ -103,9 +103,9 @@ function VerifyForm() {
         </div>
         <p className="mt-4 text-center text-[12px] text-muted">
           {left > 0 ? (
-            <>Didn’t get it? Resend in <span className="font-semibold text-ink tabular-nums">{mm}:{ss}</span></>
+            <>Didn’t get it? Resend in <span className="font-medium text-ink tabular-nums">{mm}:{ss}</span></>
           ) : (
-            <>Didn’t get it? <button type="button" onClick={resend} className="font-semibold text-brand underline underline-offset-2 hover:no-underline">Resend code</button></>
+            <>Didn’t get it? <button type="button" onClick={resend} className="font-medium text-brand underline underline-offset-2 hover:no-underline">Resend code</button></>
           )}
         </p>
       </form>

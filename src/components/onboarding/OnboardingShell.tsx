@@ -23,13 +23,13 @@ export function OnboardingHeader({ right }: { right: HeaderRight }) {
         <span className="hidden items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-[#f9fafc] px-3 py-1 sm:inline-flex">
           <span className="text-[9px] font-medium text-[#8688ae]">Powered by</span>
           <span className="size-2 rounded-full bg-[#0052ff]" />
-          <span className="text-[11px] font-semibold text-[#0052ff]">BASE</span>
+          <span className="text-[11px] font-medium text-[#0052ff]">BASE</span>
         </span>
       </div>
       <div className="text-[13px]">
         {right.kind === 'registered' && <span className="text-muted">Already registered? Use the same email to sign in.</span>}
         {right.kind === 'help' && (
-          <a href="/help" className="font-semibold text-brand transition-colors hover:text-brand-strong hover:underline">Need help?</a>
+          <a href="/help" className="font-medium text-brand transition-colors hover:text-brand-strong hover:underline">Need help?</a>
         )}
         {right.kind === 'account' && (
           <div className="flex items-center gap-2.5">
@@ -41,7 +41,7 @@ export function OnboardingHeader({ right }: { right: HeaderRight }) {
               </span>
               <span className="text-[12px] font-medium text-[#171730]">{right.email}</span>
             </div>
-            <button type="button" onClick={signOut} className="cursor-pointer text-[12.5px] font-semibold text-[#7c2ae8] transition-colors hover:text-[#6922cf] hover:underline">
+            <button type="button" onClick={signOut} className="cursor-pointer text-[12.5px] font-medium text-[#7c2ae8] transition-colors hover:text-[#6922cf] hover:underline">
               Not you?
             </button>
           </div>
@@ -80,7 +80,7 @@ export function Stepper({ step, zeroWidth = 'calc(0% - 0px)' }: { step: 0 | 1 | 
               ) : (
                 <div className="relative z-10 grid size-5 place-items-center rounded-full ring-4 ring-[#f7f7fb] transition-colors border-[2px] border-[#dcdce8] bg-white" />
               )}
-              <span className={`mt-2 text-center text-[10px] sm:text-[12px] leading-tight ${current ? 'font-bold text-[#171730]' : done ? 'font-normal text-[#6b7280]' : 'font-normal text-[#9ca3af]'}`}>{label}</span>
+              <span className={`mt-2 text-center text-[10px] sm:text-[12px] leading-tight ${current ? 'font-medium text-[#171730]' : done ? 'font-normal text-[#6b7280]' : 'font-normal text-[#9ca3af]'}`}>{label}</span>
             </div>
           );
         })}
@@ -136,7 +136,7 @@ export function OnboardingAside({ variant }: { variant: keyof typeof ASIDES }) {
       <Image alt="Si Her DeFi Artwork" fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover object-center" src={assetPath('/logIn.png')} />
       <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/10 to-black/85 pointer-events-none" />
       <div className="relative z-10 max-w-lg">
-        <h2 className="text-[20px] font-semibold tracking-tight text-white leading-snug">{a.title}</h2>
+        <h2 className="text-[20px] font-medium tracking-tight text-white leading-snug">{a.title}</h2>
         <p className="mt-3 text-[14px] leading-relaxed text-[#FFFFFF] max-w-md">{a.body}</p>
       </div>
       <div className="relative z-10 mt-12 sm:mt-16">
@@ -147,7 +147,7 @@ export function OnboardingAside({ variant }: { variant: keyof typeof ASIDES }) {
                 <svg viewBox="0 0 24 24" aria-hidden="true" className="size-[17px]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{ICONS[it.icon]}</svg>
               </span>
               <div className="min-w-0 pt-0.5">
-                <p className="text-[13.5px] font-semibold text-white leading-snug">{it.title}</p>
+                <p className="text-[13.5px] font-medium text-white leading-snug">{it.title}</p>
                 <p className="mt-0.5 text-[12px] leading-relaxed text-white/70">{it.body}</p>
               </div>
             </div>

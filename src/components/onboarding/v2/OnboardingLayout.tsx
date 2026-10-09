@@ -20,7 +20,7 @@ export function BrandNav({ right }: { right?: ReactNode }) {
           <span className="text-[9px] font-medium text-[#8688ae]">Powered by</span>
           <span className="inline-flex items-center gap-1">
             <span className="size-[11px] rounded-full bg-[#0052ff]" />
-            <span className="text-[11px] font-semibold text-[#0052ff]">BASE</span>
+            <span className="text-[11px] font-medium text-[#0052ff]">BASE</span>
           </span>
         </span>
       </div>
@@ -64,7 +64,7 @@ export function StepProgress({ step }: { step: 0 | 1 | 2 }) {
             key={label}
             role="listitem"
             aria-current={i === step ? 'step' : undefined}
-            className={`text-[11px] sm:text-[12px] leading-4 ${i === 0 ? 'text-left' : i === 1 ? 'text-center' : 'text-right'} ${i === step ? 'font-semibold text-[#151534]' : i < step ? 'text-[#4c4d77]' : 'text-[#8688ae]'}`}
+            className={`text-[11px] sm:text-[12px] leading-4 ${i === 0 ? 'text-left' : i === 1 ? 'text-center' : 'text-right'} ${i === step ? 'font-medium text-[#151534]' : i < step ? 'text-[#4c4d77]' : 'text-[#8688ae]'}`}
           >
             {label}
           </span>
@@ -87,7 +87,7 @@ export function ArtRail() {
       {/* only on small screens, where the crop changes, does the text need help to stay readable */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-black/60 lg:hidden" />
       <div className="relative z-10 flex flex-col gap-1 text-white">
-        <h2 className="text-[20px] font-semibold leading-[35px] tracking-[-0.4px]">DeFi, taught by the people leading it.</h2>
+        <h2 className="text-[20px] font-medium leading-[35px] tracking-[-0.4px]">DeFi, taught by the people leading it.</h2>
         <p className="max-w-[420px] text-[14px] leading-[22px]">Twelve partner-led modules, one live session a week, and an on-certificate demonstrating your DeFi credentials.</p>
       </div>
       <ul className="relative z-10 flex flex-col gap-[14px]">

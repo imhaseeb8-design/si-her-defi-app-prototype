@@ -52,17 +52,17 @@ export function DemoPanel() {
 
   if (!open) {
     return (
-      <button type="button" onClick={() => setOpen(true)} className="fixed bottom-4 left-4 z-[70] flex items-center gap-2 rounded-full bg-[#171730] px-3.5 py-2 text-[12px] font-semibold text-white shadow-lg shadow-black/20 hover:bg-black">
+      <button type="button" onClick={() => setOpen(true)} className="fixed bottom-4 left-4 z-[70] flex items-center gap-2 rounded-full bg-[#171730] px-3.5 py-2 text-[12px] font-medium text-white shadow-lg shadow-black/20 hover:bg-black">
         <span className="size-2 rounded-full bg-[#a3e635]" /> Prototype
       </button>
     );
   }
 
-  const label = 'block text-[10px] font-bold uppercase tracking-wider text-[#8e8ea6] mb-1.5';
+  const label = 'block text-[10px] font-medium uppercase tracking-wider text-[#8e8ea6] mb-1.5';
   return (
     <div className="fixed bottom-4 left-4 z-[70] w-[300px] max-h-[calc(100vh-32px)] overflow-y-auto rounded-2xl border border-[#e4e4ed] bg-white p-4 text-[12px] text-[#171730] shadow-2xl">
       <div className="mb-3 flex items-center justify-between">
-        <p className="text-[13px] font-bold">Prototype controls</p>
+        <p className="text-[13px] font-medium">Prototype controls</p>
         <div className="flex items-center gap-1">
           <button type="button" onClick={() => setOpen(false)} className="rounded-md px-2 py-0.5 text-[#5f5f7a] hover:bg-[#f4f4f8]">–</button>
           <button type="button" title="Hide (bring back with ?demo=1)" onClick={() => { window.localStorage.setItem('siherdefi_demo_hidden', '1'); setHidden(true); }} className="rounded-md px-2 py-0.5 text-[#5f5f7a] hover:bg-[#f4f4f8]">✕</button>
@@ -98,7 +98,7 @@ export function DemoPanel() {
         <button type="button" onClick={() => flag('now', DEFAULT_NOW)} className="rounded-lg border border-[#e2e2ec] px-2 py-1 hover:bg-[#f4f4f8]">Oct 9</button>
       </div>
 
-      <button type="button" onClick={() => go(PRESETS[0])} className="w-full rounded-lg bg-[#171730] py-2 font-semibold text-white hover:bg-black">Reset everything</button>
+      <button type="button" onClick={() => go(PRESETS[0])} className="w-full rounded-lg bg-[#171730] py-2 font-medium text-white hover:bg-black">Reset everything</button>
     </div>
   );
 }

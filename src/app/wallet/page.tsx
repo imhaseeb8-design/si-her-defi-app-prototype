@@ -23,7 +23,7 @@ const REJECT_CONNECT = 'Connection rejected. Please approve the request in your 
 const REJECT_SIGN = "Signature request rejected. Please approve it in your wallet to link it — it's free and doesn't send a transaction.";
 
 const BaseChip = () => (
-  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-[#f9fafc] px-2.5 py-1 text-[10px] font-bold text-[#171730]">
+  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e4e4ed] bg-[#f9fafc] px-2.5 py-1 text-[10px] font-medium text-[#171730]">
     <span className="size-2 rounded-full bg-[#0052ff]" />Base Mainnet
   </span>
 );
@@ -32,7 +32,7 @@ const NotInstalled = ({ href, name, icon }: { href: string; name: string; icon: 
   <a href={href} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3.5 rounded-xl border border-dashed border-[#dcdce8] bg-white/70 px-4 py-3 transition hover:border-[#bdbdce] hover:bg-white group">
     {icon}
     <div className="min-w-0 flex-1">
-      <p className="text-[13.5px] font-semibold text-[#5f5f7a] group-hover:text-[#171730] transition">{name}</p>
+      <p className="text-[13.5px] font-medium text-[#5f5f7a] group-hover:text-[#171730] transition">{name}</p>
       <p className="text-[11px] text-[#9ca3af]">Not installed — click to get it <Arrow dir="up-right" /></p>
     </div>
   </a>
@@ -94,9 +94,9 @@ export default function WalletPage() {
     <OnboardingShell right={{ kind: 'account', email: user?.email ?? '' }} step={2} aside="wallet">
       <div className="w-full">
         <div className="w-full space-y-4">
-          <Link className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#7c2ae8] transition-colors hover:underline" href="/profile"><Arrow dir="left" /> Back to profile</Link>
+          <Link className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#7c2ae8] transition-colors hover:underline" href="/profile"><Arrow dir="left" /> Back to profile</Link>
           <div>
-            <h1 className="text-[24px] font-bold tracking-tight text-[#171730]">Connect your wallet</h1>
+            <h1 className="text-[24px] font-medium tracking-tight text-[#171730]">Connect your wallet</h1>
             <p className="mt-1.5 text-[13px] leading-relaxed text-[#5f5f7a]">This is where your certificate mints at the end of the cohort. We only read your address — no funds needed.</p>
           </div>
 
@@ -112,7 +112,7 @@ export default function WalletPage() {
                   </svg>
                 </span>
                 <div>
-                  <p className="text-[13px] font-bold text-[#171730]">Wallet connected</p>
+                  <p className="text-[13px] font-medium text-[#171730]">Wallet connected</p>
                   <p className="mt-1 tabular-nums text-[12px] text-[#5f5f7a]">{short(address)}</p>
                 </div>
                 <BaseChip />
@@ -129,10 +129,10 @@ export default function WalletPage() {
                 )}
               </div>
               <div className="rounded-xl border border-[#e4e4ed] bg-[#f9fafc] px-4 py-3 flex items-center justify-between gap-3">
-                <span className="text-[11px] font-semibold text-[#8e8ea6]">Address</span>
+                <span className="text-[11px] font-medium text-[#8e8ea6]">Address</span>
                 <span className="tabular-nums text-[11.5px] text-[#171730] break-all text-right">{address}</span>
               </div>
-              <a href={`https://basescan.org/address/${address}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 rounded-xl border border-[#e2e2ec] px-4 py-2.5 text-[12.5px] font-semibold text-[#5f5f7a] transition hover:bg-gray-50 hover:text-[#171730]">
+              <a href={`https://basescan.org/address/${address}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 rounded-xl border border-[#e2e2ec] px-4 py-2.5 text-[12.5px] font-medium text-[#5f5f7a] transition hover:bg-gray-50 hover:text-[#171730]">
                 <span className="size-2 rounded-full bg-[#0052ff]" />View on BaseScan <Arrow dir="up-right" />
               </a>
               <ButtonLink href="/dashboard" disabled={phase.status !== 'connected'}>Go to my dashboard</ButtonLink>
@@ -143,7 +143,7 @@ export default function WalletPage() {
           ) : (
             <div className="w-full space-y-4">
               <div className="flex items-center justify-between">
-                <p className="text-[12px] font-semibold text-[#8e8ea6]">Choose wallet</p>
+                <p className="text-[12px] font-medium text-[#8e8ea6]">Choose wallet</p>
                 <BaseChip />
               </div>
               <div className="space-y-2.5">
@@ -151,7 +151,7 @@ export default function WalletPage() {
                   <button type="button" onClick={connectInjected} disabled={phase.status === 'connecting'} className="flex w-full items-center gap-3.5 rounded-xl border border-[#e4e4ed] bg-white px-4 py-3 text-left transition hover:border-[#7c2ae8]/40 hover:bg-[#faf7ff] hover:shadow-sm active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed group">
                     <MetaMaskIcon />
                     <div className="min-w-0 flex-1">
-                      <p className="text-[13.5px] font-semibold text-[#171730]">MetaMask</p>
+                      <p className="text-[13.5px] font-medium text-[#171730]">MetaMask</p>
                       <p className="text-[11px] text-[#8e8ea6]">{phase.status === 'connecting' ? 'Approve in your wallet…' : 'Ready to connect'}</p>
                     </div>
                     {phase.status === 'connecting' ? (
@@ -169,12 +169,12 @@ export default function WalletPage() {
                     <button type="button" onClick={() => setModal({ qr: '1inch Wallet' })} className="flex items-center gap-3.5 min-w-0 flex-1 text-left cursor-pointer">
                       <OneInchIcon />
                       <div className="min-w-0 flex-1">
-                        <p className="text-[13.5px] font-semibold text-[#171730] group-hover:text-[#6d25d6] transition flex items-center gap-2"><span>1inch Wallet</span></p>
+                        <p className="text-[13.5px] font-medium text-[#171730] group-hover:text-[#6d25d6] transition flex items-center gap-2"><span>1inch Wallet</span></p>
                         <p className="text-[11px] text-[#8e8ea6]">Scan QR with mobile app to connect or install</p>
                       </div>
                     </button>
                     <div className="flex items-center gap-2 shrink-0">
-                      <button type="button" onClick={() => setModal({ qr: '1inch Wallet' })} className="rounded-full bg-[#ede9fe] text-[#6d25d6] hover:bg-[#ddd6fe] border border-[#ddd6fe] px-2.5 py-1 text-[10px] font-bold transition cursor-pointer flex items-center gap-1 shadow-2xs">
+                      <button type="button" onClick={() => setModal({ qr: '1inch Wallet' })} className="rounded-full bg-[#ede9fe] text-[#6d25d6] hover:bg-[#ddd6fe] border border-[#ddd6fe] px-2.5 py-1 text-[10px] font-medium transition cursor-pointer flex items-center gap-1 shadow-2xs">
                         <QrGlyph /><span>QR code</span>
                       </button>
                       <a href="https://1inch.io/wallet/" target="_blank" rel="noopener noreferrer" title="Visit official website" className="p-1 rounded-lg text-[#9ca3af] hover:text-[#171730] hover:bg-gray-100 transition text-[11px]"> <Arrow dir="up-right" /></a>
@@ -185,17 +185,17 @@ export default function WalletPage() {
                   <div className="flex items-center gap-3.5 min-w-0">
                     <WalletConnectIcon />
                     <div className="min-w-0 flex-1">
-                      <p className="text-[13.5px] font-semibold text-[#171730] group-hover:text-[#6d25d6] transition">WalletConnect</p>
+                      <p className="text-[13.5px] font-medium text-[#171730] group-hover:text-[#6d25d6] transition">WalletConnect</p>
                       <p className="text-[11px] text-[#8e8ea6]">Scan with your mobile wallet app to connect</p>
                     </div>
                   </div>
-                  <span className="shrink-0 rounded-full bg-[#ede9fe] text-[#6d25d6] border border-[#ddd6fe] px-2.5 py-0.5 text-[10px] font-bold">QR code</span>
+                  <span className="shrink-0 rounded-full bg-[#ede9fe] text-[#6d25d6] border border-[#ddd6fe] px-2.5 py-0.5 text-[10px] font-medium">QR code</span>
                 </button>
               </div>
               {!detected && (
                 <p className="text-center text-[11px] leading-relaxed text-[#9ca3af]">
                   No wallet extension detected.{' '}
-                  <a href="https://metamask.io/download/" target="_blank" rel="noopener noreferrer" className="font-semibold text-[#7c2ae8] underline underline-offset-2">Install MetaMask</a> to get started.
+                  <a href="https://metamask.io/download/" target="_blank" rel="noopener noreferrer" className="font-medium text-[#7c2ae8] underline underline-offset-2">Install MetaMask</a> to get started.
                 </p>
               )}
               {phase.status === 'error' && (

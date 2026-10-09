@@ -15,7 +15,7 @@ import type { Badges, Certificate, Module, OnboardStatus, Partner, Profile } fro
 import { Arrow } from '@/components/ui/Arrow';
 
 const TOTAL_BADGES = 12;
-const sectionTitle = 'text-[11.5px] font-bold text-[#8e8ea6]';
+const sectionTitle = 'text-[11.5px] font-medium text-[#8e8ea6]';
 
 const CalendarIcon = ({ className = 'size-3.5 text-[#7954ad]', strokeWidth = '1.7', rx = '2' }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
@@ -58,7 +58,7 @@ function ProfileCard({ profile }: { profile: Profile }) {
             <Avatar src={profile.photoUrl} name={profile.name} className="size-14 border-2 border-white" />
           </span>
           <div className="min-w-0">
-            <h2 className="truncate text-[17px] font-semibold leading-tight text-[#151534]">{profile.name}</h2>
+            <h2 className="truncate text-[17px] font-medium leading-tight text-[#151534]">{profile.name}</h2>
             {meta && <p className="mt-1 truncate text-[13px] text-[#7e7e96]">{meta}</p>}
           </div>
         </div>
@@ -94,11 +94,11 @@ function StartHere({ status }: { status: OnboardStatus }) {
             <svg viewBox="0 0 12 12" aria-hidden="true" className="size-3" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="2.5 6 5 8.5 9.5 3.5" /></svg>
           </span>
           <div>
-            <h3 className="text-[13.5px] font-bold text-[#171730]">{card.title} — done</h3>
+            <h3 className="text-[13.5px] font-medium text-[#171730]">{card.title} — done</h3>
             <p className="text-[11.5px] text-[#6b7280] mt-0.5">{card.doneMessage}</p>
           </div>
         </div>
-        <span className="shrink-0 rounded-full bg-[#f0fdf4] border border-[#bbf7d0] px-2.5 py-0.5 text-[11px] font-bold text-[#16a34a]">1 of 2</span>
+        <span className="shrink-0 rounded-full bg-[#f0fdf4] border border-[#bbf7d0] px-2.5 py-0.5 text-[11px] font-medium text-[#16a34a]">1 of 2</span>
       </div>
     );
   }
@@ -147,7 +147,7 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
             <>
               <ButtonLink href={`/module/${m.slug}`} size="md">Start session</ButtonLink>
               {upcoming && (
-                <button type="button" onClick={() => onSchedule(m)} className="rounded-full border border-white/30 bg-white/15 backdrop-blur-sm px-4 py-2 text-[12px] font-semibold text-white hover:bg-white/25 active:scale-[0.99] transition cursor-pointer flex items-center gap-1.5">
+                <button type="button" onClick={() => onSchedule(m)} className="rounded-full border border-white/30 bg-white/15 backdrop-blur-sm px-4 py-2 text-[12px] font-medium text-white hover:bg-white/25 active:scale-[0.99] transition cursor-pointer flex items-center gap-1.5">
                   <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5 text-current" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="12" height="11" rx="2" /><path d="M2 7h12M5 1.5v3M11 1.5v3" /></svg>
                   <span>{m.isScheduled ? 'In your calendar ✓' : 'Add to calendar'}</span>
                 </button>
@@ -185,7 +185,7 @@ function SessionRow({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => v
           <span className="text-[11.5px] font-normal text-[#8688AE]">{m.dateLabel}</span>
           <h3 className="text-[13.5px] font-medium text-[#4C4D77] mt-0.5">{m.title}</h3>
           <div className="mt-1 flex items-center gap-1.5">
-            <span className="grid size-4 place-items-center rounded bg-[#eef0f6] text-[8.5px] font-bold text-[#8e90a8]">{m.companyTag.slice(0, 3)}</span>
+            <span className="grid size-4 place-items-center rounded bg-[#eef0f6] text-[8.5px] font-medium text-[#8e90a8]">{m.companyTag.slice(0, 3)}</span>
             <span className="text-[11.5px] text-[#8688AE]">{m.presenter}{m.partnerName ? ` · ${m.partnerName}` : ''}</span>
           </div>
         </div>
@@ -225,7 +225,7 @@ function CertificateRow({ unlocked }: { unlocked: boolean }) {
           </div>
         </div>
         <div>
-          <h3 className="text-[13.5px] font-semibold text-[#1e1e38]">Your certificate</h3>
+          <h3 className="text-[13.5px] font-medium text-[#1e1e38]">Your certificate</h3>
           <p className="text-[11.5px] text-[#8e90a8] mt-0.5">Minted on Base at the end of the cohort, showing the badges you earned.</p>
         </div>
       </div>
@@ -246,8 +246,8 @@ function ReadyToMint() {
       <Image alt="Your certificate is ready" fill sizes="(min-width: 1024px) 960px, 100vw" className="object-cover object-right" src={assetPath('/Your certificate is ready.png')} />
       <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-transparent pointer-events-none" />
       <div className="relative z-10 max-w-md space-y-3">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 px-3 py-1 text-[11px] font-bold text-purple-200 backdrop-blur-sm">● Ready to mint</span>
-        <h2 className="text-[24px] sm:text-[28px] font-bold tracking-tight text-white leading-tight">Your certificate is ready</h2>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 px-3 py-1 text-[11px] font-medium text-purple-200 backdrop-blur-sm">● Ready to mint</span>
+        <h2 className="text-[24px] sm:text-[28px] font-medium tracking-tight text-white leading-tight">Your certificate is ready</h2>
         <p className="text-[12.5px] leading-relaxed text-white/80">Twelve modules, thirteen badges, one verifiable record on Base. Minting writes it to your wallet — it’s yours, not ours.</p>
         <div className="pt-2 flex flex-wrap items-center gap-4">
           <ButtonLink href="/certificate" variant="white" size="md">Mint on Base</ButtonLink>
@@ -270,19 +270,19 @@ function PartnerCard({ p }: { p: Partner }) {
     <div className="flex flex-col justify-between overflow-hidden rounded-2xl border border-[#ececf2] bg-white shadow-xs transition hover:shadow-md">
       <div className="relative h-28 bg-[#1e1538] flex items-center justify-center overflow-hidden">
         {p.imageUrl ? <Image alt="" fill sizes="240px" className="object-cover" src={p.imageUrl} /> : (
-          <span className="grid size-11 place-items-center rounded-full bg-[#2a1f4d] text-white/90 border border-white/10 font-bold text-sm">{p.title.charAt(0)}</span>
+          <span className="grid size-11 place-items-center rounded-full bg-[#2a1f4d] text-white/90 border border-white/10 font-medium text-sm">{p.title.charAt(0)}</span>
         )}
       </div>
       <div className="flex flex-1 flex-col justify-between p-4.5">
         <div>
           <div className="flex items-start justify-between gap-2">
-            <span className="text-[11.5px] font-bold text-[#171730]">{p.title}</span>
-            <span className="shrink-0 rounded-full bg-[#f4f4fa] px-2 py-0.5 text-[11px] font-bold text-[#7e7e96]">{p.tag}</span>
+            <span className="text-[11.5px] font-medium text-[#171730]">{p.title}</span>
+            <span className="shrink-0 rounded-full bg-[#f4f4fa] px-2 py-0.5 text-[11px] font-medium text-[#7e7e96]">{p.tag}</span>
           </div>
           <p className="mt-2 text-[11.5px] leading-relaxed text-[#5f5f7a] line-clamp-2">{p.description}</p>
         </div>
         <div className="mt-4 pt-3 border-t border-[#f0f0f5]">
-          <a href={p.actionUrl} target="_blank" rel="noopener noreferrer" className="block text-center w-full rounded-xl border border-[#e2e2ec] py-2 text-[12px] font-semibold text-[#171730] transition hover:bg-gray-50 cursor-pointer">{p.actionText.replace(/\s*↗\s*$/, '')} <Arrow dir="up-right" /></a>
+          <a href={p.actionUrl} target="_blank" rel="noopener noreferrer" className="block text-center w-full rounded-xl border border-[#e2e2ec] py-2 text-[12px] font-medium text-[#171730] transition hover:bg-gray-50 cursor-pointer">{p.actionText.replace(/\s*↗\s*$/, '')} <Arrow dir="up-right" /></a>
           <p className="mt-2 text-center text-[10px] text-[#9ca3af]">{p.footerText}</p>
         </div>
       </div>
@@ -329,7 +329,7 @@ export default function DashboardPage() {
           network status as a chip pinned top-right. */}
       <header className="flex items-start justify-between gap-4">
         <div className="min-w-0 space-y-2">
-          <h1 className="text-[26px] font-semibold leading-[1.15] tracking-[-0.02em] text-[#151534] sm:text-[30px]">
+          <h1 className="text-[26px] font-medium leading-[1.15] tracking-[-0.02em] text-[#151534] sm:text-[30px]">
             Welcome, {firstName(profile.name)} <span aria-hidden="true">👋</span>
           </h1>
           <p className="max-w-[560px] text-[15px] leading-6 text-[#4c4d77]">{subtitle}</p>
@@ -341,7 +341,7 @@ export default function DashboardPage() {
             className="mt-1 hidden shrink-0 items-center gap-2 rounded-full md:inline-flex border border-[#e7e7f1] bg-white py-1.5 pl-3 pr-3.5 text-[12.5px] shadow-[0_1px_2px_rgba(23,23,48,0.04)] transition hover:border-[#d6d6e4] hover:shadow-[0_2px_8px_rgba(23,23,48,0.06)]"
           >
             <span className="size-2 rounded-full bg-[#0052ff]" />
-            <span className="font-semibold text-[#151534]">Base</span>
+            <span className="font-medium text-[#151534]">Base</span>
             <span className="h-3 w-px bg-[#e7e7f1]" />
             <span className="relative flex size-2">
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#16a34a] opacity-40 motion-reduce:hidden" />
@@ -352,7 +352,7 @@ export default function DashboardPage() {
         ) : (
           <Link href="/wallet" className="mt-1 hidden shrink-0 items-center gap-2 rounded-full md:inline-flex border border-[#e7e7f1] bg-white py-1.5 pl-3 pr-3.5 text-[12.5px] transition hover:border-[#d6d6e4]">
             <span className="size-2 rounded-full bg-[#c4c4d4]" />
-            <span className="font-semibold text-[#151534]">Base</span>
+            <span className="font-medium text-[#151534]">Base</span>
             <span className="h-3 w-px bg-[#e7e7f1]" />
             <span className="font-medium text-[#7b2fbe]">Connect wallet</span>
           </Link>
@@ -364,8 +364,8 @@ export default function DashboardPage() {
         <section className="flex flex-col justify-between rounded-2xl border border-[#ececf2] bg-white p-6 shadow-[0_2px_12px_rgba(23,23,48,0.03)]">
           <div>
             <div className="flex items-baseline justify-between">
-              <h3 className="text-[15px] font-semibold text-[#151534]">Badges earned</h3>
-              <span className="text-[13px] font-semibold text-[#151534] tabular-nums">{earned}<span className="font-medium text-[#9a9cbd]"> / {TOTAL_BADGES}</span></span>
+              <h3 className="text-[15px] font-medium text-[#151534]">Badges earned</h3>
+              <span className="text-[13px] font-medium text-[#151534] tabular-nums">{earned}<span className="font-medium text-[#9a9cbd]"> / {TOTAL_BADGES}</span></span>
             </div>
             <BadgeSlots modules={modules} badges={badges} />
             <p className="mt-3 text-[12.5px] leading-5 text-[#7e7e96]">{earned > 0 ? 'Every badge is a passed quiz. Your certificate lists the ones you earn.' : 'Pass each week’s quiz to earn that partner’s badge for your certificate.'}</p>
@@ -387,7 +387,7 @@ export default function DashboardPage() {
       <section className="space-y-5">
         <div className="flex items-center justify-between">
           {unlocked ? (
-            <><h2 className={sectionTitle}>Modules & credentials</h2><span className="text-[11px] font-semibold text-[#16a34a]">● Certificate unlocked</span></>
+            <><h2 className={sectionTitle}>Modules & credentials</h2><span className="text-[11px] font-medium text-[#16a34a]">● Certificate unlocked</span></>
           ) : (
             <><h2 className={sectionTitle}>This week</h2><span className="text-[11px] text-[#9ca3af]">{status.part1Done ? 'Pass the quiz to unlock your certificate' : 'Opens once Part 1 is done'}</span></>
           )}
@@ -396,7 +396,7 @@ export default function DashboardPage() {
           {featured && <FeaturedModule m={featured} part1Done={status.part1Done} onSchedule={setScheduling} />}
           <div className="space-y-3 pt-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-[11.5px] font-semibold text-[#9a9cbd]">Upcoming sessions ({rest.length})</h2>
+              <h2 className="text-[11.5px] font-medium text-[#9a9cbd]">Upcoming sessions ({rest.length})</h2>
               <span className="text-[11.5px] text-[#9a9cbd]">Add them to your calendar now</span>
             </div>
             <div className="space-y-3">{rest.map((m) => <SessionRow key={m.slug} m={m} onSchedule={setScheduling} />)}</div>

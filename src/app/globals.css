@@ -293,7 +293,7 @@ body {
   color: #fff;
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
   white-space: nowrap;
   box-shadow: var(--btn-inner);

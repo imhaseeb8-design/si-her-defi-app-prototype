@@ -43,7 +43,7 @@ export default function LoginPage() {
       <section className={cardV2} aria-labelledby="claim-title">
         <div className="flex w-full flex-col">
           <div className="flex flex-col gap-2">
-            <h1 id="claim-title" className="text-[22px] font-semibold leading-7 tracking-[-0.33px] text-[#151534]">Claim your seat</h1>
+            <h1 id="claim-title" className="text-[22px] font-medium leading-7 tracking-[-0.33px] text-[#151534]">Claim your seat</h1>
             <p className="text-[14px] leading-[22px] text-[#4c4d77]">Enter the same email address you used to apply for Si Her DeFi. We&apos;ll send a 6-digit code — no password to make or remember.</p>
           </div>
 

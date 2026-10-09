@@ -22,9 +22,9 @@ function Step({ n, state, title, sub }: { n: number; state: StepState; title: st
   const dot = state === 'done' ? 'bg-[#16a34a] text-white' : state === 'current' ? 'bg-[#7c2ae8] text-white' : 'border border-[#dcdce8] text-[#8e8ea6]';
   return (
     <div className="flex items-start gap-3">
-      <span className={`grid size-5 shrink-0 place-items-center rounded-full text-[11px] font-bold mt-0.5 ${dot}`}>{state === 'done' ? '✓' : n}</span>
+      <span className={`grid size-5 shrink-0 place-items-center rounded-full text-[11px] font-medium mt-0.5 ${dot}`}>{state === 'done' ? '✓' : n}</span>
       <div>
-        <p className="text-[13px] font-bold text-[#171730]">{title}</p>
+        <p className="text-[13px] font-medium text-[#171730]">{title}</p>
         <p className="text-[11px] text-[#8e8ea6]">{sub}</p>
       </div>
     </div>
@@ -83,10 +83,10 @@ export default function OnboardPage() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
-      <Link className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#7c2ae8] transition-colors hover:underline" href="/dashboard"><Arrow dir="left" /> Back to dashboard</Link>
+      <Link className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#7c2ae8] transition-colors hover:underline" href="/dashboard"><Arrow dir="left" /> Back to dashboard</Link>
       <div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f0eafb] px-3 py-1 text-[11px] font-bold text-[#7c2ae8]">● {tagCase(c.stepLabel)}</span>
-        <h1 className="mt-2 text-[24px] sm:text-[26px] font-bold tracking-tight text-[#171730]">{c.page.title}</h1>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f0eafb] px-3 py-1 text-[11px] font-medium text-[#7c2ae8]">● {tagCase(c.stepLabel)}</span>
+        <h1 className="mt-2 text-[24px] sm:text-[26px] font-medium tracking-tight text-[#171730]">{c.page.title}</h1>
         <p className="mt-1 text-[13px] leading-relaxed text-[#5f5f7a]">{c.page.subtitle}</p>
       </div>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
@@ -101,14 +101,14 @@ export default function OnboardPage() {
             </div>
             {!progress.videoWatched && (
               <div className="flex justify-end">
-                <button type="button" onClick={() => save({ videoWatched: true })} className="text-[11.5px] font-semibold text-[#7c2ae8] hover:underline cursor-pointer">I’ve watched it ✓</button>
+                <button type="button" onClick={() => save({ videoWatched: true })} className="text-[11.5px] font-medium text-[#7c2ae8] hover:underline cursor-pointer">I’ve watched it ✓</button>
               </div>
             )}
           </div>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-[13.5px] font-bold text-[#171730]">{c.socialsHeading}</h2>
-              <span className={`rounded-full px-2 py-0.5 text-[11px] font-bold ${socialsDone ? 'bg-[#dcfce7] text-[#16a34a]' : 'bg-[#fef3c7] text-[#b45309]'}`}>{socialsDone ? 'Done' : 'Required'}</span>
+              <h2 className="text-[13.5px] font-medium text-[#171730]">{c.socialsHeading}</h2>
+              <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${socialsDone ? 'bg-[#dcfce7] text-[#16a34a]' : 'bg-[#fef3c7] text-[#b45309]'}`}>{socialsDone ? 'Done' : 'Required'}</span>
             </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {socials.map((s) => {
@@ -116,16 +116,16 @@ export default function OnboardPage() {
                 return (
                   <div key={s.id} className="flex items-center justify-between gap-3 rounded-xl border border-[#ececf2] bg-white p-3.5 shadow-xs">
                     <div className="flex min-w-0 items-center gap-3">
-                      <span className={`grid size-8 shrink-0 place-items-center rounded-lg text-white font-bold text-xs ${s.platform === 'x' ? 'bg-black' : 'bg-[#0077b5]'}`}>{s.platform === 'x' ? '𝕏' : 'in'}</span>
+                      <span className={`grid size-8 shrink-0 place-items-center rounded-lg text-white font-medium text-xs ${s.platform === 'x' ? 'bg-black' : 'bg-[#0077b5]'}`}>{s.platform === 'x' ? '𝕏' : 'in'}</span>
                       <div className="min-w-0">
-                        <p className="truncate text-[12.5px] font-bold text-[#171730]">{s.label}</p>
+                        <p className="truncate text-[12.5px] font-medium text-[#171730]">{s.label}</p>
                         <p className="truncate text-[11px] text-[#8e8ea6]">{s.handle}</p>
                       </div>
                     </div>
                     <a
                       href={s.url} target="_blank" rel="noopener noreferrer"
                       onClick={() => { if (!followed) save({ followedSocialIds: [...progress.followedSocialIds, s.id] }); }}
-                      className={`shrink-0 rounded-full border px-3.5 py-1 text-[11.5px] font-semibold transition cursor-pointer ${followed ? 'border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]' : 'border-[#e2e2ec] text-[#171730] hover:bg-gray-50 hover:border-[#7c2ae8]'}`}
+                      className={`shrink-0 rounded-full border px-3.5 py-1 text-[11.5px] font-medium transition cursor-pointer ${followed ? 'border-[#bbf7d0] bg-[#f0fdf4] text-[#16a34a]' : 'border-[#e2e2ec] text-[#171730] hover:bg-gray-50 hover:border-[#7c2ae8]'}`}
                     >
                       {followed ? 'Followed ✓' : <>Follow <Arrow dir="up-right" /></>}
                     </a>
@@ -137,14 +137,14 @@ export default function OnboardPage() {
         </div>
         <div className="lg:col-span-4">
           <div className="rounded-2xl border border-[#ececf2] bg-white p-5 sm:p-6 shadow-xs space-y-4">
-            <h3 className="text-[11px] font-bold text-[#8e8ea6]">Your task</h3>
+            <h3 className="text-[11px] font-medium text-[#8e8ea6]">Your task</h3>
             <div className="space-y-4">
               <Step n={1} state={steps[0]} title={c.tasks.video} sub={`${c.video.minutes} minutes · ${progress.videoWatched ? 'watched' : 'start here'}`} />
               <Step n={2} state={steps[1]} title={c.tasks.socials} sub={`${followedCount} of ${required.length} followed · Both required`} />
               <Step n={3} state={steps[2]} title={c.tasks.questions} sub={`About ${c.questionsMinutes} minutes`} />
             </div>
             <div className="rounded-xl bg-[#f0eafb] p-3 text-[#5b21b6] text-[11.5px] leading-relaxed flex items-start gap-2">
-              <span className="text-[#7c2ae8] font-bold" aria-hidden="true">ℹ</span>
+              <span className="text-[#7c2ae8] font-medium" aria-hidden="true">ℹ</span>
               <span>{c.taskNote}</span>
             </div>
             {completed ? (
@@ -157,7 +157,7 @@ export default function OnboardPage() {
                 {!socialsDone && <p className="text-center text-[11px] text-[#b45309]">Follow the required accounts above to continue.</p>}
               </>
             )}
-            <p className="text-center text-[11px] font-bold text-[#8e8ea6]">Required before the modules open</p>
+            <p className="text-center text-[11px] font-medium text-[#8e8ea6]">Required before the modules open</p>
           </div>
         </div>
       </div>
@@ -166,7 +166,7 @@ export default function OnboardPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
           <div role="dialog" aria-modal="true" aria-labelledby="onboard-question-title" className="relative w-full rounded-2xl bg-white p-6 sm:p-7 shadow-2xl border border-[#ececf2] max-w-lg">
             <div>
-              <div className="flex items-center justify-between text-[11px] font-bold text-[#8e8ea6]">
+              <div className="flex items-center justify-between text-[11px] font-medium text-[#8e8ea6]">
                 <span>{tagCase(c.questionsHeader)}</span><span>{questionIndex + 1} of {questions.length}</span>
               </div>
               <div className="relative mt-2 h-1 w-full rounded-full bg-[#e4e4ee]">
@@ -174,7 +174,7 @@ export default function OnboardPage() {
               </div>
             </div>
             <p className="mt-4 text-[12px] text-[#5f5f7a] leading-relaxed">{c.questionsIntro}</p>
-            <h3 id="onboard-question-title" className="mt-3 text-[16px] font-bold text-[#171730]">
+            <h3 id="onboard-question-title" className="mt-3 text-[16px] font-medium text-[#171730]">
               {q.question}{!q.required && <span className="ml-1.5 text-[12px] font-normal text-[#8e8ea6]">— optional</span>}
             </h3>
             <div className="mt-3">
@@ -189,7 +189,7 @@ export default function OnboardPage() {
               </div>
             </div>
             <div className="mt-6 flex items-center justify-between pt-3 border-t border-[#f0f0f5]">
-              <button type="button" disabled={questionIndex === 0 || busy} onClick={() => setQuestionIndex(questionIndex - 1)} className="text-[12.5px] font-semibold text-[#7c2ae8] hover:underline cursor-pointer disabled:opacity-50"><Arrow dir="left" /> Back</button>
+              <button type="button" disabled={questionIndex === 0 || busy} onClick={() => setQuestionIndex(questionIndex - 1)} className="text-[12.5px] font-medium text-[#7c2ae8] hover:underline cursor-pointer disabled:opacity-50"><Arrow dir="left" /> Back</button>
               <button type="button" disabled={busy} onClick={async () => { await save({}); setQuestionIndex(null); }} className="text-[12px] text-[#8e8ea6] hover:text-[#171730] cursor-pointer disabled:opacity-50">Save & exit</button>
               <Button
                 size="md" showIcon={!isLast} disabled={q.required && !answer.trim()} loading={busy} loadingLabel={isLast ? 'Submitting…' : 'Saving…'}
@@ -208,7 +208,7 @@ export default function OnboardPage() {
             <span className="mx-auto grid size-12 place-items-center rounded-full bg-[#dcfce7] text-[#16a34a]">
               <svg className="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
             </span>
-            <h3 id="onboard-done-title" className="mt-4 text-[20px] font-bold text-[#171730]">{c.completion.title}</h3>
+            <h3 id="onboard-done-title" className="mt-4 text-[20px] font-medium text-[#171730]">{c.completion.title}</h3>
             <p className="mt-2 text-[12.5px] leading-relaxed text-[#5f5f7a] max-w-xs mx-auto">{c.completion.message}</p>
             <div className="mt-6"><Button onClick={() => router.push('/dashboard')}>Back to dashboard</Button></div>
             <p className="mt-3.5 text-[11px] text-[#8e8ea6]">🔒 {c.completion.nextStepNote}</p>
