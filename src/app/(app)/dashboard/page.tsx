@@ -15,6 +15,7 @@ import type { Badges, Certificate, Module, OnboardStatus, Partner, Profile } fro
 import { Arrow } from '@/components/ui/Arrow';
 
 const TOTAL_BADGES = 12;
+const SESSIONS_STEP = 3;
 const sectionTitle = 'text-[17px] font-medium tracking-[-0.01em] text-[#45465f]';
 
 const CalendarIcon = ({ className = 'size-3.5 text-[#7954ad]', strokeWidth = '1.7', rx = '2' }) => (
@@ -298,6 +299,8 @@ export default function DashboardPage() {
   const [cert, setCert] = useState<Certificate | null>(null);
   const [partners, setPartners] = useState<Partner[]>([]);
   const [scheduling, setScheduling] = useState<Module | null>(null);
+  // sessions list shows 3 at a time so any number from the CMS keeps the layout
+  const [shown, setShown] = useState(SESSIONS_STEP);
 
   const load = useCallback(async () => {
     const [s, m, b, c, p] = await Promise.all([
@@ -415,7 +418,22 @@ export default function DashboardPage() {
               <h2 className="text-[11.5px] font-medium text-[#9a9cbd]">Upcoming sessions ({rest.length})</h2>
               <span className="text-[11.5px] text-[#9a9cbd]">Add them to your calendar now</span>
             </div>
-            <div className="space-y-3">{rest.map((m) => <SessionRow key={m.slug} m={m} onSchedule={setScheduling} />)}</div>
+            <div className="space-y-3">{rest.slice(0, shown).map((m) => <SessionRow key={m.slug} m={m} onSchedule={setScheduling} />)}</div>
+            {rest.length > SESSIONS_STEP && (
+              <div className="flex justify-center pt-1">
+                {shown < rest.length ? (
+                  <button type="button" onClick={() => setShown((n) => n + SESSIONS_STEP)} className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#e2e2ec] bg-white px-4 py-2 text-[12.5px] font-medium text-[#45465f] transition hover:border-[#d4c2f5] hover:text-[#7c2ae8]">
+                    Show more sessions <span className="text-[#9a9cbd]">({rest.length - shown})</span>
+                    <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6l4 4 4-4" /></svg>
+                  </button>
+                ) : (
+                  <button type="button" onClick={() => setShown(SESSIONS_STEP)} className="inline-flex cursor-pointer items-center gap-1.5 rounded-full px-4 py-2 text-[12.5px] font-medium text-[#7e7e96] transition hover:text-[#151534]">
+                    Show fewer
+                    <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 10l4-4 4 4" /></svg>
+                  </button>
+                )}
+              </div>
+            )}
           </div>
           <CertificateRow unlocked={unlocked} />
           {unlocked && cert?.status !== 'minted' && <ReadyToMint />}

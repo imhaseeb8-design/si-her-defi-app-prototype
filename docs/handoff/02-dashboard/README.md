@@ -48,3 +48,9 @@ Screenshot: `after-sections.jpg`.
 - Bigger and easier to read: 17px Medium, dark grey `#45465f` (was 11.5px light grey).
 - New copy: "Start here" → **Begin your journey** (then **Your onboarding** once Part 1 is done); "This week" / "Modules & credentials" → **Your learning path**; "From our partners (2)" → **From our partners**.
 - The small notes on the right of those headings go from 11px to 12.5px.
+
+## Upcoming sessions: 3 at a time
+Screenshot: `after-sessions-more.jpg`.
+- The list shows the first **3** sessions. Below it, **Show more sessions (N)** reveals 3 more each click, with N the number still hidden. Once everything is showing it becomes **Show fewer**, which goes back to 3.
+- The heading still counts them all ("Upcoming sessions (6)"), so any number of sessions can come from the CMS without stretching the page.
+- With 3 or fewer sessions, no button shows.
