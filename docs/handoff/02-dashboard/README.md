@@ -28,3 +28,10 @@ Screenshot: `after-profile-card.jpg`. Built to sit beside the badges card at the
 - Tag shows only the step ("Get started"); the program name is dropped from the CMS label.
 - "Required before Si Her DeFi modules unlock*" sits bottom-right, aligned to the bottom of the button row.
 - The CMS image has black letterbox bars baked in; the prototype zooms it 1.22× to crop them. Better fix: re-export the image without bars.
+
+## This week (featured module) card
+- "Live session · SI" line removed.
+- The date/time pill becomes "Week 01 · Session recording" (or "Recording after the live session" until the video is uploaded). Sessions are watched as recordings here, so no date, day or time.
+- New cover image (`public/v2/module-cover.webp`), with a lighter overlay: dark on the left behind the text, nearly clear on the right. On mobile a soft fade at the bottom keeps the small text readable.
+- Locked (Part 1 not done): "Start session" shows in the Disabled state and isn't clickable; the meta line starts "Finish Part 1 to unlock". The "Quiz open" status is hidden while locked.
+- Title, pill and monogram use medium weight, not bold.

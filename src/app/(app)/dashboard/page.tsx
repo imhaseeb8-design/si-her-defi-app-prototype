@@ -10,7 +10,7 @@ import { ScheduleModal } from '@/components/dashboard/ScheduleModal';
 import { ButtonLink } from '@/components/ui/Button';
 import { Spinner } from '@/components/onboarding/OnboardingShell';
 import { assetPath, badgeApi, certificateApi, modulesApi, onboardApi, partnerApi } from '@/lib/api';
-import { dayTime, firstName, shortAddress, shortDate, tagCase } from '@/lib/format';
+import { firstName, shortAddress, shortDate, tagCase } from '@/lib/format';
 import type { Badges, Certificate, Module, OnboardStatus, Partner, Profile } from '@/lib/types';
 import { Arrow } from '@/components/ui/Arrow';
 
@@ -128,15 +128,16 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
   const upcoming = m.sessionState === 'upcoming';
   return (
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#17142b] via-[#331c4b] to-[#121124] p-6 text-white shadow-md">
-      {m.thumbnailUrl && <Image alt="" fill sizes="(min-width: 1024px) 960px, 100vw" className="object-cover object-center opacity-30 mix-blend-screen" src={m.thumbnailUrl} />}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#131124]/95 via-[#1a142e]/70 to-transparent pointer-events-none" />
+      {/* cover art for the week (prototype: one image for every module; in the real app this comes from the CMS) */}
+      <Image alt="" fill sizes="(min-width: 1024px) 960px, 100vw" className="object-cover object-right" src={assetPath('/v2/module-cover.webp')} />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#131124]/85 via-[#1a142e]/50 to-[#1a142e]/5 pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#131124]/60 to-transparent pointer-events-none sm:hidden" />
       <div className="relative z-10">
-        <div className="text-[11.5px] font-bold text-white/60 mb-2">Live session · {m.companyTag}</div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[11px] font-bold text-white">● {m.dateLabel}</span>
-        <h3 className="mt-2 text-[20px] font-bold tracking-tight text-white">{m.title}</h3>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[11px] font-medium text-white">Week {String(m.week).padStart(2, '0')} · {m.videoUrl ? 'Session recording' : 'Recording after the live session'}</span>
+        <h3 className="mt-2 text-[20px] font-medium tracking-tight text-white">{m.title}</h3>
         <p className="mt-1.5 max-w-xl text-[12px] leading-relaxed text-white/80 line-clamp-2">{m.description}</p>
         <div className="mt-3 flex items-center gap-2">
-          <span className="grid size-5 place-items-center rounded bg-black/60 tabular-nums text-[11px] font-bold text-white/90">{m.companyTag.slice(0, 3)}</span>
+          <span className="grid size-5 place-items-center rounded bg-black/60 tabular-nums text-[11px] font-medium text-white/90">{m.companyTag.slice(0, 3)}</span>
           <span className="text-[11px] text-white/75">Presented by {m.presenter}{m.partnerName ? ` (${m.partnerName})` : ''}</span>
         </div>
       </div>
@@ -153,21 +154,21 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
               )}
             </>
           ) : (
-            <Link title="Modules open once Si Her Onboard – Part 1 is done" className="flex items-center gap-1.5 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-[12.5px] font-semibold text-white/80 transition hover:bg-white/20" href="/onboard">
-              <span aria-hidden="true">🔒</span>Finish Part 1 to unlock
-            </Link>
+            <ButtonLink href={`/module/${m.slug}`} size="md" disabled title="Opens once Si Her Onboard – Part 1 is done">Start session</ButtonLink>
           )}
-          <span className="text-[11px] font-medium text-white/75">{!upcoming && m.videoUrl ? '1 video · ' : ''}{m.quiz.questionCount} questions · 1 badge</span>
+          <span className="text-[11px] text-white/75">{!part1Done ? 'Finish Part 1 to unlock · ' : ''}{!upcoming && m.videoUrl ? '1 video · ' : ''}{m.quiz.questionCount} questions · 1 badge</span>
         </div>
-        <div className="flex items-center gap-2">
+        {part1Done && (
+        <div className="flex items-center gap-2 rounded-full bg-black/35 px-3 py-1 backdrop-blur-md">
           {upcoming ? (
-            <><span className="inline-block size-2 rounded-full bg-white/50" /><span className="text-[11px] text-white/75">Live {dayTime(m.scheduledDate)}</span></>
+            <><span className="inline-block size-2 rounded-full bg-white/50" /><span className="text-[11px] text-white/75">Recording coming soon</span></>
           ) : m.sessionState === 'live' ? (
             <><span className="inline-block size-2 rounded-full bg-red-400 animate-pulse" /><span className="text-[11px] text-white/75">Live now</span></>
           ) : (
             <><span className="inline-block size-2 rounded-full bg-emerald-400 animate-pulse" /><span className="text-[11px] text-white/75">Quiz open</span></>
           )}
         </div>
+        )}
       </div>
     </div>
   );
