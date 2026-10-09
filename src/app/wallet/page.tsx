@@ -94,7 +94,7 @@ export default function WalletPage() {
     <OnboardingShell right={{ kind: 'account', email: user?.email ?? '' }} step={2} aside="wallet">
       <div className="w-full">
         <div className="w-full space-y-4">
-          <Link className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#7c2ae8] transition-colors hover:underline" href="/profile"><Arrow dir="left" /> Back to profile</Link>
+          <Link className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#7c2ae8] transition-colors link-cta" href="/profile"><Arrow dir="left" /> Back to profile</Link>
           <div>
             <h1 className="text-[24px] font-medium tracking-tight text-[#171730]">Connect your wallet</h1>
             <p className="mt-1.5 text-[13px] leading-relaxed text-[#5f5f7a]">This is where your certificate mints at the end of the cohort. We only read your address — no funds needed.</p>

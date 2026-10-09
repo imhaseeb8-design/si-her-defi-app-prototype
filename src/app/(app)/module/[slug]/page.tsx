@@ -104,7 +104,7 @@ export default function ModulePage() {
       <div className="mx-auto grid min-h-[60vh] max-w-md place-items-center text-center">
         <div>
           <p className="text-[18px] font-medium text-[#171730]">We couldn’t find that module</p>
-          <Link href="/dashboard" className="mt-3 inline-block text-[12.5px] font-medium text-[#7c2ae8] hover:underline"><Arrow dir="left" /> Back to dashboard</Link>
+          <Link href="/dashboard" className="mt-3 inline-block text-[12.5px] font-medium text-[#7c2ae8] link-cta"><Arrow dir="left" /> Back to dashboard</Link>
         </div>
       </div>
     );
@@ -122,7 +122,7 @@ export default function ModulePage() {
   return (
     <div className="mx-auto max-w-[1040px] space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Link className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-[#7c2ae8] transition-colors hover:underline" href="/dashboard"><Arrow dir="left" /> Back to dashboard</Link>
+        <Link className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-[#7c2ae8] transition-colors link-cta" href="/dashboard"><Arrow dir="left" /> Back to dashboard</Link>
         <span className="text-[11px] font-medium text-[#8e8ea6]">{m.dateLabel}</span>
       </div>
       <div>
@@ -187,7 +187,7 @@ export default function ModulePage() {
           {next && (
             <div className="flex flex-wrap items-center justify-between gap-3 pt-1 text-[12px]">
               <span className="text-[#5f5f7a]">Next up: <Link className="font-medium text-[#171730] hover:text-[#7c2ae8]" href={`/module/${next.slug}`}>{next.title}</Link> — {dayTime(next.scheduledDate)}</span>
-              <button type="button" onClick={() => setScheduling(next)} className="font-medium text-[#7c2ae8] hover:underline cursor-pointer">Add to calendar <Arrow dir="up-right" /></button>
+              <button type="button" onClick={() => setScheduling(next)} className="font-medium text-[#7c2ae8] link-cta cursor-pointer">Add to calendar <Arrow dir="up-right" /></button>
             </div>
           )}
         </div>

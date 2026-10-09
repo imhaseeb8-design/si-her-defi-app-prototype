@@ -88,7 +88,7 @@ export default function OnboardPage() {
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
-      <Link className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#7c2ae8] transition-colors hover:underline" href="/dashboard"><Arrow dir="left" /> Back to dashboard</Link>
+      <Link className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[#7c2ae8] transition-colors link-cta" href="/dashboard"><Arrow dir="left" /> Back to dashboard</Link>
       <div>
         <h1 className="text-[24px] sm:text-[26px] font-medium tracking-tight text-[#171730]">{c.page.title}</h1>
         <p className="mt-1 text-[13px] leading-relaxed text-[#5f5f7a]">{c.page.subtitle}</p>
@@ -206,7 +206,7 @@ export default function OnboardPage() {
               </div>
             </div>
             <div className="mt-6 flex items-center justify-between pt-3 border-t border-[#f0f0f5]">
-              <button type="button" disabled={questionIndex === 0 || busy} onClick={() => setQuestionIndex(questionIndex - 1)} className="text-[12.5px] font-medium text-[#7c2ae8] hover:underline cursor-pointer disabled:opacity-50"><Arrow dir="left" /> Back</button>
+              <button type="button" disabled={questionIndex === 0 || busy} onClick={() => setQuestionIndex(questionIndex - 1)} className="text-[12.5px] font-medium text-[#7c2ae8] link-cta cursor-pointer disabled:opacity-50"><Arrow dir="left" /> Back</button>
               <Button
                 size="md" showIcon={!isLast} disabled={q.required && !answer.trim()} loading={busy} loadingLabel={isLast ? 'Submitting…' : 'Saving…'}
                 onClick={async () => { if (isLast) await submit(); else { await save({}); setQuestionIndex(questionIndex + 1); } }}

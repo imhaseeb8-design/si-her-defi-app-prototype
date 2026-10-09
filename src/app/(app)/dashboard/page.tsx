@@ -76,7 +76,7 @@ function ProfileCard({ profile }: { profile: Profile }) {
             <span className="truncate">{link}</span>
           </a>
         ) : <span className="text-[#9a9cbd]">No social link yet</span>}
-        <Link href="/settings#profile" className="inline-flex shrink-0 items-center gap-1.5 font-medium text-[#7c2ae8] transition-colors hover:text-[#5e3295]">
+        <Link href="/settings#profile" className="link-cta shrink-0 font-medium text-[#7c2ae8]">
           <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M11.5 2.5a1.414 1.414 0 0 1 2 2L5 13H2v-3l8.5-8.5z" /></svg>
           Edit profile
         </Link>
@@ -114,7 +114,7 @@ function StartHere({ status }: { status: OnboardStatus }) {
               <h3 className="mt-0.5 text-[15px] font-medium text-[#151534]">{card.title}</h3>
               <p className="mt-0.5 text-[12.5px] leading-5 text-[#5f5f7a]">{card.doneMessage}</p>
             </div>
-            <Link href="/onboard" className="shrink-0 rounded-lg px-2.5 py-1.5 text-[12.5px] font-medium text-[#7c2ae8] transition hover:bg-[#f8f5fe]">Review</Link>
+            <Link href="/onboard" className="link-cta shrink-0 text-[12.5px] font-medium text-[#7c2ae8]">Review</Link>
           </li>
           <li className="flex items-center gap-4 p-4 sm:px-5" aria-disabled={!status.part2Unlocked}>
             <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-[#ece8f4] bg-[#fbfaff] text-[#a894c8]">{lock}</span>

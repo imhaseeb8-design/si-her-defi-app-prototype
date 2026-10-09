@@ -90,7 +90,7 @@ function WalletChip({ wallet }: { wallet: string | null }) {
         ) : (
           <>
             <span className="text-[#8e8ea6]">No wallet connected</span>
-            <button type="button" onClick={() => router.push('/wallet')} className="cursor-pointer text-[11px] font-medium text-[#7c2ae8] hover:underline">Connect</button>
+            <button type="button" onClick={() => router.push('/wallet')} className="cursor-pointer text-[11px] font-medium text-[#7c2ae8] link-cta">Connect</button>
           </>
         )}
       </div>

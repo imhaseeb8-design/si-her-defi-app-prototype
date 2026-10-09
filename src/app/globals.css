@@ -459,3 +459,21 @@ a.btn-primary { text-decoration: none; }
 }
 .nav-item--selected:focus-visible { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #b98be8, inset 0 0 6px rgba(0, 0, 0, 0.3), inset 0 0 4px #dcc2f2; }
 .nav-item--locked { color: #a894c8; cursor: not-allowed; }
+
+/* ── Text CTA (Back to dashboard, Review, Connect …) ─────────
+   No underline on hover: a light lilac shape appears behind it.
+   Negative side margins keep the text where it was. */
+.link-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-inline: -8px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+@media (hover: hover) { .link-cta:hover { background: #f3ebff; text-decoration: none; } }
+.link-cta:active { background: #ead9fd; }
+.link-cta:focus-visible { outline: none; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #b98be8; }
+.link-cta:disabled { background: transparent; }

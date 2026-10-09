@@ -63,7 +63,7 @@ export const CertificateArt = forwardRef<HTMLDivElement, { cert: Certificate; pr
           <div className="space-y-0.5">
             <p className="font-medium text-[#8e8ea6] text-[11px]">{minted ? 'On-chain' : 'Network'}</p>
             {minted ? (
-              <a href={cert.onChain.explorerUrl!} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-1 font-medium text-[#7c2ae8] hover:underline">
+              <a href={cert.onChain.explorerUrl!} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-1 font-medium text-[#7c2ae8] link-cta">
                 <span className="size-1.5 rounded-full bg-[#0052ff]" />Token #{cert.onChain.tokenId} <Arrow dir="up-right" />
               </a>
             ) : (
@@ -73,7 +73,7 @@ export const CertificateArt = forwardRef<HTMLDivElement, { cert: Certificate; pr
         </div>
         {!preview && cert.verificationCode && (
           <p className="text-[10.5px] text-[#8e8ea6] break-all">
-            Verify at <a href={assetPath(`/verify/${cert.verificationCode}`)} className="font-medium text-[#7c2ae8] hover:underline">certifications.si3.space/siherdefi/verify/{cert.verificationCode}</a>
+            Verify at <a href={assetPath(`/verify/${cert.verificationCode}`)} className="font-medium text-[#7c2ae8] hover:text-[#5e3295]">certifications.si3.space/siherdefi/verify/{cert.verificationCode}</a>
           </p>
         )}
         <div className="flex items-center justify-between gap-4 pt-5 text-left border-t border-[#f0f0f5]">

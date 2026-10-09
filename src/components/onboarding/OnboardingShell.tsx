@@ -29,7 +29,7 @@ export function OnboardingHeader({ right }: { right: HeaderRight }) {
       <div className="text-[13px]">
         {right.kind === 'registered' && <span className="text-muted">Already registered? Use the same email to sign in.</span>}
         {right.kind === 'help' && (
-          <a href="/help" className="font-medium text-brand transition-colors hover:text-brand-strong hover:underline">Need help?</a>
+          <a href="/help" className="font-medium text-brand transition-colors hover:text-brand-strong link-cta">Need help?</a>
         )}
         {right.kind === 'account' && (
           <div className="flex items-center gap-2.5">
@@ -41,7 +41,7 @@ export function OnboardingHeader({ right }: { right: HeaderRight }) {
               </span>
               <span className="text-[12px] font-medium text-[#171730]">{right.email}</span>
             </div>
-            <button type="button" onClick={signOut} className="cursor-pointer text-[12.5px] font-medium text-[#7c2ae8] transition-colors hover:text-[#6922cf] hover:underline">
+            <button type="button" onClick={signOut} className="cursor-pointer text-[12.5px] font-medium text-[#7c2ae8] transition-colors hover:text-[#6922cf] link-cta">
               Not you?
             </button>
           </div>

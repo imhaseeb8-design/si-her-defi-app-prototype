@@ -91,3 +91,8 @@ Figma: component set **Sidebar item** `1040:37` (Post-UX-Fixes, next to the Butt
 - 40px tall, radius 12, 12px side padding, 11px gap, Geist Medium 13.5, 18px icons.
 - Properties: **Label** (text), **Icon** (swap: Home / Certificate / Settings), **Show lock** (boolean, on by default in Locked).
 - Icons are the Figma ones: Dashboard = `home-09` house, Certificate = document with a ribbon, Settings = gear (18px, `after-sidebar-icons.png`). The gear also shows in the account menu.
+
+## Text CTAs (links styled as actions)
+- "Back to dashboard", "Back to profile", Review, Edit profile, Connect, "Take the quiz", Back in the questions modal and similar: **no underline on hover**. A light lilac shape (`#F3EBFF`, radius 8, 3px × 8px padding) appears behind the text instead, a shade darker while pressed, with the button focus ring on keyboard focus (`after-text-cta-hover.png`).
+- One class, `.link-cta` in `globals.css`; negative side margins keep the text aligned where it was.
+- Links inside a sentence (e.g. "Verify at certifications…" on the certificate) stay plain links.
