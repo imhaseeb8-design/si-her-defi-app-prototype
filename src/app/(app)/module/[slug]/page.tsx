@@ -54,13 +54,15 @@ function QuizCard({ m, quiz, part1Done, onStart, onChanged, certificateUnlocked 
   if (quiz.isPassed) {
     return (
       <div className={card}>
-        <span className="text-[11.5px] font-medium text-[#7c2ae8]">Completed</span>
-        <div className="flex items-center gap-3">
+        <div>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ecfdf3] px-2.5 py-1 text-[12px] font-medium text-[#16a34a]"><Check className="size-3.5" />Completed</span>
+        </div>
+        <div className="flex items-center gap-4 pb-1">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="" className="size-12 object-contain" src={quiz.badge.image} />
-          <div>
-            <h4 className="flex items-center gap-1.5 text-[15px] font-medium text-[#171730]">Badge earned <Check className="size-4 text-[#16a34a]" /></h4>
-            <p className="text-[12px] text-[#5f5f7a]">{quiz.badge.name}</p>
+          <img alt="" className="size-14 shrink-0 object-contain drop-shadow-[0_6px_12px_rgba(124,42,232,0.25)]" src={quiz.badge.image} />
+          <div className="min-w-0">
+            <h4 className="text-[16px] font-medium text-[#171730]">Badge earned</h4>
+            <p className="mt-0.5 text-[12.5px] text-[#5f5f7a]">{quiz.badge.name}</p>
           </div>
         </div>
         {certificateUnlocked
@@ -255,7 +257,7 @@ export default function ModulePage() {
         </div>
       </div>
 
-      {quizOpen && <QuizDialog module={m} quiz={quiz} onClose={() => { setQuizOpen(false); load(); session.refresh(); }} onFinished={() => {}} onRewatch={rewatch} />}
+      {quizOpen && <QuizDialog module={m} quiz={quiz} next={all.find((x) => x.week > m.week) ?? null} onClose={() => { setQuizOpen(false); load(); session.refresh(); }} onFinished={() => {}} onRewatch={rewatch} />}
       {scheduling && <ScheduleModal module={scheduling} onClose={() => setScheduling(null)} onScheduled={() => load()} />}
     </div>
   );

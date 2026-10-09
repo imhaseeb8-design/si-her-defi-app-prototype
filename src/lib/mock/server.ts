@@ -221,6 +221,8 @@ function baseQuiz(slug: string): Quiz {
     q.title = `Week ${m.week} quiz · ${m.title}`;
     q.badge = m.badge;
   }
+  // badge art from the design team, same as the dashboard
+  if (m) q.badge = { ...q.badge, image: badgeArt(m.week) };
   return { ...q, moduleSlug: slug };
 }
 

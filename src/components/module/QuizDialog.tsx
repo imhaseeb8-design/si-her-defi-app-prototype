@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { ApiErrorResponse, errorMessage, quizApi } from '@/lib/api';
-import { dayTime } from '@/lib/format';
+import { dayTime, sessionWhen } from '@/lib/format';
 import type { Module, Quiz, QuizAnswer, QuizHint, QuizResult } from '@/lib/types';
 import { Arrow } from '@/components/ui/Arrow';
 import { Check } from '@/components/ui/Check';
@@ -26,8 +26,11 @@ export function HintButton({ hint, onRewatch }: { hint: QuizHint; onRewatch?: (h
 
 const shareUrl = (text: string) => `https://www.linkedin.com/feed/?shareActive=true&text=${encodeURIComponent(text)}`;
 
-export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: {
-  module: Module; quiz: Quiz; onClose: () => void; onFinished: (r: QuizResult) => void; onRewatch?: (h: QuizHint) => void;
+export function QuizDialog({ module: m, quiz, next, onClose, onFinished, onRewatch }: {
+  module: Module; quiz: Quiz;
+  /** the next session in the cohort, for the "Next up" line and the main action after a pass */
+  next?: Module | null;
+  onClose: () => void; onFinished: (r: QuizResult) => void; onRewatch?: (h: QuizHint) => void;
 }) {
   const router = useRouter();
   const questions = quiz.questions;
@@ -88,25 +91,41 @@ export function QuizDialog({ module: m, quiz, onClose, onFinished, onRewatch }: 
   if (result) {
     const badgeName = result.badgeEarned?.name ?? quiz.badge.name;
     if (result.passed) {
+      // lead to the next thing to do: the certificate on the last quiz, the next session if it's open, else the dashboard
+      const nextOpen = !!next && next.sessionState !== 'upcoming';
+      const when = next ? sessionWhen(next.scheduledDate, next.endDate) : null;
+      const word = ['zero', 'one', 'two', 'three', 'four', 'five', 'six'][result.totalQuestions] ?? String(result.totalQuestions);
+      const primary = result.certificateUnlocked
+        ? { label: 'View your certificate', go: () => router.push('/certificate') }
+        : nextOpen
+          ? { label: 'Start the next session', go: () => router.push(`/module/${next!.slug}`) }
+          : { label: 'Back to dashboard', go: () => router.push('/dashboard') };
       return frame('quiz-result-title', (
         <div className="text-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="" className="mx-auto my-2 size-[84px] object-contain drop-shadow-[0_10px_20px_rgba(124,42,232,0.35)]" src={result.badgeEarned?.image ?? quiz.badge.image} />
-          <h3 id="quiz-result-title" className="mt-4 text-[21px] font-medium text-[#171730]">Badge earned</h3>
-          <p className="mt-2 text-[12px] leading-relaxed text-[#5f5f7a] max-w-xs mx-auto">{badgeName} is yours. {result.certificateUnlocked ? 'That was the last one: your certificate is unlocked and ready to mint on Base.' : 'It’s on your dashboard now. Your certificate unlocks once every session and its quiz are done.'}</p>
+          <img alt="" className="mx-auto my-2 size-[96px] object-contain drop-shadow-[0_12px_24px_rgba(124,42,232,0.35)]" src={result.badgeEarned?.image ?? quiz.badge.image} />
+          <h3 id="quiz-result-title" className="mt-4 text-[22px] font-medium text-[#171730]">Badge earned</h3>
+          <p className="mx-auto mt-2 max-w-sm text-[13px] leading-relaxed text-[#5f5f7a]">
+            All {word} correct, the week {m.week} badge is yours. {result.certificateUnlocked
+              ? 'That was the last one: your certificate is unlocked and ready to mint on Base.'
+              : 'It’s on your dashboard now, and it counts toward your certificate.'}
+          </p>
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#bbf7d0] bg-[#f0fdf4] px-3 py-1 text-[11px] font-medium text-[#16a34a]"><Check className="size-3.5" />{result.score} of {result.totalQuestions} correct</span>
-            {result.certificateUnlocked && <span className="inline-flex items-center gap-1.5 rounded-full border border-[#eedffe] bg-[#f4effe] px-3 py-1 text-[11px] font-medium text-[#7c2ae8]">Certificate unlocked</span>}
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#bbf7d0] bg-[#f0fdf4] px-3 py-1 text-[12px] font-medium text-[#16a34a]"><Check className="size-3.5" />{result.score} of {result.totalQuestions} correct</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#eedffe] bg-[#f4effe] px-3 py-1 text-[12px] font-medium text-[#7c2ae8]">
+              {result.certificateUnlocked ? <><Check className="size-3.5" />Certificate unlocked</> : 'Counts toward your certificate'}
+            </span>
           </div>
-          <div className="mt-6 space-y-2.5">
-            {result.certificateUnlocked
-              ? <Button onClick={() => router.push('/certificate')}>View your certificate</Button>
-              : <Button onClick={() => router.push('/dashboard')}>Back to dashboard</Button>}
-            <div className="grid grid-cols-2 gap-2">
-              <button type="button" onClick={onClose} className="rounded-xl border border-[#e2e2ec] py-2.5 text-[12px] font-medium text-[#5f5f7a] hover:bg-gray-50 transition cursor-pointer">Back to module</button>
-              <a href={shareUrl(`I just earned the "${badgeName}" badge in the Si Her DeFi cohort 🎉`)} target="_blank" rel="noopener noreferrer" className="rounded-xl bg-[#f4effe] py-2.5 text-center text-[12px] font-medium text-[#7c2ae8] transition hover:bg-[#ede5fc]">Share on LinkedIn <Arrow dir="up-right" /></a>
-            </div>
+          <div className="mt-7 space-y-2.5">
+            <Button onClick={primary.go}>{primary.label}</Button>
+            <a href={shareUrl(`I just earned the "${badgeName}" badge in the Si Her DeFi cohort 🎉`)} target="_blank" rel="noopener noreferrer" className="flex h-12 w-full items-center justify-center gap-2 rounded-[14px] border border-[#e4d6fb] bg-[#f6f0fe] text-[15px] font-medium text-[#7c2ae8] transition hover:bg-[#efe5fd]">Share on LinkedIn <Arrow dir="up-right" /></a>
           </div>
+          {next && when && !result.certificateUnlocked && (
+            <p className="mt-5 text-[12.5px] text-[#8e8ea6]">
+              Next up · <span className="text-[#45465f]">{next.title}</span> · {nextOpen ? 'open now' : `opens ${when.month} ${when.day}`}
+            </p>
+          )}
+          <button type="button" onClick={onClose} className="link-cta mt-3 text-[12.5px] font-medium text-[#5f5f7a]">Back to module</button>
         </div>
       ));
     }

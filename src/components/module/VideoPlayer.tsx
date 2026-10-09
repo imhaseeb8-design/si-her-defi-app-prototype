@@ -25,13 +25,11 @@ export const VideoPlayer = forwardRef<PlayerHandle, { src: string; poster?: stri
   return (
     <div ref={box} className="relative aspect-video w-full overflow-hidden rounded-2xl bg-[#0e0c18] text-white shadow-md group">
       <video
+        aria-label={label}
         ref={video} src={src} poster={poster ?? undefined} preload="metadata" playsInline className="size-full object-cover cursor-pointer" onClick={toggle}
         onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onTimeUpdate={(e) => setT(e.currentTarget.currentTime)} onLoadedMetadata={(e) => setD(e.currentTarget.duration)}
       />
       <div className={`pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/60 ${chrome}`} />
-      <div className={`absolute top-4 left-4 right-4 flex items-center justify-between text-[11px] tabular-nums text-white/80 ${chrome}`}>
-        <span className="truncate max-w-[180px] sm:max-w-none text-[10px] sm:text-[11px]">{label}</span>
-      </div>
       {!playing && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <button type="button" onClick={toggle} className="pointer-events-auto grid size-16 place-items-center rounded-full bg-white/25 backdrop-blur-md text-white transition-all hover:scale-110 hover:bg-white/40 cursor-pointer shadow-2xl active:scale-95" aria-label="Play video">
