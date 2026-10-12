@@ -38,3 +38,7 @@ States (focus, typing, filled, empty error, invalid email, loading, hover, keybo
 
 ## Still open
 - The Figma copy still says "an **on**-certificate" (IMPROVEMENTS #6). It's kept as designed; it probably should be "an on-chain certificate".
+
+## "Cohort guidelines" link → privacy policy
+- **Where it was:** only on the sign-in screen ("Claim your seat"), in the fine print under "Send my code": "By continuing you agree to the cohort guidelines." In the live app it opens https://si3.space/policy/membersPolicy (the SI<3> Members Policy). There is no separate cohort guidelines page.
+- **Now:** "By continuing you agree to the **privacy policy**. We'll only email you about Si Her DeFi." linking to https://si3.space/policy/privacy (new tab). The label changed too so it matches where it goes.
