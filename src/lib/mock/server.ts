@@ -156,11 +156,11 @@ export function applyPreset(p: Preset) {
 
 const PART2_CONTENT = {
   title: 'Close out your cohort',
-  subtitle: 'Look back on what you learned and tell us where you’re heading next. About 5 minutes, and there are no wrong answers.',
+  subtitle: 'Before you mint your certificate, take a few minutes to look back on the cohort and tell us where you’re heading next. Write as much or as little as you like.',
   questions: [
-    { id: 'part2-q-1', question: 'What’s the most useful thing you learned in Si Her DeFi?', placeholder: 'A concept, a tool, a conversation…', maxLength: 500, required: true },
-    { id: 'part2-q-2', question: 'What will you do next with what you learned?', placeholder: 'A project, a role, a habit, or a next course.', maxLength: 500, required: true },
-    { id: 'part2-q-3', question: 'Anything we should change for the next cohort?', placeholder: 'Optional. Honest feedback helps.', maxLength: 500, required: false },
+    { id: 'part2-q-1', question: 'What’s the most useful thing you learned in Si Her DeFi?', placeholder: 'A concept, a tool, a conversation…', required: true },
+    { id: 'part2-q-2', question: 'What will you do next with what you learned?', placeholder: 'A project, a role, a habit, or a next course.', required: true },
+    { id: 'part2-q-3', question: 'Anything we should change for the next cohort?', placeholder: 'Optional. Honest feedback helps.', required: false },
   ],
 };
 

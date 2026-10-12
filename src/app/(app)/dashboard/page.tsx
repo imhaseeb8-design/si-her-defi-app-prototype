@@ -348,22 +348,30 @@ function CertificateRow({ unlocked, passed, total }: { unlocked: boolean; passed
   );
 }
 
-function ReadyToMint() {
+// Prototype faces for the "learners have minted" stack (stand-ins until real minters' avatars come from the API)
+const MINTER_FACES = ['https://randomuser.me/api/portraits/women/44.jpg', 'https://randomuser.me/api/portraits/women/68.jpg', 'https://randomuser.me/api/portraits/women/12.jpg'];
+
+function ReadyToMint({ minted = false }: { minted?: boolean }) {
   return (
     <div className="relative overflow-hidden rounded-3xl p-7 sm:p-8 text-white shadow-xl border border-purple-500/20 min-h-[260px] flex items-center">
-      <Image alt="Your certificate is ready" fill sizes="(min-width: 1024px) 960px, 100vw" className="object-cover object-right" src={assetPath('/Your certificate is ready.png')} />
+      <Image alt="" fill sizes="(min-width: 1024px) 960px, 100vw" className="object-cover object-right" src={assetPath('/Your certificate is ready.png')} />
       <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-transparent pointer-events-none" />
       <div className="relative z-10 max-w-md space-y-3">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 px-3 py-1 text-[11px] font-medium text-purple-200 backdrop-blur-sm">● Ready to mint</span>
-        <h2 className="text-[24px] sm:text-[28px] font-medium tracking-tight text-white leading-tight">Your certificate is ready</h2>
-        <p className="text-[12.5px] leading-relaxed text-white/80">Twelve modules, thirteen badges, one verifiable record on Base. Minting writes it to your wallet — it’s yours, not ours.</p>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 px-3 py-1 text-[11px] font-medium text-purple-200 backdrop-blur-sm">● {minted ? 'Minted on Base' : 'Ready to mint'}</span>
+        <h2 className="text-[24px] sm:text-[28px] font-medium tracking-tight text-white leading-tight">{minted ? 'Your certificate is on Base' : 'Your certificate is ready'}</h2>
+        <p className="text-[12.5px] leading-relaxed text-white/80">{minted
+          ? 'It’s in your wallet for good. Share it, add it to LinkedIn, or let anyone verify it.'
+          : 'Every module, every badge, one verifiable record on Base. Minting writes it to your wallet — it’s yours, not ours.'}</p>
         <div className="pt-2 flex flex-wrap items-center gap-4">
-          <ButtonLink href="/certificate?mint=1" variant="white" size="md">Mint on Base</ButtonLink>
+          {minted
+            ? <ButtonLink href="/certificate" variant="white" size="md">View certificate</ButtonLink>
+            : <ButtonLink href="/certificate?mint=1" variant="white" size="md">Mint on Base</ButtonLink>}
           <div className="flex items-center gap-2">
-            <div className="flex -space-x-1.5">
-              <span className="size-5 rounded-full bg-purple-400 border border-white" />
-              <span className="size-5 rounded-full bg-blue-400 border border-white" />
-              <span className="size-5 rounded-full bg-emerald-400 border border-white" />
+            <div className="flex -space-x-2">
+              {MINTER_FACES.map((src) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={src} src={src} alt="" className="size-6 rounded-full border-2 border-[#1b1430] object-cover" />
+              ))}
             </div>
             <span className="text-[11.5px] text-white/75">96 learners have minted theirs</span>
           </div>
@@ -447,6 +455,17 @@ export default function DashboardPage() {
       : earned === 0
         ? `You're in. Watch ${featured ? `“${featured.title}”` : 'the first session'} and pass its quiz to earn your first badge.`
         : `You've earned ${earned} of ${TOTAL_BADGES} badges. Each session and quiz brings you closer to your certificate.`;
+
+  const onboardingBlock = status.part1Done ? (
+    <div className="space-y-3 pt-3">
+      <h2 className="text-[11.5px] font-medium text-[#9a9cbd]">Your onboarding</h2>
+      <StartHere status={status} />
+    </div>
+  ) : null;
+  // one certificate card: the plain row while locked, the image card once it's unlocked (ready to mint, then minted)
+  const certificateBlock = unlocked
+    ? <ReadyToMint minted={cert?.status === 'minted'} />
+    : <CertificateRow unlocked={false} passed={modules.filter((m) => m.quiz.isPassed || m.quiz.isSkipped).length} total={modules.length} />;
 
   return (
     <div className="mx-auto max-w-5xl space-y-8">
@@ -537,11 +556,14 @@ export default function DashboardPage() {
           )}
         </div>
         <div className="space-y-4">
-          {featured && <FeaturedModule m={featured} part1Done={status.part1Done} onSchedule={setScheduling} />}
+          {/* once every session is done, onboarding Part 2 and the certificate lead; the finished sessions follow */}
+          {!unlocked && featured && <FeaturedModule m={featured} part1Done={status.part1Done} onSchedule={setScheduling} />}
+          {unlocked && onboardingBlock}
+          {unlocked && certificateBlock}
           <div className="space-y-3 pt-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-[11.5px] font-medium text-[#9a9cbd]">Upcoming sessions ({items.length})</h2>
-              <span className="text-[11.5px] text-[#9a9cbd]">Add them to your calendar now</span>
+              <h2 className="text-[11.5px] font-medium text-[#9a9cbd]">{unlocked ? `Your sessions (${items.length})` : `Upcoming sessions (${items.length})`}</h2>
+              <span className="text-[11.5px] text-[#9a9cbd]">{unlocked ? 'All done. Rewatch any time.' : 'Add them to your calendar now'}</span>
             </div>
             <div className="relative space-y-3">
               {items.slice(0, shown).map((it) => (it.kind === 'module' ? <SessionCard key={it.m.slug} m={it.m} onSchedule={setScheduling} /> : <EventCard key={it.e.id} e={it.e} />))}
@@ -564,14 +586,8 @@ export default function DashboardPage() {
               </div>
             )}
           </div>
-          {status.part1Done && (
-            <div className="space-y-3 pt-3">
-              <h2 className="text-[11.5px] font-medium text-[#9a9cbd]">Your onboarding</h2>
-              <StartHere status={status} />
-            </div>
-          )}
-          <CertificateRow unlocked={unlocked} passed={modules.filter((m) => m.quiz.isPassed || m.quiz.isSkipped).length} total={modules.length} />
-          {unlocked && cert?.status !== 'minted' && <ReadyToMint />}
+          {!unlocked && onboardingBlock}
+          {!unlocked && certificateBlock}
         </div>
       </section>
 

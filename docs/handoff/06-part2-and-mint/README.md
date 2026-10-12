@@ -13,3 +13,9 @@ Try it: Prototype panel → **"All sessions done — Part 2 open, ready to mint"
 - Pop-up steps: **Review** (certificate, badges N of 12, mints to 0x…, network Base, gas covered by Si Her DAO; Mint on Base / Not now) → **Confirm in your wallet** → **Minting on Base…** (3-step progress) → **Minted on Base** (token #, transaction, View your certificate / View on BaseScan ↗). Error state: "Couldn't mint your certificate" with Try again.
 - After minting, the certificate page shows the on-chain details and the dashboard "ready to mint" card disappears.
 - **Prototype only:** the wallet signature and transaction are simulated (`POST /certificate/mint`). Production: request a signature from the connected wallet, send the sponsored mint on Base, wait for the receipt, then show the token id and tx hash.
+
+## Round 2 (Oct 12)
+- **Dashboard order once every session is done:** "Your learning path" now leads with **Your onboarding** (Part 2 open) and the **certificate card**, then **Your sessions (N)** ("All done. Rewatch any time.") below. Before that, the order is unchanged (this week → sessions → onboarding → certificate).
+- **One certificate card:** the plain "Your certificate" row only shows while it's locked. Once unlocked it's the image card: "Ready to mint · Mint on Base", and after minting "Minted on Base · Your certificate is on Base · View certificate". The "96 learners have minted theirs" stack uses photos (prototype stand-ins from randomuser.me; production: real minters' avatars).
+- **Part 2 page:** a white welcome card ("Part 2 of 2 · Close out your cohort", "You made it, {first name}", your earned badges), then one card per question with no numbers, then "N of M answered · only the SI<3> team reads these" with **Finish Part 2**.
+- **Questions come from the CMS** (any number, written by Kara); each has `question`, optional `hint` / `placeholder`, and `required`. **No character limit.**

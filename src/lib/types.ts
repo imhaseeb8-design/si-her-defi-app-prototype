@@ -314,7 +314,8 @@ export interface CohortEvent {
 export interface Part2 {
   title: string;
   subtitle: string;
-  questions: { id: string; question: string; placeholder?: string; maxLength: number; required: boolean }[];
+  /** written by the SI<3> team in the CMS: any number, any order */
+  questions: { id: string; question: string; hint?: string; placeholder?: string; required: boolean }[];
   unlocked: boolean;
   progress: { answers: Record<string, string>; completedAt: string | null };
 }
