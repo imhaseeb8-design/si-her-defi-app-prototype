@@ -420,7 +420,7 @@ export default function DashboardPage() {
                 ))}
               </ul>
             ) : (
-              <p className="mt-3 text-[12.5px] leading-5 text-[#7e7e96]">Pass each week’s quiz to earn that partner’s badge for your certificate.</p>
+              <p className="mt-3 text-[12.5px] leading-5 text-[#7e7e96]">Pass each week’s quiz to earn that module’s badge for your certificate.</p>
             )}
           </div>
           {earned >= TOTAL_BADGES ? (
