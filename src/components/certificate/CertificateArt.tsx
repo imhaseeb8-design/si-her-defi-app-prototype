@@ -9,7 +9,7 @@ const TOTAL = 12;
 export const CertificateArt = forwardRef<HTMLDivElement, { cert: Certificate; preview: boolean; weekTitles: Record<number, string> }>(function CertificateArt({ cert, preview, weekTitles }, ref) {
   const c = cert.content;
   const byWeek = new Map(cert.badges.map((b) => [b.week, b]));
-  const issued = cert.issuedAt ? new Date(cert.issuedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : `After the Week ${cert.unlockModule?.week ?? 1} quiz`;
+  const issued = cert.issuedAt ? new Date(cert.issuedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'After the final quiz';
   const minted = cert.status === 'minted' && cert.onChain.explorerUrl;
   return (
     <div ref={ref} className="relative overflow-hidden rounded-3xl border border-[#ececf2] bg-white p-7 sm:p-10 shadow-md">
@@ -39,12 +39,12 @@ export const CertificateArt = forwardRef<HTMLDivElement, { cert: Certificate; pr
           {Array.from({ length: cert.totalBadges || TOTAL }, (_, i) => i + 1).map((w) => {
             const b = byWeek.get(w);
             return b ? (
-              <div key={w} className="relative size-[38px] sm:size-[46px] drop-shadow-xs" title={`Week ${w}: ${weekTitles[w] ?? b.moduleTitle ?? ''} — ${b.name}`}>
+              <div key={w} className="relative size-[38px] sm:size-[46px] drop-shadow-xs" title={`${weekTitles[w] ?? b.moduleTitle ?? ''} — ${b.name}`}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img alt={b.name} className="size-full object-contain" src={b.image} />
               </div>
             ) : (
-              <div key={w} className="relative grid size-[38px] sm:size-[46px] place-items-center" title={`Week ${w} — not earned yet`}>
+              <div key={w} className="relative grid size-[38px] sm:size-[46px] place-items-center" title={`${weekTitles[w] ?? 'Module'} — not earned yet`}>
                 <svg viewBox="0 0 100 115" className="absolute inset-0 size-full"><polygon points="50 3, 97 29, 97 86, 50 112, 3 86, 3 29" fill="none" stroke="#d8d8e5" strokeWidth="3" strokeDasharray="7 6" /></svg>
                 <span className="relative text-[10px] font-medium text-[#c4c4d4]">{String(w).padStart(2, '0')}</span>
               </div>

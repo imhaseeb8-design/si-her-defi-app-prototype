@@ -103,3 +103,7 @@ Figma: component set **Sidebar item** `1040:37` (Post-UX-Fixes, next to the Butt
 ## Browser tab
 - **Title:** "Si Her DeFi Certification" on every page (was "Si Her DeFi"). Set in `src/app/layout.tsx` metadata.
 - **Favicon:** the Si Her DeFi crystal (white line-art octahedron) on the brand gradient `#5E3295 → #B76FDE`, rounded tile (`favicon-preview.png`). Files: `public/icon.svg` (main), `public/icon-32.png` (fallback), `public/apple-icon.png` (180px, home-screen icon). Swap in the official Roamoji artwork here if it differs.
+
+## No week labels on modules
+- Modules are named by their title only; "Week 1" / "Week 01" labels are gone everywhere: the "This week" card tag ("Session recording"), "Next badge: Si Her Collective Capital", the welcome line ("Watch “Si Her Collective Capital” and pass its quiz…"), badge tooltips, the quiz tag ("Si Her Collective Capital quiz"), the badge dialog ("the Collective Capital Badge is yours"), the module page ("Earn this module's badge", "No badge for this module"), the certificate page ("Pass the … quiz to unlock it", "Go to …") and the certificate artwork.
+- The `week` field is still used for ordering.

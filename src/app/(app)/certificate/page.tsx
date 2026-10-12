@@ -88,8 +88,8 @@ export default function CertificatePage() {
             <div className={card}>
               <span className="text-[11px] font-medium text-[#7c2ae8]">Locked</span>
               <h3 className="text-[16px] font-medium text-[#171730]">Unlock your certificate</h3>
-              <p className="text-[12px] leading-relaxed text-[#5f5f7a]">Pass the Week {cert.unlockModule.week} quiz — {cert.unlockModule.title} — to unlock it.</p>
-              <ButtonLink href={`/module/${cert.unlockModule.slug}`}>Go to Week {cert.unlockModule.week}</ButtonLink>
+              <p className="text-[12px] leading-relaxed text-[#5f5f7a]">Pass the {cert.unlockModule.title} quiz to unlock it.</p>
+              <ButtonLink href={`/module/${cert.unlockModule.slug}`}>Go to {cert.unlockModule.title}</ButtonLink>
             </div>
           ) : (
             <div className={card}>
@@ -136,7 +136,6 @@ export default function CertificatePage() {
               <div className="space-y-3 divide-y divide-[#f0f0f5]">
                 {cert.stillOpen.map((s) => (
                   <div key={s.slug} className="pt-3 first:pt-0 space-y-1">
-                    <p className="text-[11px] font-medium text-[#8e8ea6]">Week {String(s.week).padStart(2, '0')}</p>
                     <h4 className="text-[13px] font-medium text-[#171730]">{s.title}</h4>
                     <Link className="inline-flex items-center gap-1 text-[11.5px] font-medium text-[#7c2ae8] link-cta" href={`/module/${s.slug}`}>Take the quiz <Arrow /></Link>
                   </div>

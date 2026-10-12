@@ -39,7 +39,7 @@ function BadgeSlots({ modules, badges }: { modules: Module[]; badges: Badges | n
         return (
           <li
             key={week}
-            title={`Week ${week}: ${m?.title ?? `Week ${week} module`} · ${got ? 'Earned' : week === next ? 'Next to earn' : 'Not earned yet'}`}
+            title={`${m?.title ?? 'Upcoming module'} · ${got ? 'Earned' : week === next ? 'Next to earn' : 'Not earned yet'}`}
             className={`h-2 flex-1 rounded-full transition-colors duration-300 ${got ? 'bg-gradient-to-r from-[#9b4dff] to-[#7c2ae8]' : week === next ? 'bg-[#e4d4ff]' : 'bg-[#f0f0f6]'}`}
           />
         );
@@ -161,7 +161,7 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
       <div className="absolute inset-0 bg-gradient-to-r from-[#131124]/85 via-[#1a142e]/50 to-[#1a142e]/5 pointer-events-none" />
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#131124]/60 to-transparent pointer-events-none sm:hidden" />
       <div className="relative z-10">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[11px] font-medium text-white">Week {String(m.week).padStart(2, '0')} · {m.videoUrl ? 'Session recording' : 'Recording after the live session'}</span>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 backdrop-blur-md px-2.5 py-0.5 text-[11px] font-medium text-white">{m.videoUrl ? 'Session recording' : 'Recording after the live session'}</span>
         <h3 className="mt-2 text-[20px] font-medium tracking-tight text-white">{m.title}</h3>
         <p className="mt-1.5 max-w-xl text-[12px] leading-relaxed text-white/80 line-clamp-2">{m.description}</p>
         <div className="mt-3">
@@ -421,7 +421,7 @@ export default function DashboardPage() {
     : unlocked
       ? 'You did it. Every session and quiz is done, and your certificate is ready to mint on Base.'
       : earned === 0
-        ? `You're in. Watch the Week ${String(featured?.week ?? 1).padStart(2, '0')} session and pass its quiz to earn your first badge.`
+        ? `You're in. Watch ${featured ? `“${featured.title}”` : 'the first session'} and pass its quiz to earn your first badge.`
         : `You've earned ${earned} of ${TOTAL_BADGES} badges. Each session and quiz brings you closer to your certificate.`;
 
   return (
@@ -472,7 +472,7 @@ export default function DashboardPage() {
             {earned > 0 ? (
               <ul className="mt-4 grid grid-cols-12 gap-1.5" aria-label="Your badges">
                 {badges!.badges.map((b) => (
-                  <li key={b.id} title={`Week ${b.week} · ${b.moduleTitle ?? b.name}`} className="max-w-10">
+                  <li key={b.id} title={b.moduleTitle ?? b.name} className="max-w-10">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={assetPath(b.image)} alt={b.name} className="aspect-[8/9] w-full object-contain drop-shadow-[0_2px_4px_rgba(94,50,149,0.25)]" />
                   </li>
@@ -490,7 +490,7 @@ export default function DashboardPage() {
           ) : nextBadge && (
             <p className="mt-4 flex items-center gap-2 border-t border-[#f0f0f6] pt-4 text-[12.5px] text-[#7e7e96]">
               <svg viewBox="0 0 16 16" aria-hidden="true" className="size-4 shrink-0 text-[#9b4dff]" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><path d="M8 1.5l5.6 3.25v6.5L8 14.5l-5.6-3.25v-6.5z" /></svg>
-              <span className="min-w-0 truncate">Next badge: <span className="font-medium text-[#151534]">Week {String(nextBadge.week).padStart(2, '0')} · {nextBadge.title}</span></span>
+              <span className="min-w-0 truncate">Next badge: <span className="font-medium text-[#151534]">{nextBadge.title}</span></span>
             </p>
           )}
         </section>
