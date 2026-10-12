@@ -104,3 +104,13 @@ Screenshot: `after-partners.jpg` (desktop 3-up, mobile stacked).
 - 3 columns on desktop, 2 on tablet, 1 on mobile. Logos are text wordmarks in the prototype; add a logo image field to the CMS for production.
 - **CTA update:** each partner action is now **Button · Primary** (full width, `ButtonLink external`). External button links show the arrow pointing up-right (`.btn-primary__icon--out`), everywhere they're used (`after-partners-cta.png`).
 - **Order and partners (Kara, Oct 12):** DeFi For Good Foundation · **Cashi** (replaces KAST; "Sign up", https://cashi.com/, "Send, receive and spend stablecoins worldwide, with a virtual card you can tap to pay anywhere.") · Tangem. The subtitle "Verified ecosystem partners · open in a new tab" next to the heading is removed. Cashi is marked Verified (no referral link) until we know otherwise.
+
+## Sessions with several speakers / companies
+Screenshots: `after-multi-speakers.png`, `after-multi-speakers-mobile.png`.
+- **Already supported by the data:** each module has a `speakers` array from the CMS (name, role, companyName, headshot, logo). The module page already lists every speaker; the dashboard used only the single `presenter` / `partnerName` fields.
+- **Now:** the session cards and the featured "This week" card read `speakers` (falling back to `presenter` when it's empty):
+  - one speaker: "Diana Ilieva · FinDaS Ltd"
+  - two: "Karin Kusano (CryptoMommi) & Kara Howard (SI<3>)"
+  - three or more: first two, then "+N more" (full list on hover and on the module page)
+- The line wraps to two lines on small screens instead of cutting off.
+- **For the LinkedIn Lives:** add each person as a speaker on the session in the CMS (with their company); nothing else is needed. Demo: "Si Her Trade" has two speakers in the prototype data.

@@ -165,7 +165,7 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
         <h3 className="mt-2 text-[20px] font-medium tracking-tight text-white">{m.title}</h3>
         <p className="mt-1.5 max-w-xl text-[12px] leading-relaxed text-white/80 line-clamp-2">{m.description}</p>
         <div className="mt-3">
-          <span className="text-[11px] text-white/75">Presented by {m.presenter}{m.partnerName ? ` · ${m.partnerName}` : ''}</span>
+          <span className="text-[11px] text-white/75">Presented by <Speakers m={m} tone="dark" /></span>
         </div>
       </div>
       <div className="relative z-10 mt-5 flex flex-wrap items-center justify-between gap-4 pt-2">
@@ -201,6 +201,27 @@ function FeaturedModule({ m, part1Done, onSchedule }: { m: Module; part1Done: bo
   );
 }
 
+/** Everyone presenting a session, from the CMS speakers list (falls back to the single presenter field).
+ *  One speaker: "Name · Company". Several: "Name (Company) & Name (Company)", "+N more" after two. */
+function speakerParts(m: Module): { name: string; company?: string }[] {
+  const list = (m.speakers ?? []).filter((x) => x?.name).map((x) => ({ name: x.name, company: x.companyName }));
+  return list.length ? list : [{ name: m.presenter, company: m.partnerName || undefined }];
+}
+function Speakers({ m, tone = 'light' }: { m: Module; tone?: 'light' | 'dark' }) {
+  const parts = speakerParts(m);
+  const nameCls = tone === 'dark' ? 'text-white/90' : 'text-[#45465f]';
+  if (parts.length === 1) return <>{<span className={nameCls}>{parts[0].name}</span>}{parts[0].company ? ` · ${parts[0].company}` : ''}</>;
+  const shown = parts.slice(0, 2);
+  return (
+    <>
+      {shown.map((x, i) => (
+        <span key={x.name}>{i > 0 && (i === shown.length - 1 && parts.length <= 2 ? ' & ' : ', ')}<span className={nameCls}>{x.name}</span>{x.company ? ` (${x.company})` : ''}</span>
+      ))}
+      {parts.length > 2 && ` +${parts.length - 2} more`}
+    </>
+  );
+}
+
 /** Session card: date tile, title, day + time, speaker · company, then Add to calendar (upcoming) or Open (quiz open / badge earned). */
 function SessionCard({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => void }) {
   const when = sessionWhen(m.scheduledDate, m.endDate);
@@ -215,7 +236,7 @@ function SessionCard({ m, onSchedule }: { m: Module; onSchedule: (m: Module) => 
         <div className="min-w-0">
           <h3 className="truncate text-[15px] font-medium text-[#151534]">{m.title}</h3>
           <p className="mt-1 text-[12.5px] text-[#5f5f7a]"><time dateTime={m.scheduledDate}>{when.weekday}, {when.month} {when.day} · {when.time}</time></p>
-          <p className="mt-1 truncate text-[12.5px] text-[#7e7e96]"><span className="text-[#45465f]">{m.presenter}</span>{m.partnerName ? ` · ${m.partnerName}` : ''}</p>
+          <p className="mt-1 line-clamp-2 text-[12.5px] leading-5 text-[#7e7e96]" title={speakerParts(m).map((x) => x.company ? `${x.name} (${x.company})` : x.name).join(', ')}><Speakers m={m} /></p>
         </div>
       </div>
       {m.sessionState === 'upcoming' ? (
