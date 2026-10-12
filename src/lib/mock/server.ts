@@ -9,6 +9,7 @@ import speakersFx from './fixtures/_modules_cms_speakers.json';
 import part1Fx from './fixtures/_onboard_part1.json';
 import statusFx from './fixtures/_onboard_status.json';
 import partnersFx from './fixtures/_partners.json';
+import eventsFx from './fixtures/_events.json';
 import settingsFx from './fixtures/_settings.json';
 import quiz1Fx from './fixtures/_quiz_si-her-collective-capital.json';
 import quiz2Fx from './fixtures/_quiz_test-live-session.json';
@@ -307,6 +308,8 @@ function route(s: DemoState, method: string, p: string, body: Record<string, unk
       return ok((speakersFx as { data: unknown }).data);
 
     // partners, badges, certificate, settings
+    case 'GET /events':
+      return ok((eventsFx as { data: unknown }).data);
     case 'GET /partners':
       return ok((partnersFx as { data: unknown }).data);
     case 'GET /partners/more-ways':

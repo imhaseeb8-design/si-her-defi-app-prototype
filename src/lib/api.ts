@@ -3,7 +3,7 @@
 // Set NEXT_PUBLIC_API_BASE (e.g. https://certifications-server.vercel.app/api/v1) to use a real backend.
 import { handle } from './mock/server';
 import type {
-  Badges, Certificate, Me, Module, OnboardStatus, Part1, Part1Progress, Partner, Prefill, Profile, Quiz, QuizAnswer,
+  Badges, Certificate, CohortEvent, Me, Module, OnboardStatus, Part1, Part1Progress, Partner, Prefill, Profile, Quiz, QuizAnswer,
   Settings, Speaker, WalletStatus,
 } from './types';
 
@@ -133,6 +133,8 @@ export const settingsApi = {
   getSettings: () => request<Settings>('/settings'),
   updateSettings: (s: Partial<Settings>) => request<Settings>('/settings', { method: 'PATCH', body: s }),
 };
+export const eventsApi = { getAll: () => request<CohortEvent[]>('/events') };
+
 export const partnerApi = {
   getPartners: () => request<Partner[]>('/partners'),
   getMoreWays: () => request<unknown>('/partners/more-ways'),

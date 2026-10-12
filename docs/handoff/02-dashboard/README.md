@@ -114,3 +114,11 @@ Screenshots: `after-multi-speakers.png`, `after-multi-speakers-mobile.png`.
   - three or more: first two, then "+N more" (full list on hover and on the module page)
 - The line wraps to two lines on small screens instead of cutting off.
 - **For the LinkedIn Lives:** add each person as a speaker on the session in the CMS (with their company); nothing else is needed. Demo: "Si Her Trade" has two speakers in the prototype data.
+
+## LinkedIn Lives in the sessions list
+Screenshot: `after-linkedin-lives.png`.
+- Two LinkedIn Lives from si3.space/siher are in the "Upcoming sessions" list, sorted by date with the modules: **Proof of Adoption** (Wed Nov 18 · "Driving Real-World Value for Crypto's Next Billion Users" · DeFi For Good) and **The Capital Table** (Wed Dec 9 · "DeFi's Next Chapter").
+- Same card as a session plus a blue **LinkedIn Live** tag. Instead of "Add to calendar" the CTA is **Join on LinkedIn ↗** (Primary md, opens in a new tab). No quiz or badge.
+- Time shows "Time to be announced" until it's set.
+- **Data:** a new `CohortEvent` type and `GET /events` (prototype: `src/lib/mock/fixtures/_events.json`): `kind: 'linkedin-live'`, title, subtitle, date, optional endDate / timeTba, partnerName, speakers, link.
+- **Needed from SI<3>:** the start times and the two LinkedIn event links. Until then "Join on LinkedIn" opens the SI<3> LinkedIn page (`linkIsPlaceholder: true`).

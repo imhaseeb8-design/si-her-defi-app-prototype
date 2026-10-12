@@ -292,3 +292,20 @@ export interface Partner {
   actionUrl: string;
   footerText: string;
 }
+
+/** A cohort event that isn't a module (no quiz, no badge), e.g. a LinkedIn Live. Shown in the sessions list by date. */
+export interface CohortEvent {
+  id: string;
+  kind: 'linkedin-live' | string;
+  title: string;
+  subtitle?: string;
+  /** start time; the date is what's shown while `timeTba` is true */
+  date: string;
+  endDate?: string;
+  timeTba?: boolean;
+  partnerName?: string;
+  speakers?: Speaker[];
+  /** where "Join on LinkedIn" goes (the LinkedIn event page) */
+  link: string;
+  linkIsPlaceholder?: boolean;
+}
