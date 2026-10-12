@@ -73,7 +73,7 @@ function ProfileForm({ profile, onSaved }: { profile: Profile | null; onSaved: (
             <button type="button" onClick={() => file.current?.click()} className="rounded-lg bg-[#f2e8ff] px-3 py-1 text-[12px] font-medium text-[#7c2ae8] transition-colors hover:bg-[#ead5ff] cursor-pointer">{photo ? 'Replace photo' : 'Upload a photo'}</button>
             {photo && <button type="button" onClick={() => { setPhoto(''); setSaved(false); }} className="rounded-lg px-2 py-1 text-[12px] text-[#8e8ea6] transition-colors hover:text-[#5f5f7a] cursor-pointer">Remove</button>}
           </div>
-          <p className="text-[11px] text-[#8e8ea6]">JPG, PNG or WebP · up to 5 MB · shown on your certificate</p>
+          <p className="text-[11px] text-[#8e8ea6]">JPG, PNG or WebP · up to 5 MB</p>
         </div>
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -141,7 +141,7 @@ export default function SettingsPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h2 className="text-[16px] font-medium text-[#171730]">Profile information</h2>
-            <p className="text-[12px] text-[#8e8ea6]">This is how your credentials appear on your on-chain certificate.</p>
+            <p className="text-[12px] text-[#8e8ea6]">Your name appears on your certificate. Members see your photo, role and bio on your profile.</p>
           </div>
           <span className="self-start rounded-full bg-[#f6f6fa] px-2.5 py-1 text-[11.5px] text-[#5f5f7a]">Cohort 01 · Si Her DeFi</span>
         </div>

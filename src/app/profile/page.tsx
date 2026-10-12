@@ -114,7 +114,7 @@ function ProfileForm({ email }: { email: string }) {
                   </div>
                   <div>
                     <button type="button" onClick={() => file.current?.click()} className="rounded-lg bg-[#f2e8ff] px-3.5 py-1 text-[12.5px] font-medium text-[#7c2ae8] transition-colors hover:bg-[#ead5ff] cursor-pointer">Upload a photo</button>
-                    <p className="mt-1 text-[11px] text-[#8e8ea6]">JPG, PNG or WebP · up to 5 MB · shown on your certificate</p>
+                    <p className="mt-1 text-[11px] text-[#8e8ea6]">JPG, PNG or WebP · up to 5 MB</p>
                   </div>
                 </>
               )}

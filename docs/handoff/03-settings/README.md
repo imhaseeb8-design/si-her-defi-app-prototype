@@ -12,3 +12,9 @@ Screenshot: `after-profile-edit.jpg` (loaded, edited, saved, mobile).
 
 ## Preferences
 - **Email notifications** and **On-chain verification privacy** are both **on by default** for new accounts.
+
+## Profile photo is not on the certificate
+- Checked: the certificate (live app and prototype, all states) shows the member's **name**, badges and on-chain details, never the profile photo. The photo is only for the profile.
+- Copy fixed to match:
+  - Settings → Profile information subtitle: "Your name appears on your certificate. Members see your photo, role and bio on your profile." (was "This is how your credentials appear on your on-chain certificate.")
+  - Photo upload hint (Settings and onboarding profile): "JPG, PNG or WebP · up to 5 MB" (dropped "· shown on your certificate").
