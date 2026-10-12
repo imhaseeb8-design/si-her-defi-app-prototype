@@ -302,7 +302,7 @@ function ReadyToMint() {
 const PARTNER_MARK: Record<string, React.ReactNode> = {
   'partner-defi-for-good-foundation': <span className="text-[15px] font-medium tracking-[-0.02em]"><span className="text-[#1d6fe0]">DeFi</span> <span className="text-[12px] text-[#22a06b]">for Good</span></span>,
   'partner-tangem': <span className="flex items-center gap-1.5 text-[15px] font-medium tracking-[-0.02em] text-[#111]"><span className="grid h-3.5 w-3.5 grid-rows-[1fr_2fr] gap-[2px]" aria-hidden="true"><span className="bg-[#111]" /><span className="mx-auto w-1.5 bg-[#111]" /></span>tangem</span>,
-  'partner-kast': <span className="rounded bg-[#111] px-2 py-0.5 text-[13px] font-medium tracking-[0.02em] text-white">KAST</span>,
+  'partner-cashi': <span className="rounded-full bg-[#ff4f1f] px-2.5 py-0.5 text-[13px] font-medium tracking-[-0.01em] text-white">cashi</span>,
 };
 const domain = (url: string) => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return url; } };
 
@@ -496,7 +496,6 @@ export default function DashboardPage() {
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className={sectionTitle}>From our partners</h2>
-            <span className="text-[12.5px] text-[#8e8ea6]">Verified ecosystem partners · open in a new tab</span>
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">{partners.map((p) => <PartnerCard key={p.id} p={p} />)}</div>
           {partners.some((p) => /referral/i.test(p.footerText)) && <p className="text-[11.5px] text-[#9a9cbd]">Si Her DAO may earn a referral fee from links marked “Referral link”.</p>}

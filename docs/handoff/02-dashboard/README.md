@@ -103,3 +103,4 @@ Screenshot: `after-partners.jpg` (desktop 3-up, mobile stacked).
 - One line under the grid explains referral links: "Si Her DAO may earn a referral fee from links marked 'Referral link'."
 - 3 columns on desktop, 2 on tablet, 1 on mobile. Logos are text wordmarks in the prototype; add a logo image field to the CMS for production.
 - **CTA update:** each partner action is now **Button · Primary** (full width, `ButtonLink external`). External button links show the arrow pointing up-right (`.btn-primary__icon--out`), everywhere they're used (`after-partners-cta.png`).
+- **Order and partners (Kara, Oct 12):** DeFi For Good Foundation · **Cashi** (replaces KAST; "Sign up", https://cashi.com/, "Send, receive and spend stablecoins worldwide, with a virtual card you can tap to pay anywhere.") · Tangem. The subtitle "Verified ecosystem partners · open in a new tab" next to the heading is removed. Cashi is marked Verified (no referral link) until we know otherwise.
