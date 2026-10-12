@@ -99,3 +99,7 @@ Figma: component set **Sidebar item** `1040:37` (Post-UX-Fixes, next to the Butt
 
 ## Tick icon
 - Every check mark uses the Figma tick (`check` `1045:1441`): `<Check />` in `src/components/ui/Check.tsx` (24px viewBox, takes the text colour, size via class). No more "✓" text characters or other tick SVGs: quiz answers and score, onboarding steps and follows, "Added to calendar", "Link copied", "Copied", the verified credential, the email chip, the wallet-connected icon, the completion modal.
+
+## Browser tab
+- **Title:** "Si Her DeFi Certification" on every page (was "Si Her DeFi"). Set in `src/app/layout.tsx` metadata.
+- **Favicon:** the Si Her DeFi crystal (white line-art octahedron) on the brand gradient `#5E3295 → #B76FDE`, rounded tile (`favicon-preview.png`). Files: `public/icon.svg` (main), `public/icon-32.png` (fallback), `public/apple-icon.png` (180px, home-screen icon). Swap in the official Roamoji artwork here if it differs.
