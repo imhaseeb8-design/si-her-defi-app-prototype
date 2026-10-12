@@ -87,8 +87,8 @@ function ProfileCard({ profile }: { profile: Profile }) {
 }
 
 // Onboarding Part 2 copy (prototype: the CMS has no Part 2 content yet).
-const PART2_TITLE = 'Onboarding Part 2';
-const PART2_LOCKED = 'Opens later in the cohort. We’ll let you know when it’s ready.';
+const PART2_TITLE = 'Close out your cohort';
+const PART2_LOCKED = 'Opens once you’ve finished every session and its quiz.';
 
 function StartHere({ status }: { status: OnboardStatus }) {
   const card = status.part1Card;
@@ -117,7 +117,30 @@ function StartHere({ status }: { status: OnboardStatus }) {
             </div>
             <Link href="/onboard" className="link-cta shrink-0 text-[12.5px] font-medium text-[#7c2ae8]">Review</Link>
           </li>
-          <li className="flex items-center gap-4 p-4 sm:px-5" aria-disabled={!status.part2Unlocked}>
+          {status.part2Done ? (
+            <li className="flex items-center gap-4 p-4 sm:px-5">
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#ecfdf3] text-[#16a34a]"><Check className="size-5" /></span>
+              <div className="min-w-0 flex-1">
+                <p className="text-[12px] text-[#16a34a]">Part 2 · Done</p>
+                <h3 className="mt-0.5 text-[15px] font-medium text-[#151534]">{PART2_TITLE}</h3>
+                <p className="mt-0.5 text-[12.5px] leading-5 text-[#5f5f7a]">Thank you for closing out the cohort.</p>
+              </div>
+              <Link href="/onboard/part-2" className="link-cta shrink-0 text-[12.5px] font-medium text-[#7c2ae8]">Review</Link>
+            </li>
+          ) : status.part2Unlocked ? (
+            <li className="flex flex-col gap-4 bg-[#fbf9ff] p-4 sm:flex-row sm:items-center sm:px-5">
+              <div className="flex min-w-0 flex-1 items-center gap-4">
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#f4effe] text-[13px] font-medium text-[#7c2ae8]">2</span>
+                <div className="min-w-0">
+                  <p className="text-[12px] text-[#7c2ae8]">Part 2 · Open now</p>
+                  <h3 className="mt-0.5 text-[15px] font-medium text-[#151534]">{PART2_TITLE}</h3>
+                  <p className="mt-0.5 text-[12.5px] leading-5 text-[#5f5f7a]">You’ve finished every session. Close out the cohort in about 5 minutes.</p>
+                </div>
+              </div>
+              <ButtonLink href="/onboard/part-2" size="md" className="shrink-0 max-sm:w-full">Start Part 2</ButtonLink>
+            </li>
+          ) : (
+            <li className="flex items-center gap-4 p-4 sm:px-5" aria-disabled={!status.part2Unlocked}>
             <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-[#ece8f4] bg-[#fbfaff] text-[#a894c8]">{lock}</span>
             <div className="min-w-0 flex-1">
               <p className="text-[12px] text-[#a894c8]">Part 2</p>
@@ -126,6 +149,7 @@ function StartHere({ status }: { status: OnboardStatus }) {
             </div>
             <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#f1ecf8] px-2.5 py-1 text-[11.5px] font-medium text-[#8a6fb8]">{lock}Locked</span>
           </li>
+          )}
         </ol>
       </div>
     );
@@ -334,7 +358,7 @@ function ReadyToMint() {
         <h2 className="text-[24px] sm:text-[28px] font-medium tracking-tight text-white leading-tight">Your certificate is ready</h2>
         <p className="text-[12.5px] leading-relaxed text-white/80">Twelve modules, thirteen badges, one verifiable record on Base. Minting writes it to your wallet — it’s yours, not ours.</p>
         <div className="pt-2 flex flex-wrap items-center gap-4">
-          <ButtonLink href="/certificate" variant="white" size="md">Mint on Base</ButtonLink>
+          <ButtonLink href="/certificate?mint=1" variant="white" size="md">Mint on Base</ButtonLink>
           <div className="flex items-center gap-2">
             <div className="flex -space-x-1.5">
               <span className="size-5 rounded-full bg-purple-400 border border-white" />

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { CertificateArt } from '@/components/certificate/CertificateArt';
+import { MintDialog } from '@/components/certificate/MintDialog';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { Spinner } from '@/components/onboarding/OnboardingShell';
 import { assetPath, certificateApi, modulesApi } from '@/lib/api';
@@ -20,6 +21,9 @@ export default function CertificatePage() {
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [minting, setMinting] = useState(false);
+  // ?mint=1 (from the dashboard or Part 2) opens the mint flow straight away
+  useEffect(() => { if (cert && cert.status === 'earned' && cert.walletAddress && new URLSearchParams(window.location.search).get('mint') === '1') setMinting(true); }, [cert]);
   const art = useRef<HTMLDivElement>(null);
 
   const load = () => {
@@ -119,13 +123,13 @@ export default function CertificatePage() {
               </>
             ) : (
               <>
-                <h3 className="text-[15px] font-medium text-[#171730]">Minting opens soon</h3>
-                <p className="text-[12px] leading-relaxed text-[#5f5f7a]">Your certificate will be written to Base as a soulbound token in your wallet — permanent, and gas is covered by Si Her DAO. We’ll let you know when minting opens.</p>
+                <h3 className="text-[15px] font-medium text-[#171730]">{locked ? 'Mint once it’s unlocked' : 'Mint your certificate'}</h3>
+                <p className="text-[12px] leading-relaxed text-[#5f5f7a]">Your certificate is written to Base as a soulbound token in your wallet: permanent, and gas is covered by Si Her DAO.</p>
                 <div className="flex items-center justify-between rounded-xl border border-[#ececf2] bg-[#f9fafc] px-3 py-2 text-[11px]">
                   <span className="text-[#8e8ea6] font-medium text-[11px]">Mints to</span>
                   {cert.walletAddress ? <span className="tabular-nums text-[#171730]">{shortAddress(cert.walletAddress)}</span> : <Link href="/wallet" className="font-medium text-[#7c2ae8] link-cta">Connect a wallet</Link>}
                 </div>
-                <Button disabled showIcon={false}>Mint on Base — coming soon</Button>
+                <Button disabled={locked || !cert.walletAddress} showIcon={false} onClick={() => setMinting(true)}>Mint on Base</Button>
               </>
             )}
           </div>
@@ -145,6 +149,7 @@ export default function CertificatePage() {
           )}
         </div>
       </div>
+      {minting && <MintDialog cert={cert} onClose={() => setMinting(false)} onMinted={(c) => setCert(c)} />}
     </div>
   );
 }

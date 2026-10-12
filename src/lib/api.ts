@@ -3,7 +3,7 @@
 // Set NEXT_PUBLIC_API_BASE (e.g. https://certifications-server.vercel.app/api/v1) to use a real backend.
 import { handle } from './mock/server';
 import type {
-  Badges, Certificate, CohortEvent, Me, Module, OnboardStatus, Part1, Part1Progress, Partner, Prefill, Profile, Quiz, QuizAnswer,
+  Badges, Certificate, CohortEvent, Me, Module, OnboardStatus, Part1, Part1Progress, Part2, Partner, Prefill, Profile, Quiz, QuizAnswer,
   Settings, Speaker, WalletStatus,
 } from './types';
 
@@ -105,6 +105,8 @@ export const onboardApi = {
   getPart1: () => request<Part1>('/onboard/part1'),
   saveDraft: (p: Partial<Part1Progress>) => request('/onboard/part1/draft', { method: 'PUT', body: p }),
   submitPart1: (p: Partial<Part1Progress>) => request('/onboard/part1', { method: 'POST', body: p }),
+  getPart2: () => request<Part2>('/onboard/part2'),
+  submitPart2: (answers: Record<string, string>) => request('/onboard/part2', { method: 'POST', body: { answers } }),
 };
 
 export const modulesApi = {
@@ -128,6 +130,8 @@ export const badgeApi = { getBadges: () => request<Badges>('/badges') };
 export const certificateApi = {
   getCertificate: () => request<Certificate>('/certificate'),
   verifyPublic: (code: string) => request<Certificate>(`/certificate/verify/${encodeURIComponent(code)}`),
+  /** soulbound mint on Base to the connected wallet (gas covered by Si Her DAO) */
+  mint: () => request<Certificate>('/certificate/mint', { method: 'POST' }),
 };
 export const settingsApi = {
   getSettings: () => request<Settings>('/settings'),

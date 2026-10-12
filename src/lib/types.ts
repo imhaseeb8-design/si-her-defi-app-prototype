@@ -309,3 +309,12 @@ export interface CohortEvent {
   link: string;
   linkIsPlaceholder?: boolean;
 }
+
+/** Onboarding Part 2: a short close-out reflection, opens once every session and quiz is done. */
+export interface Part2 {
+  title: string;
+  subtitle: string;
+  questions: { id: string; question: string; placeholder?: string; maxLength: number; required: boolean }[];
+  unlocked: boolean;
+  progress: { answers: Record<string, string>; completedAt: string | null };
+}

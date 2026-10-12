@@ -16,7 +16,7 @@ const PRESETS: { id: Preset; label: string; to: string }[] = [
   { id: 'part1-done', label: 'Part 1 done — first module open', to: '/dashboard' },
   { id: 'badge', label: 'First badge earned', to: '/dashboard' },
   { id: 'badges-some', label: '4 badges earned', to: '/dashboard' },
-  { id: 'badges-all', label: 'All 12 badges earned', to: '/dashboard' },
+  { id: 'badges-all', label: 'All sessions done — Part 2 open, ready to mint', to: '/dashboard' },
   { id: 'minted', label: 'Certificate minted', to: '/certificate' },
 ];
 

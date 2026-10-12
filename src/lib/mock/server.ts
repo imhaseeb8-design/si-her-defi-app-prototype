@@ -40,6 +40,8 @@ export interface DemoState {
   minted: boolean;
   /** demo only: also award the 5 weeks that have no module in the fixtures, to test a full set of 12 */
   allBadges?: boolean;
+  /** Onboarding Part 2 (opens once every session and quiz is done) */
+  part2?: { answers: Record<string, string>; completedAt: string | null };
   settings: Settings;
   flags: {
     emailNotFound: boolean;
@@ -151,6 +153,16 @@ export function applyPreset(p: Preset) {
     }
   }
 }
+
+const PART2_CONTENT = {
+  title: 'Close out your cohort',
+  subtitle: 'Look back on what you learned and tell us where you’re heading next. About 5 minutes, and there are no wrong answers.',
+  questions: [
+    { id: 'part2-q-1', question: 'What’s the most useful thing you learned in Si Her DeFi?', placeholder: 'A concept, a tool, a conversation…', maxLength: 500, required: true },
+    { id: 'part2-q-2', question: 'What will you do next with what you learned?', placeholder: 'A project, a role, a habit, or a next course.', maxLength: 500, required: true },
+    { id: 'part2-q-3', question: 'Anything we should change for the next cohort?', placeholder: 'Optional. Honest feedback helps.', maxLength: 500, required: false },
+  ],
+};
 
 // ---------------------------------------------------------------- derived data
 
@@ -290,8 +302,24 @@ function route(s: DemoState, method: string, p: string, body: Record<string, unk
     // onboarding part 1
     case 'GET /onboard/status': {
       const st = (statusFx as { data: OnboardStatus }).data;
-      return ok({ ...st, part1Done: s.progress.status === 'completed', part1Status: s.progress.status, part1CompletedAt: s.progress.completedAt });
+      return ok({
+        ...st, part1Done: s.progress.status === 'completed', part1Status: s.progress.status, part1CompletedAt: s.progress.completedAt,
+        part2Unlocked: s.progress.status === 'completed' && allPassed(s), part2Done: !!s.part2?.completedAt, part2CompletedAt: s.part2?.completedAt ?? null,
+      });
     }
+    // onboarding part 2 (prototype content; the CMS has none yet)
+    case 'GET /onboard/part2':
+      return ok({ ...PART2_CONTENT, unlocked: s.progress.status === 'completed' && allPassed(s), progress: s.part2 ?? { answers: {}, completedAt: null } });
+    case 'POST /onboard/part2':
+      if (!(s.progress.status === 'completed' && allPassed(s))) return fail(409, 'Part 2 opens once every session and quiz is done.');
+      s.part2 = { answers: (body.answers as Record<string, string>) ?? {}, completedAt: now().toISOString() };
+      return ok({ progress: s.part2 });
+    // certificate minting (simulated: a real mint is a signature in the wallet + a Base transaction)
+    case 'POST /certificate/mint':
+      if (!allPassed(s)) return fail(409, 'Your certificate unlocks once every session and quiz is done.');
+      if (!s.user.walletAddress) return fail(409, 'Connect a wallet to mint your certificate.');
+      s.minted = true;
+      return ok(certificate(s));
     case 'GET /onboard/part1':
       return ok({ ...(part1Fx as { data: Part1 }).data, progress: s.progress });
     case 'PUT /onboard/part1/draft':
