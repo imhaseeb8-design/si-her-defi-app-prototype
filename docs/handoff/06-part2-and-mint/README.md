@@ -19,3 +19,12 @@ Try it: Prototype panel → **"All sessions done — Part 2 open, ready to mint"
 - **One certificate card:** the plain "Your certificate" row only shows while it's locked. Once unlocked it's the image card: "Ready to mint · Mint on Base", and after minting "Minted on Base · Your certificate is on Base · View certificate". The "96 learners have minted theirs" stack uses photos (prototype stand-ins from randomuser.me; production: real minters' avatars).
 - **Part 2 page:** a white welcome card ("Part 2 of 2 · Close out your cohort", "You made it, {first name}", your earned badges), then one card per question with no numbers, then "N of M answered · only the SI<3> team reads these" with **Finish Part 2**.
 - **Questions come from the CMS** (any number, written by Kara); each has `question`, optional `hint` / `placeholder`, and `required`. **No character limit.**
+
+## Round 3 (Oct 12): certificate design, Part 2 done screen, confetti
+- **Certificate artwork = Haseeb's design "1a — Certificate · Light"** (2000×2000). `public/v2/certificate-base.svg` is that file with the name, the 12 placeholder badges and the on-chain values removed; `CertificateArt` draws them on top, positioned in the design's 2000-unit grid and sized with container units, so it scales and downloads correctly:
+  - **Name:** the member's name (shrinks for long names so it stays on one line).
+  - **Badges:** the badge art for each module passed, in the design's 7 + 5 slots; a dashed empty hexagon until earned.
+  - **Box:** Contract (short address once minted, "At mint" before), Token ID (#0042 once minted, "—" before), Network ● BASE, Verify si3.space/verify.
+  - The description line ("has completed the 10-week …") and the issuer/presenter logos come straight from the design file.
+- **Part 2 done screen** (`g1-done-confetti.png`): "You did it, Ada." with the green check, the live certificate on the left, and a "Mint your certificate" card on the right (Onboarding · 2 of 2 complete, badges 12 of 12, network Base, **Mint your certificate**, Back to dashboard). A confetti shower plays when you finish.
+- **Confetti** (`components/ui/Confetti.tsx`): ~90 small pieces in the brand colours fall for about 4 seconds, then remove themselves; plays when Part 2 is finished and when the mint succeeds (`g3-minted-confetti.png`). Hidden for people who turn on reduced motion.

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { CertificateArt } from '@/components/certificate/CertificateArt';
 import { MintDialog } from '@/components/certificate/MintDialog';
+import { Confetti } from '@/components/ui/Confetti';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { Spinner } from '@/components/onboarding/OnboardingShell';
 import { assetPath, certificateApi, modulesApi } from '@/lib/api';
@@ -22,6 +23,7 @@ export default function CertificatePage() {
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [minting, setMinting] = useState(false);
+  const [celebrate, setCelebrate] = useState(0);
   // ?mint=1 (from the dashboard or Part 2) opens the mint flow straight away
   useEffect(() => { if (cert && cert.status === 'earned' && cert.walletAddress && new URLSearchParams(window.location.search).get('mint') === '1') setMinting(true); }, [cert]);
   const art = useRef<HTMLDivElement>(null);
@@ -149,7 +151,8 @@ export default function CertificatePage() {
           )}
         </div>
       </div>
-      {minting && <MintDialog cert={cert} onClose={() => setMinting(false)} onMinted={(c) => setCert(c)} />}
+      {minting && <MintDialog cert={cert} onClose={() => setMinting(false)} onMinted={(c) => { setCert(c); setCelebrate((n) => n + 1); }} />}
+      {celebrate > 0 && <Confetti key={celebrate} />}
     </div>
   );
 }

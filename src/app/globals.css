@@ -480,3 +480,11 @@ a.btn-primary { text-decoration: none; }
 
 /* external ButtonLink: the arrow points up-right (individual `rotate` so hover transforms still apply) */
 .btn-primary__icon--out { rotate: -45deg; }
+
+/* ── Confetti (components/ui/Confetti) ── */
+@keyframes confetti-fall {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translate3d(var(--drift), 105vh, 0) rotate(var(--spin)); opacity: 0; }
+}
+.confetti-bit { animation-name: confetti-fall; animation-timing-function: cubic-bezier(0.25, 0.6, 0.4, 1); animation-fill-mode: both; }
