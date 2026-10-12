@@ -23,8 +23,14 @@ Try it: Prototype panel → **"All sessions done — Part 2 open, ready to mint"
 ## Round 3 (Oct 12): certificate design, Part 2 done screen, confetti
 - **Certificate artwork = Haseeb's design "1a — Certificate · Light"** (2000×2000). `public/v2/certificate-base.svg` is that file with the name, the 12 placeholder badges and the on-chain values removed; `CertificateArt` draws them on top, positioned in the design's 2000-unit grid and sized with container units, so it scales and downloads correctly:
   - **Name:** the member's name (shrinks for long names so it stays on one line).
-  - **Badges:** the badge art for each module passed, in the design's 7 + 5 slots; a dashed empty hexagon until earned.
+  - **Badges:** only earned badge art, sorted by module week. Each occupied row is centered, with up to seven on the first row and five on the second. Missed quizzes leave no placeholder or gap.
   - **Box:** Contract (short address once minted, "At mint" before), Token ID (#0042 once minted, "—" before), Network ● BASE, Verify si3.space/verify.
   - The description line ("has completed the 10-week …") and the issuer/presenter logos come straight from the design file.
 - **Part 2 done screen** (`g1-done-confetti.png`): "You did it, Ada." with the green check, the live certificate on the left, and a "Mint your certificate" card on the right (Onboarding · 2 of 2 complete, badges 12 of 12, network Base, **Mint your certificate**, Back to dashboard). A confetti shower plays when you finish.
 - **Confetti** (`components/ui/Confetti.tsx`): ~90 small pieces in the brand colours fall for about 4 seconds, then remove themselves; plays when Part 2 is finished and when the mint succeeds (`g3-minted-confetti.png`). Hidden for people who turn on reduced motion.
+
+## Round 4 (Oct 12): earned badges only
+- The certificate no longer shows empty hexagons for quizzes the member did not pass. Badge order follows module week, and the occupied row is centered for any earned count. See [before](before-badge-gaps.png) and [after](after-earned-badges.png).
+
+## Round 5 (Oct 12): minted certificate on the dashboard
+- After minting, a card with the live certificate artwork appears directly under the dashboard greeting and above the profile and badges. It shows the earned badge count, token ID, and Base network, with only **View certificate** and **View on BaseScan** actions. The lower minted banner is removed so the certificate appears once. The ready-to-mint banner stays in the learning path before minting. See [before](f9-dashboard-done.png) and [after](after-minted-dashboard-top.png).

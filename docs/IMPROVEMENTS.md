@@ -21,6 +21,8 @@ Status key: **open** = not designed yet · **designed** = shown in Figma · **bu
 | 13 | Times | **Module labels say "12:00–1:00 PM ET" while the stored start time is 12:00 UTC** for Week 2, so "Live …" times disagree with the label. | Wrong times for a live session. | open (data) |
 | 15 | `/verified` | **An extra "Email verified" screen between the code and the profile** — one more click before anything happens. | Slows the first-run flow. | **built** — removed; the code goes straight to Create your profile |
 | 14 | Sidebar wallet chip | Can show **"Not connected / Connect"** on module and certificate pages while the dashboard shows the wallet as linked. | Needs checking with a real session. | to verify |
+| 16 | Certificate artwork | **Unearned badge positions show empty hexagons and split earned badges apart.** | Members can earn different badge counts; the certificate should show only their earned badges in module order. | **built** — compact, centered rows ([before](handoff/06-part2-and-mint/before-badge-gaps.png) / [after](handoff/06-part2-and-mint/after-earned-badges.png)) |
+| 17 | Dashboard after mint | **The minted certificate sits below the profile and badges as a generic banner.** | The completed credential should be visible near the top with a clear path to view or verify it. | **built** — certificate preview and two actions above the profile ([before](handoff/06-part2-and-mint/f9-dashboard-done.png) / [after](handoff/06-part2-and-mint/after-minted-dashboard-top.png)) |
 
 Phase 2 plan: line each item up with the Figma frames, design the fix, build it behind the same screens here, then mark it **built** with a before/after screenshot.
 

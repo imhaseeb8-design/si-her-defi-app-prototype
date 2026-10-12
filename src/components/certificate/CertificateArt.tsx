@@ -9,18 +9,19 @@ import { assetPath } from '@/lib/api';
 import { shortAddress } from '@/lib/format';
 import type { Certificate } from '@/lib/types';
 
-const TOTAL = 12;
 const pct = (n: number) => `${(n / 2000) * 100}%`;
 const cq = (n: number) => `${(n / 2000) * 100}cqw`;
-// badge slots from the design: 7 on the first row, 5 centred under them
-const SLOTS = [
-  ...[355, 545, 735, 925, 1115, 1305, 1495].map((x) => ({ x, y: 1104 })),
-  ...[545, 735, 925, 1115, 1305].map((x) => ({ x, y: 1298 })),
-];
+const badgePosition = (index: number, count: number) => {
+  const firstRow = Math.min(count, 7);
+  const row = index < firstRow ? 0 : 1;
+  const rowCount = row === 0 ? firstRow : count - firstRow;
+  const column = row === 0 ? index : index - firstRow;
+  // Preserve the design's 190-unit spacing, centering each occupied row.
+  return { x: 1000 - (rowCount * 150 + (rowCount - 1) * 40) / 2 + column * 190, y: row === 0 ? 1104 : 1298 };
+};
 
 export const CertificateArt = forwardRef<HTMLDivElement, { cert: Certificate; preview: boolean; weekTitles: Record<number, string> }>(function CertificateArt({ cert, preview, weekTitles }, ref) {
-  const byWeek = new Map(cert.badges.map((b) => [b.week, b]));
-  const weeks = Array.from({ length: Math.max(TOTAL, cert.totalBadges || 0) }, (_, i) => i + 1).slice(0, SLOTS.length);
+  const earnedBadges = [...cert.badges].sort((a, b) => a.week - b.week).slice(0, 12);
   const name = cert.recipientName || 'Your name';
   // shrink long names so they stay on one line inside the 1250-unit text column
   const nameSize = Math.min(140, 1250 / Math.max(1, name.length * 0.56));
@@ -41,21 +42,14 @@ export const CertificateArt = forwardRef<HTMLDivElement, { cert: Certificate; pr
         {/* name */}
         <p className="absolute inset-x-0 text-center font-medium leading-none tracking-[-0.025em] text-[#14122B] whitespace-nowrap" style={{ top: pct(378), fontSize: cq(nameSize) }}>{name}</p>
 
-        {/* badges: the module's badge art once passed, an empty slot until then */}
-        {weeks.map((w, i) => {
-          const s = SLOTS[i];
-          const b = byWeek.get(w);
+        {/* Only earned badges, in module order, with each occupied row centered. */}
+        {earnedBadges.map((b, i) => {
+          const s = badgePosition(i, earnedBadges.length);
           return (
-            <div key={w} className="absolute grid place-items-center" style={{ left: pct(s.x), top: pct(s.y), width: pct(150), height: pct(173) }}
-              title={b ? `${weekTitles[w] ?? b.moduleTitle ?? ''} · ${b.name}` : `${weekTitles[w] ?? 'Module'} · not earned yet`}>
-              {b ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={assetPath(b.image)} alt={b.name} className="size-full object-contain drop-shadow-[0_6px_10px_rgba(94,50,149,0.25)]" />
-              ) : (
-                <svg viewBox="0 0 150 173" className="size-full" aria-hidden="true">
-                  <path d="M75 2 L148 44.5 L148 128.5 L75 171 L2 128.5 L2 44.5 Z" fill="#F4F1FF" stroke="#D9D0F2" strokeWidth="2" strokeDasharray="6 6" />
-                </svg>
-              )}
+            <div key={b.week} className="absolute grid place-items-center" style={{ left: pct(s.x), top: pct(s.y), width: pct(150), height: pct(173) }}
+              title={`${weekTitles[b.week] ?? b.moduleTitle ?? ''} · ${b.name}`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={assetPath(b.image)} alt={b.name} className="size-full object-contain drop-shadow-[0_6px_10px_rgba(94,50,149,0.25)]" />
             </div>
           );
         })}

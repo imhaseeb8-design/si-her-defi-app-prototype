@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Avatar } from '@/components/app/AppShell';
 import { useSession } from '@/components/app/SessionProvider';
 import { ScheduleModal } from '@/components/dashboard/ScheduleModal';
+import { CertificateArt } from '@/components/certificate/CertificateArt';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { Spinner } from '@/components/onboarding/OnboardingShell';
 import { assetPath, badgeApi, certificateApi, eventsApi, modulesApi, onboardApi, partnerApi } from '@/lib/api';
@@ -351,21 +352,17 @@ function CertificateRow({ unlocked, passed, total }: { unlocked: boolean; passed
 // Prototype faces for the "learners have minted" stack (stand-ins until real minters' avatars come from the API)
 const MINTER_FACES = ['https://randomuser.me/api/portraits/women/44.jpg', 'https://randomuser.me/api/portraits/women/68.jpg', 'https://randomuser.me/api/portraits/women/12.jpg'];
 
-function ReadyToMint({ minted = false }: { minted?: boolean }) {
+function ReadyToMint() {
   return (
     <div className="relative overflow-hidden rounded-3xl p-7 sm:p-8 text-white shadow-xl border border-purple-500/20 min-h-[260px] flex items-center">
       <Image alt="" fill sizes="(min-width: 1024px) 960px, 100vw" className="object-cover object-right" src={assetPath('/Your certificate is ready.png')} />
       <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-transparent pointer-events-none" />
       <div className="relative z-10 max-w-md space-y-3">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 px-3 py-1 text-[11px] font-medium text-purple-200 backdrop-blur-sm">● {minted ? 'Minted on Base' : 'Ready to mint'}</span>
-        <h2 className="text-[24px] sm:text-[28px] font-medium tracking-tight text-white leading-tight">{minted ? 'Your certificate is on Base' : 'Your certificate is ready'}</h2>
-        <p className="text-[12.5px] leading-relaxed text-white/80">{minted
-          ? 'It’s in your wallet for good. Share it, add it to LinkedIn, or let anyone verify it.'
-          : 'Every module, every badge, one verifiable record on Base. Minting writes it to your wallet — it’s yours, not ours.'}</p>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-purple-500/20 border border-purple-400/30 px-3 py-1 text-[11px] font-medium text-purple-200 backdrop-blur-sm">● Ready to mint</span>
+        <h2 className="text-[24px] sm:text-[28px] font-medium tracking-tight text-white leading-tight">Your certificate is ready</h2>
+        <p className="text-[12.5px] leading-relaxed text-white/80">Every module, every badge, one verifiable record on Base. Minting writes it to your wallet — it’s yours, not ours.</p>
         <div className="pt-2 flex flex-wrap items-center gap-4">
-          {minted
-            ? <ButtonLink href="/certificate" variant="white" size="md">View certificate</ButtonLink>
-            : <ButtonLink href="/certificate?mint=1" variant="white" size="md">Mint on Base</ButtonLink>}
+          <ButtonLink href="/certificate?mint=1" variant="white" size="md">Mint on Base</ButtonLink>
           <div className="flex items-center gap-2">
             <div className="flex -space-x-2">
               {MINTER_FACES.map((src) => (
@@ -378,6 +375,26 @@ function ReadyToMint({ minted = false }: { minted?: boolean }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function MintedCertificateCard({ cert, modules }: { cert: Certificate; modules: Module[] }) {
+  const titles = Object.fromEntries(modules.map((m) => [m.week, m.title]));
+  return (
+    <section className="flex flex-col gap-5 rounded-2xl border border-[#ececf2] bg-white p-5 shadow-[0_2px_12px_rgba(23,23,48,0.03)] sm:flex-row sm:items-center sm:p-6">
+      <div className="w-32 shrink-0 sm:w-40">
+        <CertificateArt cert={cert} preview={false} weekTitles={titles} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <span className="inline-flex items-center rounded-full bg-[#ecfdf3] px-2.5 py-1 text-[11px] font-medium text-[#15803d]">Minted on Base</span>
+        <h2 className="mt-2 text-[20px] font-medium tracking-tight text-[#151534]">Your {cert.content.cohortLabel} certificate</h2>
+        <p className="mt-1 text-[12.5px] text-[#5f5f7a]">{cert.badges.length} badges earned{cert.onChain.tokenId ? ` · Token #${cert.onChain.tokenId}` : ''} · Base</p>
+        <div className="mt-4 flex flex-wrap items-center gap-4">
+          <ButtonLink href="/certificate" size="md">View certificate</ButtonLink>
+          {cert.onChain.explorerUrl && <a href={cert.onChain.explorerUrl} target="_blank" rel="noopener noreferrer" className="link-cta text-[12.5px] font-medium text-[#7c2ae8]">View on BaseScan <Arrow dir="up-right" /></a>}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -450,6 +467,8 @@ export default function DashboardPage() {
   const unlocked = !!cert && cert.status !== 'locked';
   const subtitle = !status.part1Done
     ? 'Introduce yourself to unlock the weekly sessions.'
+    : cert?.status === 'minted'
+      ? 'Your certificate is minted on Base.'
     : unlocked
       ? 'You did it. Every session and quiz is done, and your certificate is ready to mint on Base.'
       : earned === 0
@@ -462,9 +481,9 @@ export default function DashboardPage() {
       <StartHere status={status} />
     </div>
   ) : null;
-  // one certificate card: the plain row while locked, the image card once it's unlocked (ready to mint, then minted)
+  // The certificate moves above the profile after minting; keep one certificate card on the page.
   const certificateBlock = unlocked
-    ? <ReadyToMint minted={cert?.status === 'minted'} />
+    ? <ReadyToMint />
     : <CertificateRow unlocked={false} passed={modules.filter((m) => m.quiz.isPassed || m.quiz.isSkipped).length} total={modules.length} />;
 
   return (
@@ -502,6 +521,8 @@ export default function DashboardPage() {
           </Link>
         )}
       </header>
+
+      {cert?.status === 'minted' && <MintedCertificateCard cert={cert} modules={modules} />}
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <ProfileCard profile={profile} />
@@ -559,7 +580,7 @@ export default function DashboardPage() {
           {/* once every session is done, onboarding Part 2 and the certificate lead; the finished sessions follow */}
           {!unlocked && featured && <FeaturedModule m={featured} part1Done={status.part1Done} onSchedule={setScheduling} />}
           {unlocked && onboardingBlock}
-          {unlocked && certificateBlock}
+          {unlocked && cert?.status !== 'minted' && certificateBlock}
           <div className="space-y-3 pt-3">
             <div className="flex items-center justify-between">
               <h2 className="text-[11.5px] font-medium text-[#9a9cbd]">{unlocked ? `Your sessions (${items.length})` : `Upcoming sessions (${items.length})`}</h2>

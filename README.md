@@ -62,5 +62,6 @@ Shared pieces:
 | `tools/capture/` | Scripts that re-capture the live app (`capture.js`) and screenshot the prototype in the same states (`proto.js`, `compare.js`) |
 | `tools/html2jsx/` | Converts a captured page into JSX (how screens were rebuilt) |
 | `docs/IMPROVEMENTS.md` | UX/UI issues found so far — the Phase 2 backlog |
+| `docs/USER-FLOW.md` | End-to-end user flow, dashboard state rules, failures and API contract |
 | `docs/REPLICA-NOTES.md` | Where the replica deliberately differs from the live app, or had to guess |
 | `AGENTS.md` | Working notes for AI agents and developers picking this up |
