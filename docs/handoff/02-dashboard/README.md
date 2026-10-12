@@ -19,7 +19,7 @@ Screenshot: `after-badges.jpg` (0 badges, 1 badge, mobile).
 ## Profile card (trial)
 Screenshot: `after-profile-card.jpg`. Built to sit beside the badges card at the same height, with matching footers.
 - Avatar on the left with a brand-gradient ring; name (17px semibold) and "Role · Organization" beside it.
-- Bio below, clamped to 2 lines. With no bio, a muted "Add a short bio" link takes its place.
+- Bio below, clamped to 2 lines. With no bio, a link "Add a short bio. Members can see it on your profile." takes its place.
 - Footer row (divider, like the badges card's "Next badge" row): social link on the left, opening in a new tab; "Edit profile" on the right as a purple text link instead of the outlined pill.
 
 ## Start here card

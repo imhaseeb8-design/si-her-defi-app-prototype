@@ -67,7 +67,7 @@ function ProfileCard({ profile }: { profile: Profile }) {
         {profile.bio ? (
           <p className="mt-4 line-clamp-2 text-[12.5px] leading-5 text-[#5f5f7a]">{profile.bio}</p>
         ) : (
-          <Link href="/settings#profile" className="mt-4 block text-[12.5px] leading-5 text-[#9a9cbd] hover:text-[#7c2ae8]">Add a short bio. Partners see it on your profile.</Link>
+          <Link href="/settings#profile" className="mt-4 block text-[12.5px] leading-5 text-[#9a9cbd] hover:text-[#7c2ae8]">Add a short bio. Members can see it on your profile.</Link>
         )}
       </div>
       <div className="relative mt-4 flex items-center justify-between gap-3 border-t border-[#f0f0f6] pt-4 text-[12.5px]">
